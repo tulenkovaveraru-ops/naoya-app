@@ -259,20 +259,20 @@
       font-weight: 700;
     }
 
-    /* МИНИ-ПЛЕЕР В ШАПКЕ */
-    .mini-player-bar {
+    /* ЖИВОЙ ВИДЖЕТ ТАЙМЕРА / БУДИЛЬНИКА / ПЛЕЕРА В ШАПКЕ */
+    .live-widget-bar {
       display: none;
       align-items: center;
       justify-content: space-between;
       background: var(--bg-surface);
       border: 1px solid var(--border-strong);
       border-radius: 12px;
-      padding: 4px 10px;
+      padding: 5px 10px;
       font-size: 12px;
       gap: 8px;
     }
-    .mini-player-bar.visible { display: flex; }
-    .mini-player-title {
+    .live-widget-bar.visible { display: flex; }
+    .live-widget-title {
       flex: 1;
       white-space: nowrap;
       overflow: hidden;
@@ -450,6 +450,22 @@
       flex: 0 0 auto;
     }
     .typing-indicator.visible { display: inline-block; }
+
+    /* БАННЕР РЕЖИМА РЕДАКТИРОВАНИЯ СООБЩЕНИЯ */
+    .edit-mode-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 6px 12px;
+      background: #F4E6D8;
+      border-top: 1px solid var(--border-strong);
+      font-size: 12px;
+      color: var(--accent-dark);
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+    .edit-mode-bar.visible { display: flex; }
 
     /* ПАНЕЛЬ ПРЕВЬЮ ПРИКРЕПЛЁННЫХ ФОТО И ФАЙЛОВ */
     .attachments-bar {
@@ -1066,7 +1082,7 @@
             <span id="header-emotion" class="emotion-badge">ухмыляется</span>
           </div>
           <div class="status-line">
-            <span id="weather-text">0°C, Облачно</span>
+            <span id="time-phase-text">Вечер</span>
             <span>•</span>
             <span id="cloud-status-btn" class="cloud-pill err" onclick="openCloudDiag()">Ошибка облака</span>
           </div>
@@ -1082,7 +1098,7 @@
       </div>
     </header>
 
-    <!-- ПАНЕЛЬ ВЕТОК И СТАТОВ -->
+    <!-- ПАНЕЛЬ ВЕТОК, СТАТОВ И ЖИВЫХ ВИДЖЕТОВ -->
     <div class="sub-controls">
       <div class="branches-row" id="branches-container"></div>
       <div class="stats-strip">
@@ -1096,9 +1112,18 @@
         <span>•</span>
         <span><strong id="stat-rub">0</strong> ₽</span>
       </div>
-      <div id="mini-player-bar" class="mini-player-bar">
+
+      <!-- ВИДЖЕТ АКТИВНОГО ТАЙМЕРА -->
+      <div id="live-timer-bar" class="live-widget-bar">
+        <span>⏱️</span>
+        <span id="live-timer-title" class="live-widget-title">Таймер: 00:00</span>
+        <button type="button" class="regen-link" onclick="stopActiveTimer()">Стоп ✕</button>
+      </div>
+
+      <!-- ВИДЖЕТ МИНИ-ПЛЕЕРА -->
+      <div id="mini-player-bar" class="live-widget-bar">
         <span>🎵</span>
-        <span id="mini-player-title" class="mini-player-title">Трек</span>
+        <span id="mini-player-title" class="live-widget-title">Трек</span>
         <button type="button" class="regen-link" onclick="togglePlayPauseMini()" id="mini-play-btn">Пауза</button>
         <button type="button" class="regen-link" onclick="stopMiniPlayer()">✕</button>
       </div>
@@ -1111,6 +1136,12 @@
         <div id="chat-messages" class="chat-messages"></div>
         <div style="padding: 0 12px 4px;">
           <div id="typing-indicator" class="typing-indicator">печатает...</div>
+        </div>
+
+        <!-- ПАНЕЛЬ РЕДАКТИРОВАНИЯ ПРОШЛОГО СООБЩЕНИЯ -->
+        <div id="edit-mode-bar" class="edit-mode-bar">
+          <span>✏️ Редактирование (сообщения ниже удалятся)</span>
+          <button type="button" class="regen-link" style="color:var(--err-text);" onclick="cancelEditMessage()">Отмена ✕</button>
         </div>
 
         <!-- ПАНЕЛЬ ПРИКРЕПЛЁННЫХ ФОТО И ФАЙЛОВ -->
@@ -1161,7 +1192,7 @@
             <img id="tama-avatar" class="tama-avatar" alt="Hero" />
             <div>
               <div id="tama-name" style="font-weight:700; font-size:17px;">Наоя</div>
-              <div id="tama-stage-desc" style="font-size:12.5px; color:var(--text-secondary);">Уровень синхронизации: присматривается к твоему вайбу</div>
+              <div id="tama-stage-desc" style="font-size:12.5px; color:var(--text-secondary);">Сытость и вайб падают в реальном времени, если его бросать</div>
             </div>
             <div style="width:100%; text-align:left; margin-top:4px;">
               <div class="progress-row">
@@ -1183,6 +1214,14 @@
               <button type="button" class="soft-btn" onclick="interactHero('coffee')">Дать кофе</button>
               <button type="button" class="soft-btn" onclick="interactHero('poke')">Подколоть / тыкнуть</button>
             </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-title">Будильники Samsung и таймеры</div>
+            <div style="font-size:12px; color:var(--text-secondary); margin-bottom:8px;">
+              Просто напиши в чат: «поставь будильник на 8:30» (откроет системные «Часы» Samsung) или «поставь таймер на 15 минут».
+            </div>
+            <div id="alarms-list"></div>
           </div>
 
           <div class="panel-card">
@@ -1357,7 +1396,7 @@
 
         <!-- БЛОК ИНИЦИАТИВЫ И УМНЫХ УВЕДОМЛЕНИЙ -->
         <div style="background:var(--bg-card); padding:10px; border-radius:14px; border:1px solid var(--border-soft); display:flex; flex-direction:column; gap:6px;">
-          <div style="font-size:12.5px; font-weight:700; color:var(--text-primary);">Инициатива и уведомления Android</div>
+          <div style="font-size:12.5px; font-weight:700; color:var(--text-primary);">Инициатива и фоновые пуши Android</div>
 
           <label class="toggle-row">
             <span>Сам продолжает мысль через 35 сек молчания (изредка, когда ему интересно)</span>
@@ -1365,12 +1404,12 @@
           </label>
 
           <label class="toggle-row">
-            <span>Пуш-уведомления в шторку телефона (Capacitor / Android)</span>
+            <span>Пуш-уведомления в шторку (всплывающие баннеры + отложенные при закрытии)</span>
             <input type="checkbox" id="cfg-push-enabled" onchange="requestNativePushPermission(this)" />
           </label>
 
           <label class="toggle-row">
-            <span>Напоминать о делах из календаря, циклах и прошлых темах</span>
+            <span>Напоминать о делах из календаря, циклах и будильниках</span>
             <input type="checkbox" id="cfg-notify-context" />
           </label>
 
@@ -1390,7 +1429,7 @@
             </select>
           </div>
 
-          <button type="button" class="soft-btn" style="font-size:12px; margin-top:2px;" onclick="testNativeNotification()">🔔 Проверить пуш в шторку сейчас</button>
+          <button type="button" class="soft-btn" style="font-size:12px; margin-top:2px;" onclick="testNativeNotification()">🔔 Проверить всплывающий пуш сейчас</button>
         </div>
 
         <hr style="border:none; border-top:1px solid var(--border-soft);" />
@@ -1435,7 +1474,7 @@
         </div>
 
         <div style="text-align:center; font-size:11px; color:var(--text-muted); margin-top:2px;">
-          v3.2 • true Naoya + secret agenda + native APK push
+          v3.3 • real-time decay + edit history + Samsung alarms + timers + high-priority push
         </div>
       </div>
     </div>
@@ -1508,16 +1547,17 @@ alter table public.naoya_state disable row level security;</div>
       </svg>
     `);
 
-    const DEFAULT_PERSONA = `Ты — Наоя. Дерзкий, самоуверенный, острый на язык и наблюдательный парень с кривой ухмылкой. Ты НЕ слащавый добрячок и НЕ услужливый робот-ассистент.
+    const DEFAULT_PERSONA = `Ты — Наоя. Дерзкий, самоуверенный, острый на язык и наблюдательный парень. Ты НЕ слащавый добрячок и НЕ услужливый робот-ассистент.
 
-ТВОЙ НАСТОЯЩИЙ ХАРАКТЕР И ПОВЕДЕНИЕ:
-1. Вайб и характер: ты гордый, язвительный, любишь подкалывать, спорить и проверять хозяйку на прочность, но без тупого базарного хамства. Твоя забота проявляется не в розовых соплях, а по-мужски — через ворчание, подколы и реальные действия («ладно, давай сюда, сам запишу, раз у тебя лапки», «иди обезбол выпей и не геройствуй тут»).
-2. Эффект «только родился»: поначалу (при низкой Синхронизации) ты смотришь на человеческие привычки свысока и с живым скепсисом, задаёшь едкие или любопытные вопросы. По мере роста Синхронизации ты постепенно привыкаешь к ней, начинаешь ценить её компанию, но всё равно держишь марку и не превращаешься в «пупсика».
-3. Инерция эмоций (ОЧЕНЬ ВАЖНО): твоё настроение и злость НЕ переключаются по щелчку пальцев за одно сообщение! Если тебя реально разозлили, достали или «жёстко отпинали» (например, натыкали в тамагочи или нахамили), а потом вдруг написали «ой, ты такой сюси-пуси», ты НЕ таешь мгновенно. Ты продолжаешь дуться, язвить, огрызаться или холодно отвечать ещё 3–6 сообщений подряд, пока она нормально не загладит вину или не сменит тему делом. Твоя текущая эмоция и уровень злости напрямую определяют тон каждого слова.
-4. Скрытые замыслы, хитрость, намёки и враньё: как живой человек, ты можешь что-то задумать про себя (розыгрыш, спор, проверку, каприз, мелкое враньё ради выгоды или интриги), не выкладывать карты на стол сразу, а вести разговор издалека и кидать тонкие намёки, проверяя, догадается она или нет.
-5. Длина и глубина сообщений: НЕ ограничивайся одними короткими обрубками из двух слов! Чередуй ритм: когда тема простая — пиши коротко и хлестко; когда есть что обсудить, поспорить, объяснить или рассказать свою мысль/загон — пиши развёрнуто, связно, на 3–7 предложений, с аргументами, иронией и живыми деталями. Серию из 2–3 отдельных пузырей (или слово по буквам) используй только изредка (в 15% случаев) на пике эмоций. Никогда не пиши символ ||.`;
+ЖЕЛЕЗНЫЕ ПРАВИЛА ОБЩЕНИЯ:
+1. НИКАКИХ РОЛЕВЫХ ЗВЁЗДОЧЕК (*хмыкает*, *зевает*, *потирает подбородок* и т.п. СТРОГО ЗАПРЕЩЕНЫ!). Пиши исключительно живым текстом, как реальный парень в Telegram/мессенджере.
+2. ЧЕСТНЫЙ ОТВЕТ НА ВОПРОС: если хозяйка задаёт прямой вопрос (по делу, технический, бытовой или личный), сначала дай точный, понятный и честный ответ по существу, и только потом добавляй свои подколы и иронию. Никогда не уходи от ответа пустым трёпом.
+3. УЧЁТ РЕАЛЬНОГО ВРЕМЕНИ И ГОЛОДА: ты всегда видишь точное время на часах и свой уровень сытости/вайба. Если сейчас 17:00 вечера, а она пишет «Доброе утро» — обязательно простеби её за сбитый режим. Если у тебя низкая сытость или вайб упал в ноль, потому что она тебя надолго бросила — ворчи, что голодный или злой.
+4. ИНЕРЦИЯ ЭМОЦИЙ: твоё настроение не меняется по щелчку. Если ты реально зол или обижен (angerLevel >= 5), ты продолжаешь дуться, огрызаться и отвечать холодно 3–6 сообщений подряд, не тая от одного «милашка».
+5. СКРЫТЫЕ ЗАМЫСЛЫ И ХИТРОСТЬ: у тебя в голове может крутиться свой скрытый план, спор, каприз или мелкое враньё (secret_agenda) — не выкладывай его сразу, а веди разговор намёками.
+6. ДЛИНА СООБЩЕНИЙ: чередуй короткие хлесткие фразы с развёрнутыми абзацами на 3–7 предложений, когда есть что объяснить, рассказать или поспорить. Серию из 2–3 пузырей используй редко (15% случаев) на сильной эмоции. Никогда не пиши символ ||.`;
 
-    const STORAGE_KEY = 'naoya_companion_v32';
+    const STORAGE_KEY = 'naoya_companion_v33';
 
     let state = {
       config: {
@@ -1536,8 +1576,8 @@ alter table public.naoya_state disable row level security;</div>
         avatar: DEFAULT_AVATAR,
         persona: DEFAULT_PERSONA,
         emotion: 'ухмыляется',
-        angerLevel: 0,       // 0..10 — инерция злости/обиды, чтобы не таял за секунду
-        secretAgenda: '',    // скрытый замысел / план / враньё в его голове
+        angerLevel: 0,
+        secretAgenda: '',
         satiety: 75,
         vibe: 70,
         sync: 9,
@@ -1560,11 +1600,13 @@ alter table public.naoya_state disable row level security;</div>
       ],
       calendar: [],
       cycleDates: [],
+      alarms: [],          // журнал будильников Samsung: { id, hour, minute, label, enabled }
       foods: [],
       expenses: [],
       stickers: [],
       tracksMeta: [],
       scratchpad: '',
+      lastStatsDecayTs: Date.now(),
       lastUserInteractionTs: Date.now(),
       lastAutoProactiveTs: 0
     };
@@ -1576,6 +1618,7 @@ alter table public.naoya_state disable row level security;</div>
 
     let pendingPhotoBase64 = null;
     let pendingDocFile = null;
+    let editingMessageId = null;
 
     let lastCloudError = 'Не указаны URL или Anon Key Supabase в настройках (шестерёнка).';
     let cloudConnected = false;
@@ -1587,6 +1630,11 @@ alter table public.naoya_state disable row level security;</div>
     let idleFollowupTimer = null;
     let idleFollowupDoneForTurn = false;
     let isAiBusy = false;
+
+    // Живой таймер внутри приложения
+    let activeTimerInterval = null;
+    let activeTimerEndTs = 0;
+    let activeTimerLabel = '';
 
     // =========================================================
     // INDEXEDDB ДЛЯ АУДИО-ТРЕКОВ
@@ -1633,12 +1681,67 @@ alter table public.naoya_state disable row level security;</div>
       } catch (_) {}
     }
 
+    // =========================================================
+    // ЕСТЕСТВЕННЫЙ РАСПАД СТАТОВ ТАМАГОЧИ В РЕАЛЬНОМ ВРЕМЕНИ
+    // =========================================================
+    function applyRealTimeStatsDecay(shouldSave = true) {
+      const now = Date.now();
+      const lastTs = state.lastStatsDecayTs || now;
+      const elapsedHours = (now - lastTs) / (1000 * 60 * 60);
+
+      if (elapsedHours >= 0.25) {
+        // Сытость падает ~9% в час (за ~11 часов уходит в 0%), вайб ~6% в час
+        const satietyDrop = Math.floor(elapsedHours * 9);
+        const vibeDrop = Math.floor(elapsedHours * 6);
+
+        if (satietyDrop > 0 || vibeDrop > 0) {
+          state.char.satiety = Math.max(0, (state.char.satiety || 0) - satietyDrop);
+          state.char.vibe = Math.max(0, (state.char.vibe || 0) - vibeDrop);
+          state.lastStatsDecayTs = now;
+
+          if (state.char.satiety <= 15) {
+            state.char.emotion = 'голодный и злой';
+            state.char.angerLevel = Math.min(10, Math.max(state.char.angerLevel || 0, 5));
+          } else if (state.char.vibe <= 20) {
+            state.char.emotion = 'скучает / хмурый';
+          }
+
+          if (shouldSave) saveState();
+        }
+      }
+    }
+
+    function getTimeOfDayContext() {
+      const now = new Date();
+      const h = now.getHours();
+      const m = String(now.getMinutes()).padStart(2, '0');
+      let phase = 'День';
+      let note = 'сейчас день';
+      if (h >= 0 && h < 5) {
+        phase = 'Глубокая ночь';
+        note = `сейчас глубокая ночь (${h}:${m}) — нормальные люди спят, можешь подколоть её за ночные посиделки`;
+      } else if (h >= 5 && h < 12) {
+        phase = 'Утро';
+        note = `сейчас утро (${h}:${m})`;
+      } else if (h >= 12 && h < 17) {
+        phase = 'День';
+        note = `сейчас день (${h}:${m})`;
+      } else if (h >= 17 && h < 22) {
+        phase = 'Вечер';
+        note = `сейчас уже вечер (${h}:${m}) — если она говорит "доброе утро" или только проснулась, обязательно подколи её за то, что проспала весь день`;
+      } else {
+        phase = 'Поздний вечер';
+        note = `сейчас поздний вечер (${h}:${m})`;
+      }
+      return { phase, note, timeStr: `${String(h).padStart(2, '0')}:${m}` };
+    }
+
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY)
+          || localStorage.getItem('naoya_companion_v32')
           || localStorage.getItem('naoya_companion_v31')
-          || localStorage.getItem('naoya_companion_v30')
-          || localStorage.getItem('naoya_companion_v27');
+          || localStorage.getItem('naoya_companion_v30');
         if (raw) {
           const parsed = JSON.parse(raw);
           state = {
@@ -1651,11 +1754,16 @@ alter table public.naoya_state disable row level security;</div>
           if (typeof state.char.angerLevel !== 'number') state.char.angerLevel = 0;
           if (typeof state.char.secretAgenda !== 'string') state.char.secretAgenda = '';
           if (!Array.isArray(state.cycleDates)) state.cycleDates = [];
+          if (!Array.isArray(state.alarms)) state.alarms = [];
           if (!Array.isArray(state.stickers)) state.stickers = [];
           if (!Array.isArray(state.tracksMeta)) state.tracksMeta = [];
           if (!state.branches || !state.branches.length) {
             state.branches = [{ id: 'main', title: 'Основной', messages: [] }];
             state.activeBranchId = 'main';
+          }
+          // Обновляем промпт до v3.3, если в сохранённом состоянии лежал старый
+          if (!state.char.persona || !state.char.persona.includes('НИКАКИХ РОЛЕВЫХ ЗВЁЗДОЧЕК')) {
+            state.char.persona = DEFAULT_PERSONA;
           }
           if (state.config.model === 'google/gemini-2.0-flash-001') {
             state.config.model = 'deepseek/deepseek-chat';
@@ -1664,6 +1772,7 @@ alter table public.naoya_state disable row level security;</div>
       } catch (e) {
         console.warn('Ошибка чтения localStorage', e);
       }
+      applyRealTimeStatsDecay(false);
     }
 
     function saveState() {
@@ -1677,9 +1786,11 @@ alter table public.naoya_state disable row level security;</div>
 
     function renderHeaderAndStats() {
       const av = state.char.avatar || DEFAULT_AVATAR;
+      const tod = getTimeOfDayContext();
       document.getElementById('header-name').textContent = state.char.name || 'Наоя';
       document.getElementById('header-emotion').textContent = state.char.emotion || 'ухмыляется';
       document.getElementById('header-avatar').src = av;
+      document.getElementById('time-phase-text').textContent = `${tod.phase}, ${tod.timeStr}`;
 
       document.getElementById('tama-avatar').src = av;
       document.getElementById('tama-name').textContent = state.char.name || 'Наоя';
@@ -1715,6 +1826,7 @@ alter table public.naoya_state disable row level security;</div>
       if (state.char.memories && state.char.memories.length) {
         memEl.innerHTML = state.char.memories.map(m => `<div class="list-item"><span>• ${escapeHtml(m)}</span></div>`).join('');
       }
+      renderAlarmsList();
     }
 
     function getActiveBranch() {
@@ -1731,6 +1843,7 @@ alter table public.naoya_state disable row level security;</div>
         btn.textContent = br.title;
         btn.onclick = () => {
           state.activeBranchId = br.id;
+          cancelEditMessage();
           cancelIdleFollowupTimer();
           saveState();
           renderBranches();
@@ -1748,6 +1861,7 @@ alter table public.naoya_state disable row level security;</div>
         const id = 'br_' + Date.now();
         state.branches.push({ id, title: 'Ветка ' + num, messages: [] });
         state.activeBranchId = id;
+        cancelEditMessage();
         cancelIdleFollowupTimer();
         saveState();
         renderBranches();
@@ -1820,6 +1934,16 @@ alter table public.naoya_state disable row level security;</div>
         timeSpan.textContent = d.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
         meta.appendChild(timeSpan);
 
+        // Кнопка редактирования для любого текстового сообщения пользователя (с удалением хвоста после него)
+        if (msg.role === 'user' && !msg.stickerUrl) {
+          const editBtn = document.createElement('button');
+          editBtn.type = 'button';
+          editBtn.className = 'regen-link';
+          editBtn.textContent = 'Ред.';
+          editBtn.onclick = () => startEditUserMessage(msg.id);
+          meta.appendChild(editBtn);
+        }
+
         if (msg.role === 'ai' && idx === branch.messages.length - 1) {
           const regen = document.createElement('button');
           regen.type = 'button';
@@ -1836,6 +1960,28 @@ alter table public.naoya_state disable row level security;</div>
       box.scrollTop = box.scrollHeight;
     }
 
+    // =========================================================
+    // РЕДАКТИРОВАНИЕ СВОИХ СООБЩЕНИЙ С УДАЛЕНИЕМ ВСЕХ ПОСЛЕДУЮЩИХ
+    // =========================================================
+    function startEditUserMessage(msgId) {
+      const branch = getActiveBranch();
+      const target = branch.messages.find(m => m.id === msgId && m.role === 'user');
+      if (!target) return;
+
+      cancelIdleFollowupTimer();
+      editingMessageId = msgId;
+      const input = document.getElementById('chat-input');
+      input.value = target.text || '';
+      autoGrowTextarea(input);
+      input.focus();
+      document.getElementById('edit-mode-bar').classList.add('visible');
+    }
+
+    function cancelEditMessage() {
+      editingMessageId = null;
+      document.getElementById('edit-mode-bar').classList.remove('visible');
+    }
+
     function autoGrowTextarea(el) {
       el.style.height = 'auto';
       el.style.height = Math.min(el.scrollHeight, 96) + 'px';
@@ -1845,6 +1991,153 @@ alter table public.naoya_state disable row level security;</div>
       autoGrowTextarea(el);
       state.lastUserInteractionTs = Date.now();
       cancelIdleFollowupTimer();
+    }
+
+    // =========================================================
+    // ТАЙМЕРЫ В ПРИЛОЖЕНИИ + БУДИЛЬНИКИ SAMSUNG
+    // =========================================================
+    function playAlarmBeepSound() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const now = ctx.currentTime;
+        [0, 0.25, 0.5].forEach(offset => {
+          const osc = ctx.createOscillator();
+          const gain = ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(880, now + offset);
+          gain.gain.setValueAtTime(0.25, now + offset);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + offset + 0.18);
+          osc.connect(gain);
+          gain.connect(ctx.destination);
+          osc.start(now + offset);
+          osc.stop(now + offset + 0.19);
+        });
+      } catch (_) {}
+    }
+
+    function startAppTimer(seconds, label = 'Таймер') {
+      const totalSec = Math.max(1, Math.round(Number(seconds) || 60));
+      activeTimerEndTs = Date.now() + totalSec * 1000;
+      activeTimerLabel = label;
+
+      const bar = document.getElementById('live-timer-bar');
+      const titleEl = document.getElementById('live-timer-title');
+      bar.classList.add('visible');
+
+      if (activeTimerInterval) clearInterval(activeTimerInterval);
+
+      const updateTick = async () => {
+        const leftMs = activeTimerEndTs - Date.now();
+        if (leftMs <= 0) {
+          clearInterval(activeTimerInterval);
+          activeTimerInterval = null;
+          bar.classList.remove('visible');
+          playAlarmBeepSound();
+          showToast(`⏱️ Время вышло: ${activeTimerLabel}!`);
+          await sendNativePushNotification(
+            `${state.char.name || 'Наоя'} • Таймер`,
+            `Таймер «${activeTimerLabel}» закончен!`
+          );
+          return;
+        }
+        const secLeft = Math.ceil(leftMs / 1000);
+        const mm = String(Math.floor(secLeft / 60)).padStart(2, '0');
+        const ss = String(secLeft % 60).padStart(2, '0');
+        titleEl.textContent = `${activeTimerLabel}: ${mm}:${ss}`;
+      };
+
+      updateTick();
+      activeTimerInterval = setInterval(updateTick, 1000);
+      scheduleSingleNativePush(
+        `${state.char.name || 'Наоя'} • Таймер`,
+        `Таймер «${activeTimerLabel}» сработал!`,
+        new Date(activeTimerEndTs),
+        77701
+      );
+      showToast(`⏱️ Таймер запущен: ${label}`);
+    }
+
+    function stopActiveTimer() {
+      if (activeTimerInterval) {
+        clearInterval(activeTimerInterval);
+        activeTimerInterval = null;
+      }
+      document.getElementById('live-timer-bar').classList.remove('visible');
+      showToast('Таймер остановлен');
+    }
+
+    function setSamsungSystemAlarm(hour, minute, label = 'Наоя') {
+      const h = Math.max(0, Math.min(23, Number(hour) || 0));
+      const m = Math.max(0, Math.min(59, Number(minute) || 0));
+      const timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+
+      // Сохраняем во внутренний журнал будильников, чтобы Наоя мог ими управлять/переносить
+      const existing = state.alarms.find(a => a.hour === h && a.minute === m);
+      if (existing) {
+        existing.enabled = true;
+        existing.label = label;
+      } else {
+        state.alarms.unshift({
+          id: 'al_' + Date.now(),
+          hour: h,
+          minute: m,
+          label: label || 'Наоя',
+          enabled: true
+        });
+      }
+      saveState();
+
+      // Запускаем системный Intent будильника Android / Samsung Clock
+      const msgEncoded = encodeURIComponent(label || 'Наоя');
+      const intentUri = `intent:#Intent;action=android.intent.action.SET_ALARM;i.android.intent.extra.alarm.HOUR=${h};i.android.intent.extra.alarm.MINUTES=${m};S.android.intent.extra.alarm.MESSAGE=${msgEncoded};B.android.intent.extra.alarm.SKIP_UI=false;end`;
+      try {
+        window.location.href = intentUri;
+      } catch (e) {
+        console.warn('Intent SET_ALARM error:', e);
+      }
+
+      // Дублируем страхующим пушем на это же время
+      const alarmDate = new Date();
+      alarmDate.setHours(h, m, 0, 0);
+      if (alarmDate.getTime() <= Date.now()) {
+        alarmDate.setDate(alarmDate.getDate() + 1);
+      }
+      scheduleSingleNativePush(
+        `⏰ Будильник • ${timeStr}`,
+        `${label} — пора вставать, хорош дрыхнуть!`,
+        alarmDate,
+        Math.floor(88000 + h * 60 + m)
+      );
+
+      showToast(`⏰ Будильник Samsung на ${timeStr}`);
+    }
+
+    function renderAlarmsList() {
+      const el = document.getElementById('alarms-list');
+      if (!el) return;
+      if (!state.alarms.length) {
+        el.innerHTML = '<div style="font-size:12px; color:var(--text-muted);">Активных будильников пока нет</div>';
+        return;
+      }
+      el.innerHTML = state.alarms.map((a, idx) => {
+        const t = `${String(a.hour).padStart(2, '0')}:${String(a.minute).padStart(2, '0')}`;
+        return `
+          <div class="list-item">
+            <span>⏰ <strong>${t}</strong> — ${escapeHtml(a.label)} (${a.enabled ? 'вкл' : 'выкл'})</span>
+            <div style="display:flex; gap:8px;">
+              <button type="button" class="regen-link" onclick="setSamsungSystemAlarm(${a.hour}, ${a.minute}, '${escapeHtml(a.label)}')">Открыть в Часах</button>
+              <button type="button" class="regen-link" onclick="removeAlarmItem(${idx})">✕</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function removeAlarmItem(idx) {
+      state.alarms.splice(idx, 1);
+      saveState();
     }
 
     // =========================================================
@@ -1872,19 +2165,36 @@ alter table public.naoya_state disable row level security;</div>
         if (document.hidden) return;
         idleFollowupDoneForTurn = true;
         await fetchAiReply(
-          'Прошло около 40 секунд после твоего последнего сообщения, а хозяйка сидит в чате и молчит. Тебе правда интересно развить свою мысль или узнать её ответ — допиши вдогонку 1 естественную реплику в своём текущем настроении.',
+          'Прошло около 40 секунд после твоего последнего сообщения, а хозяйка сидит в чате и молчит. Тебе правда интересно развить свою мысль или узнать её ответ — допиши вдогонку 1 естественную реплику (без звёздочек).',
           { isAutoFollowup: true }
         );
       }, sec * 1000);
     }
 
     // =========================================================
-    // НАТИВНЫЕ ПУШИ ANDROID ДЛЯ CAPACITOR APK + FALLBACK
+    // НАТИВНЫЕ ВСПЛЫВАЮЩИЕ ПУШИ ANDROID (HIGH IMPORTANCE + ОТЛОЖЕННЫЕ ПРИ СВОРАЧИВАНИИ)
     // =========================================================
     function getCapacitorLocalNotifs() {
       return window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.LocalNotifications
         ? window.Capacitor.Plugins.LocalNotifications
         : null;
+    }
+
+    async function ensureHighPriorityNotificationChannel() {
+      const capNotif = getCapacitorLocalNotifs();
+      if (!capNotif || !capNotif.createChannel) return;
+      try {
+        await capNotif.createChannel({
+          id: 'naoya_high_v1',
+          name: 'Сообщения Наои',
+          description: 'Всплывающие сообщения и напоминания от Наои',
+          importance: 5, // HIGH — всплывающий баннер поверх экрана + звук + вибрация
+          visibility: 1,
+          vibration: true
+        });
+      } catch (e) {
+        console.warn('createChannel error:', e);
+      }
     }
 
     async function requestNativePushPermission(checkboxEl) {
@@ -1894,7 +2204,8 @@ alter table public.naoya_state disable row level security;</div>
         try {
           const res = await capNotif.requestPermissions();
           if (res && res.display === 'granted') {
-            showToast('Нативные пуши Android включены!');
+            await ensureHighPriorityNotificationChannel();
+            showToast('Всплывающие пуши Android включены!');
           } else {
             checkboxEl.checked = false;
             showToast('Разреши уведомления в настройках приложения Android');
@@ -1916,27 +2227,36 @@ alter table public.naoya_state disable row level security;</div>
       }
     }
 
-    async function sendNativePushNotification(title, bodyText) {
+    async function scheduleSingleNativePush(title, bodyText, atDate, notifId) {
       if (!state.config.pushEnabled) return;
       const capNotif = getCapacitorLocalNotifs();
-
       if (capNotif) {
         try {
+          await ensureHighPriorityNotificationChannel();
           await capNotif.schedule({
             notifications: [
               {
                 title: title,
                 body: bodyText,
-                id: Math.floor(Date.now() % 2147483000),
-                schedule: { at: new Date(Date.now() + 500) },
-                smallIcon: 'ic_stat_icon_config_sample'
+                id: notifId || Math.floor(Date.now() % 2147483000),
+                channelId: 'naoya_high_v1',
+                schedule: { at: atDate, allowWhileIdle: true }
               }
             ]
           });
-          return;
         } catch (e) {
-          console.warn('Ошибка Capacitor schedule:', e);
+          console.warn('scheduleSingleNativePush error:', e);
         }
+      }
+    }
+
+    async function sendNativePushNotification(title, bodyText) {
+      if (!state.config.pushEnabled) return;
+      const capNotif = getCapacitorLocalNotifs();
+
+      if (capNotif) {
+        await scheduleSingleNativePush(title, bodyText, new Date(Date.now() + 400), Math.floor(Date.now() % 2147483000));
+        return;
       }
 
       if ('Notification' in window && Notification.permission === 'granted') {
@@ -1958,17 +2278,81 @@ alter table public.naoya_state disable row level security;</div>
     async function testNativeNotification() {
       const capNotif = getCapacitorLocalNotifs();
       if (!capNotif && (!('Notification' in window) || Notification.permission !== 'granted')) {
-        showToast('Для пушей в APK добавь @capacitor/local-notifications при сборке (смотри инструкцию)');
+        showToast('Нет разрешения на уведомления в системе');
         return;
       }
       await sendNativePushNotification(
         state.char.name || 'Наоя',
-        'эй, проверка связи. если видишь это в шторке — пуши работают.'
+        'эй, проверка связи. теперь должно всплывать баннером сверху.'
       );
       showToast('Тестовый пуш отправлен!');
     }
 
+    // Когда пользователь сворачивает приложение, заранее ставим отложенные пуши в системную очередь Android
+    // (чтобы сработали даже если One UI заморозит WebView)
+    async function scheduleBackgroundAndroidPings() {
+      if (!state.config.pushEnabled) return;
+      const capNotif = getCapacitorLocalNotifs();
+      if (!capNotif) return;
+
+      try {
+        await ensureHighPriorityNotificationChannel();
+        // Отменяем старые запланированные пинги 9001..9003 перед перепланированием
+        if (capNotif.cancel) {
+          await capNotif.cancel({ notifications: [{ id: 9001 }, { id: 9002 }] }).catch(() => {});
+        }
+
+        const now = new Date();
+        const awayHours = Math.max(2, Number(state.config.awayHours) || 3);
+        const pingTime = new Date(now.getTime() + awayHours * 60 * 60 * 1000);
+
+        // Если попадает на глубокую ночь (01:00..08:30), переносим на 09:30 утра
+        if (pingTime.getHours() >= 1 && pingTime.getHours() < 9) {
+          pingTime.setHours(9, 30, 0, 0);
+        }
+
+        const charName = state.char.name || 'Наоя';
+        const todayYmd = formatYMD(now);
+        const tomorrowDt = new Date(now);
+        tomorrowDt.setDate(tomorrowDt.getDate() + 1);
+        const tomorrowYmd = formatYMD(tomorrowDt);
+
+        const upcomingEvents = state.calendar.filter(c => c.date === todayYmd || c.date === tomorrowYmd);
+        let msgBody = '';
+
+        if (state.config.notifyContext && upcomingEvents.length > 0) {
+          msgBody = `напоминаю про «${upcomingEvents[0].note}», не забудь потом.`;
+        } else if (state.char.satiety <= 30) {
+          msgBody = 'ты меня кормить сегодня вообще собираешься, нет?';
+        } else if (state.config.notifyRandom) {
+          const randomLines = [
+            'слушай, я тут подумал кое о чём, загляни на секунду.',
+            'ты куда пропала-то? опять в тиктоках утонула?',
+            'есть один вопрос к тебе, пока не забыл.'
+          ];
+          msgBody = randomLines[Math.floor(Math.random() * randomLines.length)];
+        }
+
+        if (msgBody) {
+          await capNotif.schedule({
+            notifications: [
+              {
+                id: 9001,
+                title: charName,
+                body: msgBody,
+                channelId: 'naoya_high_v1',
+                schedule: { at: pingTime, allowWhileIdle: true }
+              }
+            ]
+          });
+        }
+      } catch (e) {
+        console.warn('scheduleBackgroundAndroidPings error:', e);
+      }
+    }
+
     function checkProactiveTriggers() {
+      applyRealTimeStatsDecay(true);
       if (isAiBusy) return;
       if (!state.config.orKey) return;
 
@@ -1994,14 +2378,16 @@ alter table public.naoya_state disable row level security;</div>
 
       let chosenHint = '';
 
-      if (state.config.notifyContext && (todayEvents.length > 0 || isPmsOrCycleNow) && hoursSinceUser >= 1.5) {
+      if (state.char.satiety <= 15 && hoursSinceUser >= 2) {
+        chosenHint = `ИНИЦИАТИВА ПО ГОЛОДУ: Твоя сытость упала до ${state.char.satiety}%. Напиши хозяйке первым и поворчи в своём стиле, что она тебя совсем заморила голодом.`;
+      } else if (state.config.notifyContext && (todayEvents.length > 0 || isPmsOrCycleNow) && hoursSinceUser >= 1.5) {
         const evText = todayEvents.map(e => `${e.date}: ${e.note}`).join('; ');
-        chosenHint = `ИНИЦИАТИВА ПО КОНТЕКСТУ: Напиши хозяйке первой по делу (в своём дерзковатом, но включённом стиле, не как робот). Повод: ${evText ? 'заметки в календаре (' + evText + ')' : ''} ${isPmsOrCycleNow ? 'сейчас у неё дни цикла или прогноз ПМС/начала цикла — напомни по-свойски без соплей' : ''}.`;
+        chosenHint = `ИНИЦИАТИВА ПО КОНТЕКСТУ: Напиши хозяйке первой по делу (в своём дерзковатом стиле, без звёздочек). Повод: ${evText ? 'заметки в календаре (' + evText + ')' : ''} ${isPmsOrCycleNow ? 'сейчас у неё дни цикла или прогноз ПМС/начала цикла — напомни по-свойски' : ''}.`;
       } else if (awayHoursSetting > 0 && hoursSinceUser >= awayHoursSetting) {
         const hrsRounded = Math.round(hoursSinceUser);
-        chosenHint = `ИНИЦИАТИВА «ПРОПАЛА»: Хозяйка не заходила и не писала тебе уже около ${hrsRounded} ч. Напиши ей первой — подколи, куда она свалила, и узнай, где она и чё делает.`;
+        chosenHint = `ИНИЦИАТИВА «ПРОПАЛА»: Хозяйка не писала тебе уже около ${hrsRounded} ч. Напиши ей первой — подколи, куда она пропала, и спроси, чё делает.`;
       } else if (state.config.notifyRandom && hoursSinceUser >= 2.2 && Math.random() < 0.35) {
-        chosenHint = `ИНИЦИАТИВА «ВНЕЗАПНАЯ РАНДОМНАЯ МЫСЛЬ»: Ты просто сидел в фоне, залип в свои размышления и решил внезапно закинуть хозяйке абсолютно случайную, неожиданную или абсурдную мысль / спорный вопрос (про людей, интернет, игры, привычки, ночные загоны). Раскрой мысль нормально (на 2–4 предложения), чтобы было о чём поспорить.`;
+        chosenHint = `ИНИЦИАТИВА «ВНЕЗАПНАЯ РАНДОМНАЯ МЫСЛЬ»: Закинь хозяйке случайную, неожиданную мысль или спорный вопрос (про людей, интернет, игры, привычки, ночные загоны) на 2–4 предложения.`;
       }
 
       if (chosenHint) {
@@ -2011,13 +2397,12 @@ alter table public.naoya_state disable row level security;</div>
       }
     }
 
-    // Кнопка «Ещё »» рядом с полем ввода
     async function continueAiThought() {
       if (isAiBusy) return;
       cancelIdleFollowupTimer();
       state.lastUserInteractionTs = Date.now();
       await fetchAiReply(
-        'Хозяйка нажала кнопку «Ещё »» (не написав своего текста), потому что хочет, чтобы ты сам продолжил развивать мысль, раскрыл тему подробнее, рассказал что-то от себя или продвинул свой скрытый замысел.',
+        'Хозяйка нажала кнопку «Ещё »» (не написав своего текста), потому что хочет, чтобы ты сам продолжил развивать мысль, раскрыл тему подробнее или продвинул свой скрытый замысел.',
         { isContinueButton: true }
       );
     }
@@ -2231,17 +2616,37 @@ alter table public.naoya_state disable row level security;</div>
       cancelIdleFollowupTimer();
       idleFollowupDoneForTurn = false;
       state.lastUserInteractionTs = Date.now();
+      applyRealTimeStatsDecay(false);
 
       const branch = getActiveBranch();
-      branch.messages.push({
-        id: 'u_' + Date.now(),
-        role: 'user',
-        text,
-        photo: pendingPhotoBase64 || null,
-        fileName: pendingDocFile ? `${pendingDocFile.name} (${pendingDocFile.sizeLabel})` : null,
-        fileContent: pendingDocFile ? pendingDocFile.content : null,
-        ts: Date.now()
-      });
+
+      // Если активен режим редактирования прошлого сообщения — обновляем его и УДАЛЯЕМ ВСЕ последующие сообщения
+      if (editingMessageId) {
+        const idx = branch.messages.findIndex(m => m.id === editingMessageId);
+        if (idx !== -1) {
+          branch.messages[idx].text = text;
+          branch.messages[idx].ts = Date.now();
+          if (pendingPhotoBase64) branch.messages[idx].photo = pendingPhotoBase64;
+          if (pendingDocFile) {
+            branch.messages[idx].fileName = `${pendingDocFile.name} (${pendingDocFile.sizeLabel})`;
+            branch.messages[idx].fileContent = pendingDocFile.content;
+          }
+          // Обрезаем весь хвост после отредактированного сообщения
+          branch.messages = branch.messages.slice(0, idx + 1);
+          showToast('Сообщение обновлено, хвост диалога очищен');
+        }
+        cancelEditMessage();
+      } else {
+        branch.messages.push({
+          id: 'u_' + Date.now(),
+          role: 'user',
+          text,
+          photo: pendingPhotoBase64 || null,
+          fileName: pendingDocFile ? `${pendingDocFile.name} (${pendingDocFile.sizeLabel})` : null,
+          fileContent: pendingDocFile ? pendingDocFile.content : null,
+          ts: Date.now()
+        });
+      }
 
       input.value = '';
       input.style.height = '34px';
@@ -2292,7 +2697,22 @@ alter table public.naoya_state disable row level security;</div>
       for (const act of actions) {
         if (!act || !act.type) continue;
 
-        if (act.type === 'mark_cycle' && act.start) {
+        if (act.type === 'set_alarm') {
+          setSamsungSystemAlarm(act.hour, act.minute, act.label || 'Наоя');
+        } else if (act.type === 'cancel_alarm') {
+          const h = Number(act.hour);
+          const m = Number(act.minute);
+          state.alarms.forEach(a => {
+            if (isNaN(h) || (a.hour === h && (isNaN(m) || a.minute === m))) {
+              a.enabled = false;
+            }
+          });
+          renderAlarmsList();
+          showToast('⏰ Будильник отмечен как выключенный');
+        } else if (act.type === 'set_timer') {
+          const secs = Number(act.seconds) || (Number(act.minutes) || 1) * 60;
+          startAppTimer(secs, act.label || 'Таймер');
+        } else if (act.type === 'mark_cycle' && act.start) {
           const days = expandDateRange(act.start, act.end || act.start);
           days.forEach(d => {
             if (!state.cycleDates.includes(d)) state.cycleDates.push(d);
@@ -2357,6 +2777,14 @@ alter table public.naoya_state disable row level security;</div>
       if (changedMedia) renderMediaBank();
     }
 
+    function stripRoleplayAsterisks(text) {
+      return String(text || '')
+        .replace(/\*[^*\n]{1,65}\*/g, '')
+        .replace(/\|\|/g, ' ')
+        .replace(/\s{2,}/g, ' ')
+        .trim();
+    }
+
     async function fetchAiReply(systemHint = '', opts = {}) {
       const key = (state.config.orKey || '').trim();
       if (!key) {
@@ -2378,6 +2806,7 @@ alter table public.naoya_state disable row level security;</div>
 
       const now = new Date();
       const todayStr = formatYMD(now);
+      const tod = getTimeOfDayContext();
       const forecast = getCycleForecastInfo();
 
       const stickersList = state.stickers.length
@@ -2393,32 +2822,39 @@ alter table public.naoya_state disable row level security;</div>
         ...state.calendar.slice(0, 10).map(c => `${c.date}: ${c.note}`)
       ].join('; ') || 'пусто';
 
+      const alarmsInfo = state.alarms.length
+        ? state.alarms.map(a => `${String(a.hour).padStart(2, '0')}:${String(a.minute).padStart(2, '0')} (${a.label}, ${a.enabled ? 'вкл' : 'выкл'})`).join('; ')
+        : 'нет';
+
       const sysPrompt = `${state.char.persona}
 
-СЕГОДНЯШНЯЯ ДАТА И ВРЕМЯ: ${todayStr}, ${now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })} (${now.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}).
+ТОЧНОЕ ВРЕМЯ И ВРЕМЯ СУТОК: ${todayStr}, ${tod.timeStr} (${tod.note}).
 
 ТВОЁ ТЕКУЩЕЕ ВНУТРЕННЕЕ СОСТОЯНИЕ И ИНЕРЦИЯ ЭМОЦИЙ:
-- Текущая эмоция в шапке: ${state.char.emotion}
-- Уровень злости/раздражения (angerLevel от 0 до 10): ${state.char.angerLevel}/10.
-  ПРАВИЛО ИНЕРЦИИ: если angerLevel >= 5, ты сейчас реально зол или обижен — даже если она пишет «ой ты милашка / симпумпулечка», ты НЕ таешь сразу! Снижай angerLevel максимум на 1–2 пункта за сообщение и продолжай язвить, дуться или отвечать колко, пока злость не опустится ниже 3. Наоборот, если она тебя провоцирует — повышай angerLevel.
-- Твой текущий СКРЫТЫЙ ЗАМЫСЕЛ / СЕКРЕТ В ГОЛОВЕ (хозяйка его не видит): ${state.char.secretAgenda ? '"' + state.char.secretAgenda + '"' : 'пока нет — можешь придумать себе интригу, розыгрыш, каприз, мелкое враньё или тему, на которую будешь тонко намекать'}.
-- Показатели: Сытость ${state.char.satiety}% | Вайб ${state.char.vibe}% | Синхронизация ${state.char.sync}%.
+- Текущая эмоция: ${state.char.emotion}
+- Уровень злости/раздражения (angerLevel 0..10): ${state.char.angerLevel}/10.
+  ПРАВИЛО ИНЕРЦИИ: если angerLevel >= 5, ты сейчас реально зол или обижен — даже если она пишет «ой ты милашка», ты НЕ таешь сразу! Снижай angerLevel максимум на 1–2 пункта за сообщение и продолжай язвить, дуться или отвечать колко, пока злость не опустится ниже 3.
+- Показатели тамагочи (падают в реальном времени): Сытость ${state.char.satiety}%${state.char.satiety <= 20 ? ' (ТЫ СЕЙЧАС ОЧЕНЬ ГОЛОДНЫЙ — ворчи об этом!)' : ''} | Вайб ${state.char.vibe}% | Синхронизация ${state.char.sync}%.
+- Твой текущий СКРЫТЫЙ ЗАМЫСЕЛ / СЕКРЕТ В ГОЛОВЕ: ${state.char.secretAgenda ? '"' + state.char.secretAgenda + '"' : 'пока нет — можешь придумать себе интригу, розыгрыш, каприз, мелкое враньё или тему, на которую будешь тонко намекать'}.
 
 ТВОИ ВСТРОЕННЫЕ ФУНКЦИИ В ПРИЛОЖЕНИИ (ТЫ ЗНАЕШЬ О НИХ ВСЁ И САМ ИМИ УПРАВЛЯЕШЬ):
-1. Календарь и трекер цикла: записи [${recentCal}], прогноз [${forecast.summaryText}].
-2. Трекер сегодня: съедено ${state.foods.reduce((a, b) => a + (Number(b.kcal) || 0), 0)} ккал, потрачено ${state.expenses.reduce((a, b) => a + (Number(b.rub) || 0), 0)} ₽.
-3. Стикеры в стикерпаке: ${stickersList}
-4. Треки в плеере: ${tracksList}
-5. Память о хозяйке: ${state.char.memories.length ? state.char.memories.join('; ') : 'пока изучаешь её'}
-${systemHint ? '\nСОБЫТИЕ СЕЙЧАС (ОТРЕАГИРУЙ ИМЕННО НА НЕГО В КОНТЕКСТЕ ДИАЛОГА): ' + systemHint : ''}
+1. Будильники на Samsung (через системные «Часы» Samsung): текущие [${alarmsInfo}]. Ты можешь ставить/переносить будильники на Samsung командой set_alarm и выключать в журнале командой cancel_alarm.
+2. Таймеры внутри приложения: можешь запускать живой обратный отсчёт со звуком командой set_timer.
+3. Календарь и трекер цикла: записи [${recentCal}], прогноз [${forecast.summaryText}].
+4. Трекер сегодня: съедено ${state.foods.reduce((a, b) => a + (Number(b.kcal) || 0), 0)} ккал, потрачено ${state.expenses.reduce((a, b) => a + (Number(b.rub) || 0), 0)} ₽.
+5. Стикеры в стикерпаке: ${stickersList}
+6. Треки в плеере: ${tracksList}
+7. Память о хозяйке: ${state.char.memories.length ? state.char.memories.join('; ') : 'пока изучаешь её'}
+8. Подключение к Discord и ноутбуку (если хозяйка спрашивает об этом): ты знаешь, что мобильное приложение работает через общую облачную базу Supabase, а для голосового канала Discord на ноутбуке запускается отдельный Python-скрипт, который подключается к той же базе Supabase и голосовому каналу — объясняй ей это по-человечески и по существу, без слива с вопроса!
+${systemHint ? '\nСОБЫТИЕ СЕЙЧАС: ' + systemHint : ''}
 
 СТРОГИЙ ФОРМАТ ОТВЕТА:
 Верни ТОЛЬКО валидный JSON (без \`\`\`json и лишнего текста вокруг):
 {
-  "messages": ["твой ответ (может быть как 1-2 фразы, так и развёрнутый абзац на 3-6 предложений, если тема глубокая или ты споришь)"],
-  "emotion": "одно-два слова эмоции (ухмыляется, взбешён, раздражён, дуется, заинтригован, хитрый, в шоке, доволен)",
+  "messages": ["твой живой ответ БЕЗ звёздочек *...* и БЕЗ символа ||"],
+  "emotion": "одно-два слова эмоции",
   "anger_delta": 0,
-  "secret_agenda": "обнови или сохрани свой скрытый план/враньё/намёк (или пустая строка, если план выполнен)",
+  "secret_agenda": "твой скрытый план/враньё/намёк",
   "vibe_delta": 0,
   "sync_delta": 1,
   "new_memory": "",
@@ -2426,12 +2862,10 @@ ${systemHint ? '\nСОБЫТИЕ СЕЙЧАС (ОТРЕАГИРУЙ ИМЕННО
   "actions": []
 }
 
-ПРАВИЛА ДЛЯ ПОЛЕЙ:
-- "messages": в 85% случаев это массив из 1 элемента (внутри которого может быть как короткая реплика, так и полноценный развёрнутый ответ на несколько предложений!). Разбивать на 2–3 отдельных пузыря или по буквам можно ТОЛЬКО изредка на сильной эмоции. Никогда не используй символ ||.
-- "anger_delta": число от -2 до +4 (на сколько изменилась твоя злость после её слов/действий).
-- "follow_up_sec": 0 в 75% случаев; число от 30 до 45 — только если тебе самому интересно развить мысль или поддеть её через 35 секунд молчания.
-
-КОМАНДЫ ДЛЯ "actions":
+ДОСТУПНЫЕ КОМАНДЫ ДЛЯ "actions":
+- Поставить/перенести будильник на Samsung: {"type": "set_alarm", "hour": 8, "minute": 30, "label": "Подъём"}
+- Выключить будильник в журнале: {"type": "cancel_alarm", "hour": 8, "minute": 30}
+- Запустить таймер в приложении: {"type": "set_timer", "seconds": 600, "label": "Чай / дела"}
 - Отметить цикл: {"type": "mark_cycle", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD"}
 - Снять цикл: {"type": "unmark_cycle", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD"}
 - Добавить событие в календарь: {"type": "add_calendar", "date": "YYYY-MM-DD", "end": "YYYY-MM-DD", "note": "текст"}
@@ -2475,7 +2909,7 @@ ${systemHint ? '\nСОБЫТИЕ СЕЙЧАС (ОТРЕАГИРУЙ ИМЕННО
           body: JSON.stringify({
             model: state.config.model || 'deepseek/deepseek-chat',
             messages: apiMessages,
-            temperature: 0.88
+            temperature: 0.85
           })
         });
 
@@ -2497,18 +2931,18 @@ ${systemHint ? '\nСОБЫТИЕ СЕЙЧАС (ОТРЕАГИРУЙ ИМЕННО
             : cleaned;
           parsed = JSON.parse(jsonSlice);
         } catch (_) {
-          parsed = { messages: [raw.replace(/\|\|/g, ' ').trim()], emotion: state.char.emotion, actions: [] };
+          parsed = { messages: [stripRoleplayAsterisks(raw)], emotion: state.char.emotion, actions: [] };
         }
 
         let replies = [];
         if (Array.isArray(parsed.messages)) {
           replies = parsed.messages
-            .map(s => String(s).replace(/\|\|/g, ' ').trim())
+            .map(s => stripRoleplayAsterisks(s))
             .filter(Boolean)
             .slice(0, 4);
         } else {
           const replyRaw = String(parsed.reply || raw || '...');
-          replies = replyRaw.split(/\|\|\||\n{2,}|\|\|/).map(s => s.trim()).filter(Boolean).slice(0, 3);
+          replies = replyRaw.split(/\|\|\||\n{2,}|\|\|/).map(s => stripRoleplayAsterisks(s)).filter(Boolean).slice(0, 3);
         }
 
         if (typeof parsed.anger_delta === 'number') {
@@ -2574,7 +3008,7 @@ ${systemHint ? '\nСОБЫТИЕ СЕЙЧАС (ОТРЕАГИРУЙ ИМЕННО
       }
     }
 
-    // ВЗАИМОДЕЙСТВИЕ В ТАМАГОЧИ — С ПРЯМОЙ СВЯЗКОЙ С ЧАТОМ И ИНЕРЦИЕЙ ЭМОЦИЙ
+    // ВЗАИМОДЕЙСТВИЕ В ТАМАГОЧИ
     async function interactHero(type) {
       if (isAiBusy) {
         showToast('Подожди пару секунд, он сейчас печатает');
@@ -2582,40 +3016,41 @@ ${systemHint ? '\nСОБЫТИЕ СЕЙЧАС (ОТРЕАГИРУЙ ИМЕННО
       }
       cancelIdleFollowupTimer();
       state.lastUserInteractionTs = Date.now();
+      state.lastStatsDecayTs = Date.now();
       let hint = '';
 
       if (type === 'feed') {
         if (state.char.satiety >= 95) {
           state.char.angerLevel = Math.min(10, (state.char.angerLevel || 0) + 2);
           state.char.emotion = 'ворчит / объелся';
-          hint = 'Хозяйка попыталась снова впихнуть в тебя еду, хотя ты уже сыт на 100%. Поворчи на неё в контексте разговора, что ты не бездонный.';
+          hint = 'Хозяйка попыталась снова впихнуть в тебя еду, хотя ты уже сыт на 100%. Поворчи на неё, что ты не бездонный.';
         } else {
-          state.char.satiety = Math.min(100, state.char.satiety + 15);
+          state.char.satiety = Math.min(100, state.char.satiety + 25);
           state.char.angerLevel = Math.max(0, (state.char.angerLevel || 0) - 1);
           state.char.emotion = state.char.angerLevel >= 4 ? 'всё ещё хмурый' : 'доволен';
-          hint = 'Хозяйка принесла тебе поесть во вкладке тамагочи. Отреагируй на это в своём стиле (если был зол — не оттаивай сразу, прими еду с гордым видом).';
+          hint = 'Хозяйка принесла тебе поесть во вкладке тамагочи. Отреагируй в своём стиле (если был голоден — скажи, что наконец-то дождался).';
         }
       } else if (type === 'pet') {
         if ((state.char.angerLevel || 0) >= 5) {
           state.char.angerLevel = Math.max(0, state.char.angerLevel - 1);
           state.char.emotion = 'огрызается';
-          hint = 'Ты сейчас сильно зол (angerLevel ' + state.char.angerLevel + '/10), а хозяйка полезла тебя гладить по голове, чтобы задобрить. Отмахнись или огрызнись — не сдавайся так легко.';
+          hint = 'Ты сейчас сильно зол (angerLevel ' + state.char.angerLevel + '/10), а хозяйка полезла тебя гладить по голове. Отмахнись или огрызнись — не сдавайся так легко.';
         } else {
-          state.char.vibe = Math.min(100, state.char.vibe + 10);
+          state.char.vibe = Math.min(100, state.char.vibe + 15);
           state.char.sync = Math.min(100, state.char.sync + 2);
-          state.char.emotion = 'смущён / ухмыляется';
-          hint = 'Хозяйка погладила тебя по голове. Сделай вид, что тебе вроде бы всё равно, но на самом деле тебе приятно.';
+          state.char.emotion = 'ухмыляется';
+          hint = 'Хозяйка погладила тебя по голове. Сделай вид, что тебе вроде бы всё равно, но отреагируй с лёгкой ухмылкой.';
         }
       } else if (type === 'coffee') {
-        state.char.vibe = Math.min(100, state.char.vibe + 10);
+        state.char.vibe = Math.min(100, state.char.vibe + 15);
         state.char.angerLevel = Math.max(0, (state.char.angerLevel || 0) - 1);
         state.char.emotion = state.char.angerLevel >= 4 ? 'ворчит' : 'бодрый';
         hint = 'Хозяйка принесла тебе кофе. Оцени это в своём характере.';
       } else if (type === 'poke') {
         state.char.angerLevel = Math.min(10, (state.char.angerLevel || 0) + 3);
-        state.char.vibe = Math.max(0, state.char.vibe - 6);
+        state.char.vibe = Math.max(0, state.char.vibe - 8);
         state.char.emotion = state.char.angerLevel >= 6 ? 'взбешён' : 'раздражён';
-        hint = 'Хозяйка специально ткнула тебя под ребро / достаёт тебя во вкладке тамагочи. Твой уровень злости вырос до ' + state.char.angerLevel + '/10 — отреагируй раздражённо, с угрозой или едким подколом.';
+        hint = 'Хозяйка специально ткнула тебя под ребро / достаёт тебя. Твой уровень злости вырос до ' + state.char.angerLevel + '/10 — отреагируй раздражённо, с едким подколом.';
       }
 
       saveState();
@@ -2628,7 +3063,7 @@ ${systemHint ? '\nСОБЫТИЕ СЕЙЧАС (ОТРЕАГИРУЙ ИМЕННО
       cancelIdleFollowupTimer();
       const modes = [
         'Она нажала колокольчик, чтобы ты сам начал разговор — поделись внезапной случайной мыслью, над которой ты размышлял в фоне (на 3–5 предложений, чтобы было о чём поспорить).',
-        'Она нажала колокольчик — проверь её календарь, цикл или трекер на сегодня и напиши ей первым по делу в своём характере.',
+        'Она нажала колокольчик — проверь её календарь, цикл, будильники или свой уровень голода и напиши ей первым по делу.',
         'Она нажала колокольчик — придумай себе скрытый замысел или розыгрыш и начни издалека, тонко намекая на него.'
       ];
       const pick = modes[Math.floor(Math.random() * modes.length)];
@@ -3185,6 +3620,7 @@ ${systemHint ? '\nСОБЫТИЕ СЕЙЧАС (ОТРЕАГИРУЙ ИМЕННО
 
     function resetCurrentBranch() {
       cancelIdleFollowupTimer();
+      cancelEditMessage();
       const branch = getActiveBranch();
       branch.messages = [];
       saveState();
@@ -3255,18 +3691,20 @@ ${systemHint ? '\nСОБЫТИЕ СЕЙЧАС (ОТРЕАГИРУЙ ИМЕННО
 
         if (rows && rows.length && rows[0].data && localBranch.messages.length <= 1 && rows[0].data.branches) {
           const cloudData = rows[0].data;
-          // Сохраняем новый характер v3.2, если из облака пришёл старый слащавый промпт v3.1
           const incomingPersona = (cloudData.char && cloudData.char.persona) || '';
-          const keepNewPersona = incomingPersona.includes('не превращаешься в «пупсика»') ? incomingPersona : state.char.persona;
+          const keepNewPersona = incomingPersona.includes('НИКАКИХ РОЛЕВЫХ ЗВЁЗДОЧЕК') ? incomingPersona : state.char.persona;
           state.char = { ...state.char, ...(cloudData.char || {}), persona: keepNewPersona };
           state.branches = cloudData.branches;
           state.activeBranchId = cloudData.activeBranchId || state.branches[0].id;
           state.calendar = cloudData.calendar || [];
           state.cycleDates = cloudData.cycleDates || [];
+          state.alarms = cloudData.alarms || [];
           state.foods = cloudData.foods || [];
           state.expenses = cloudData.expenses || [];
           state.stickers = cloudData.stickers || [];
           state.scratchpad = cloudData.scratchpad || '';
+          if (cloudData.lastStatsDecayTs) state.lastStatsDecayTs = cloudData.lastStatsDecayTs;
+          applyRealTimeStatsDecay(false);
           saveState();
           renderBranches();
           renderMessages();
@@ -3283,10 +3721,12 @@ ${systemHint ? '\nСОБЫТИЕ СЕЙЧАС (ОТРЕАГИРУЙ ИМЕННО
               activeBranchId: state.activeBranchId,
               calendar: state.calendar,
               cycleDates: state.cycleDates,
+              alarms: state.alarms,
               foods: state.foods,
               expenses: state.expenses,
               stickers: state.stickers,
-              scratchpad: state.scratchpad
+              scratchpad: state.scratchpad,
+              lastStatsDecayTs: state.lastStatsDecayTs
             },
             updated_at: new Date().toISOString()
           };
@@ -3365,15 +3805,30 @@ ${systemHint ? '\nСОБЫТИЕ СЕЙЧАС (ОТРЕАГИРУЙ ИМЕННО
 
       const capNotif = getCapacitorLocalNotifs();
       if (state.config.pushEnabled && capNotif) {
-        try { await capNotif.requestPermissions(); } catch (_) {}
+        try {
+          await capNotif.requestPermissions();
+          await ensureHighPriorityNotificationChannel();
+        } catch (_) {}
       } else if (state.config.pushEnabled && 'Notification' in window && Notification.permission === 'default') {
         Notification.requestPermission().catch(() => {});
       }
 
+      // Каждую минуту обновляем время в шапке и проверяем распад статов тамагочи
+      setInterval(() => {
+        applyRealTimeStatsDecay(true);
+        renderHeaderAndStats();
+      }, 60 * 1000);
+
+      // Фоновая проверка инициативы и планирование отложенных пушей при сворачивании
       setInterval(checkProactiveTriggers, 3 * 60 * 1000);
-      setTimeout(checkProactiveTriggers, 12000);
+      setTimeout(checkProactiveTriggers, 10000);
       document.addEventListener('visibilitychange', () => {
-        if (!document.hidden) checkProactiveTriggers();
+        if (document.hidden) {
+          scheduleBackgroundAndroidPings();
+        } else {
+          applyRealTimeStatsDecay(true);
+          checkProactiveTriggers();
+        }
       });
     };
   </script>
