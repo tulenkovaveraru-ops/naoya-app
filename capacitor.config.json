@@ -8,7 +8,7 @@
   "appName": "Naoya",
   "webDir": "www",
   "server": {
-    "url": "https://tulenkovaveraru-ops.github.io/naoya-app/",
+    "url": "https://tulenkovaveraru-ops.github.io/naoya-app/www/",
     "cleartext": true
   }
 }
