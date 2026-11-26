@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "type": "commonjs",
-  "dependencies": {"@capacitor/local-notifications": "^6.0.0",
+  "dependencies": {"@capacitor/local-notifications": "^8.0.0",
     "@capacitor/android": "^8.6.3",
     "@capacitor/cli": "^8.6.3",
     "@capacitor/core": "^8.6.3"
