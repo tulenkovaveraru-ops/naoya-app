@@ -3,32 +3,34 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#F5EFEA" />
+  <meta name="theme-color" content="#F7F3EE" />
   <title>Наоя • Компаньон</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-main: #F5EFEA;
-      --bg-card: #EAE0D5;
-      --bg-surface: #FAF6F2;
-      --bg-bubble-ai: #FCF9F5;
-      --bg-bubble-user: #D6C1AC;
-      --border-soft: #DDD0C2;
-      --border-strong: #C5B09B;
-      --text-primary: #3D312A;
-      --text-secondary: #756256;
-      --text-muted: #9A877B;
+      --bg-main: #F7F3EE;
+      --bg-card: #EFE8DF;
+      --bg-surface: #FCF9F5;
+      --bg-bubble-ai: #FFFFFF;
+      --bg-bubble-user: #DFCBB7;
+      --border-soft: #E3D7C9;
+      --border-strong: #CBB7A3;
+      --text-primary: #3D3229;
+      --text-secondary: #756456;
+      --text-muted: #9B8A7C;
       --accent: #8C6D53;
+      --accent-soft: #A68468;
       --accent-dark: #6E533D;
-      --emotion-bg: #EEDAD4;
-      --emotion-text: #85463B;
-      --ok-bg: #DCE8D8;
-      --ok-text: #3B6334;
-      --err-bg: #F2D8D5;
-      --err-text: #943C34;
-      --shadow-sm: 0 2px 8px rgba(61, 49, 42, 0.06);
+      --emotion-bg: #F2DDD7;
+      --emotion-text: #8C473B;
+      --ok-bg: #DFECDC;
+      --ok-text: #3A6333;
+      --err-bg: #F5DDD9;
+      --err-text: #993D35;
+      --rec-color: #C94A3E;
+      --shadow-sm: 0 2px 8px rgba(61, 50, 41, 0.06);
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
@@ -179,8 +181,8 @@
     }
 
     .icon-btn {
-      width: 36px;
-      height: 36px;
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
       border: 1px solid var(--border-soft);
       background: var(--bg-card);
@@ -189,9 +191,22 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      transition: transform 0.1s, background 0.15s;
+      transition: transform 0.1s, background 0.15s, color 0.15s;
+      flex-shrink: 0;
     }
     .icon-btn:active { transform: scale(0.93); background: var(--border-soft); }
+
+    /* СОСТОЯНИЯ КНОПКИ МИКРОФОНА */
+    .icon-btn.recording {
+      background: rgba(201, 74, 62, 0.15);
+      color: var(--rec-color);
+      animation: pulseRec 1.2s infinite;
+    }
+    @keyframes pulseRec {
+      0% { box-shadow: 0 0 0 0 rgba(201, 74, 62, 0.45); }
+      70% { box-shadow: 0 0 0 8px rgba(201, 74, 62, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(201, 74, 62, 0); }
+    }
 
     /* ПАНЕЛЬ ВЕТОК И СТАТОВ */
     .sub-controls {
@@ -267,7 +282,7 @@
     }
 
     /* =========================================================
-       КОМПАКТНЫЕ ПУЗЫРИ СООБЩЕНИЙ (КАК В TELEGRAM, БЕЗ КАРТОЧЕК)
+       КОМПАКТНЫЕ ПУЗЫРИ СООБЩЕНИЙ (СТРОГО ПО РАЗМЕРУ ТЕКСТА)
        ========================================================= */
     .chat-messages {
       flex: 1;
@@ -320,7 +335,7 @@
     .bubble {
       display: inline-block;
       width: fit-content;
-      max-width: 78%;
+      max-width: 82%;
       height: auto;
       min-height: 0;
       flex: 0 0 auto;
@@ -330,7 +345,7 @@
       line-height: 1.38;
       white-space: pre-wrap;
       word-break: break-word;
-      box-shadow: 0 1px 3px rgba(61, 49, 42, 0.05);
+      box-shadow: 0 1px 3px rgba(61, 50, 41, 0.05);
     }
 
     .msg-ai-line .bubble {
@@ -359,6 +374,19 @@
       max-height: 210px;
       border-radius: 10px;
       margin-bottom: 4px;
+    }
+
+    .file-badge-in-msg {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 9px;
+      border-radius: 10px;
+      background: rgba(61, 50, 41, 0.08);
+      font-size: 12.5px;
+      font-weight: 600;
+      margin-bottom: 4px;
+      max-width: 100%;
     }
 
     .msg-meta {
@@ -398,22 +426,52 @@
     }
     .typing-indicator.visible { display: inline-block; }
 
-    /* ПРЕВЬЮ ПРИКРЕПЛЁННОГО ФОТО */
-    .photo-preview-bar {
+    /* ПАНЕЛЬ ПРЕВЬЮ ПРИКРЕПЛЁННЫХ ФОТО И ФАЙЛОВ */
+    .attachments-bar {
       display: none;
+      flex-wrap: wrap;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
       padding: 6px 12px;
       background: var(--bg-card);
       border-top: 1px solid var(--border-soft);
       flex-shrink: 0;
     }
-    .photo-preview-bar.visible { display: flex; }
-    .photo-preview-bar img {
-      width: 38px;
-      height: 38px;
-      border-radius: 8px;
+    .attachments-bar.visible { display: flex; }
+
+    .attach-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 12px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      font-size: 12px;
+      color: var(--text-primary);
+      max-width: 100%;
+    }
+    .attach-chip img {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
       object-fit: cover;
+    }
+    .attach-chip-name {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+      font-weight: 600;
+    }
+    .attach-chip-remove {
+      background: none;
+      border: none;
+      color: var(--err-text);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      padding: 0 2px;
     }
 
     /* ПАНЕЛЬ ВВОДА (ENTER = НОВАЯ СТРОЧКА, БЕЗ ОТПРАВКИ) */
@@ -426,12 +484,36 @@
     .composer-box {
       display: flex;
       align-items: flex-end;
-      gap: 6px;
+      gap: 4px;
       background: var(--bg-surface);
       border: 1px solid var(--border-soft);
       border-radius: 22px;
       padding: 5px 6px;
       box-shadow: var(--shadow-sm);
+    }
+
+    .composer-tool-btn {
+      width: 32px;
+      height: 34px;
+      border-radius: 50%;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: background 0.15s, color 0.15s;
+    }
+    .composer-tool-btn:active {
+      background: var(--bg-card);
+      color: var(--text-primary);
+    }
+    .composer-tool-btn.recording {
+      background: rgba(201, 74, 62, 0.15);
+      color: var(--rec-color);
+      animation: pulseRec 1.2s infinite;
     }
 
     .composer-textarea {
@@ -442,11 +524,11 @@
       font-family: inherit;
       font-size: 14.5px;
       line-height: 1.38;
-      padding: 7px 6px;
+      padding: 7px 4px;
       resize: none;
       outline: none;
       min-height: 34px;
-      max-height: 92px; /* до ~4 строк */
+      max-height: 96px;
       overflow-y: auto;
     }
     .composer-textarea::placeholder {
@@ -637,7 +719,7 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(61, 49, 42, 0.45);
+      background: rgba(61, 50, 41, 0.45);
       display: none;
       align-items: center;
       justify-content: center;
@@ -656,7 +738,7 @@
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 12px 32px rgba(61, 49, 42, 0.22);
+      box-shadow: 0 12px 32px rgba(61, 50, 41, 0.22);
     }
 
     .modal-header {
@@ -794,21 +876,32 @@
         <div style="padding: 0 12px 4px;">
           <div id="typing-indicator" class="typing-indicator">печатает...</div>
         </div>
-        <div id="photo-preview-bar" class="photo-preview-bar">
-          <img id="photo-preview-img" src="" alt="Preview" />
-          <span style="flex:1; font-size:12px; color:var(--text-secondary);">Фото прикреплено</span>
-          <button type="button" class="soft-btn" style="padding:4px 8px; font-size:11.5px;" onclick="clearPendingPhoto()">Убрать</button>
-        </div>
+
+        <!-- ПАНЕЛЬ ПРИКРЕПЛЁННЫХ ФОТО И ФАЙЛОВ -->
+        <div id="attachments-bar" class="attachments-bar"></div>
+
         <div class="composer-wrap">
           <div class="composer-box">
+            <!-- Скрытые инпуты для фото и документов -->
             <input type="file" id="photo-file-input" accept="image/*" style="display:none" onchange="handlePhotoSelected(event)" />
-            <button type="button" class="icon-btn" style="width:34px; height:34px; border:none;" onclick="document.getElementById('photo-file-input').click()" title="Фото">
+            <input type="file" id="doc-file-input" accept=".txt,.md,.json,.csv,.js,.py,.html,.xml,.log,.pdf,.doc,.docx,text/*" style="display:none" onchange="handleDocSelected(event)" />
+
+            <!-- Кнопка фото -->
+            <button type="button" class="composer-tool-btn" onclick="document.getElementById('photo-file-input').click()" title="Прикрепить фото">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
             </button>
-            <button type="button" class="icon-btn" id="mic-btn" style="width:34px; height:34px; border:none;" onclick="toggleVoiceInput()" title="Голос">
+
+            <!-- Кнопка скрепки (файлы) -->
+            <button type="button" class="composer-tool-btn" onclick="document.getElementById('doc-file-input').click()" title="Прикрепить файл">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            </button>
+
+            <!-- Кнопка микрофона -->
+            <button type="button" class="composer-tool-btn" id="mic-btn" onclick="toggleVoiceInput()" title="Голосовой ввод">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
             </button>
-            <!-- НИКАКИХ ОБРАБОТЧИКОВ ENTER: ENTER ВСЕГДА ДЕЛАЕТ ПЕРЕНОС СТРОКИ -->
+
+            <!-- Поле ввода: НИКАКОГО ПЕРЕХВАТА ENTER (ENTER = НОВАЯ СТРОЧКА) -->
             <textarea
               id="chat-input"
               class="composer-textarea"
@@ -817,6 +910,8 @@
               placeholder="Напиши Наое..."
               oninput="autoGrowTextarea(this)"
             ></textarea>
+
+            <!-- Кнопка отправки -->
             <button type="button" id="send-btn" class="send-btn" onclick="sendUserMessage()" title="Отправить">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
@@ -946,7 +1041,7 @@
     </nav>
   </div>
 
-  <!-- МОДАЛЬНОЕ ОКНО: НАСТРОЙКИ (АВАТАР В САМОМ ВЕРХУ) -->
+  <!-- МОДАЛЬНОЕ ОКНО: НАСТРОЙКИ И ПЕРСОНАЖ -->
   <div id="modal-settings" class="modal-backdrop" onclick="if(event.target===this) closeModal('modal-settings')">
     <div class="modal-card">
       <div class="modal-header">
@@ -954,15 +1049,15 @@
         <button type="button" class="icon-btn" style="width:30px; height:30px;" onclick="closeModal('modal-settings')">✕</button>
       </div>
       <div class="modal-body">
-        <!-- БЛОК ЗАГРУЗКИ И СБРОСА АВАТАРКИ -->
+        <!-- БЛОК АВАТАРКИ -->
         <div class="avatar-editor-card">
           <img id="cfg-avatar-preview" class="avatar-preview-lg" alt="Preview" />
           <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
             <span style="font-size:12.5px; font-weight:700; color:var(--text-primary);">Аватарка персонажа</span>
             <input type="file" id="cfg-avatar-file" accept="image/*" style="display:none" onchange="handleAvatarUpload(event)" />
             <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <button type="button" class="soft-btn primary" style="padding:6px 10px; font-size:12px;" onclick="document.getElementById('cfg-avatar-file').click()">Загрузить аватарку</button>
-              <button type="button" class="soft-btn" style="padding:6px 10px; font-size:12px;" onclick="resetDefaultAvatar()">Сбросить на стандартную</button>
+              <button type="button" class="soft-btn primary" style="padding:6px 10px; font-size:12px;" onclick="document.getElementById('cfg-avatar-file').click()">Загрузить фото</button>
+              <button type="button" class="soft-btn" style="padding:6px 10px; font-size:12px;" onclick="resetDefaultAvatar()">Вернуть стандартную</button>
             </div>
           </div>
         </div>
@@ -1010,7 +1105,7 @@
           <button type="button" class="soft-btn" onclick="resetCurrentBranch()">Очистить чат</button>
         </div>
         <div style="text-align:center; font-size:11px; color:var(--text-muted); margin-top:2px;">
-          v2.5 • compact
+          v2.7 • full
         </div>
       </div>
     </div>
@@ -1028,12 +1123,12 @@
         <div style="font-size:12px; color:var(--text-secondary);">
           Если таблица ещё не создана в Supabase (SQL Editor), выполни этот код один раз:
         </div>
-        <div id="sql-snippet" class="code-box">create table if not exists public.companion_state (
+        <div id="sql-snippet" class="code-box">create table if not exists public.naoya_state (
   id text primary key,
   data jsonb not null,
   updated_at timestamptz default now()
 );
-alter table public.companion_state disable row level security;</div>
+alter table public.naoya_state disable row level security;</div>
         <div style="display:flex; gap:8px;">
           <button type="button" class="soft-btn" style="flex:1;" onclick="copySqlSnippet()">Скопировать SQL</button>
           <button type="button" class="soft-btn primary" style="flex:1;" onclick="syncCloud(true)">Проверить сейчас</button>
@@ -1045,49 +1140,49 @@ alter table public.companion_state disable row level security;</div>
   <div id="toast" class="toast-banner"></div>
 
   <script>
-    // Аккуратный, стильный аниме-векторный портрет Наои Зенина (светлые волосы с тёмными корнями/андеркатом, прищур, тёмное кимоно)
+    // Фирменный иллюстративный портрет Наои Зенина (светлые волосы с тёмным андеркатом, острые золотисто-карие глаза, тёмное кимоно)
     const DEFAULT_AVATAR = "data:image/svg+xml;utf8," + encodeURIComponent(`
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
         <defs>
           <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#EAD8C5"/>
-            <stop offset="100%" stop-color="#D7BFA7"/>
+            <stop offset="0%" stop-color="#EDE0D1"/>
+            <stop offset="100%" stop-color="#D7C0A8"/>
           </linearGradient>
           <linearGradient id="hairGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#EAD096"/>
-            <stop offset="100%" stop-color="#CFA962"/>
+            <stop offset="0%" stop-color="#F0D79E"/>
+            <stop offset="100%" stop-color="#CEA65B"/>
           </linearGradient>
         </defs>
         <rect width="200" height="200" fill="url(#bgGrad)"/>
-        <!-- Тёмный андеркат / затылок -->
-        <path d="M52 94 C48 118, 56 142, 70 150 L130 150 C144 142, 152 118, 148 94 Z" fill="#2A211C"/>
+        <!-- Тёмный затылок / андеркат -->
+        <path d="M52 94 C48 118, 56 142, 70 150 L130 150 C144 142, 152 118, 148 94 Z" fill="#251D18"/>
         <!-- Шея -->
-        <path d="M84 134 L84 166 L116 166 L116 134 Z" fill="#EAD0BA"/>
+        <path d="M84 134 L84 166 L116 166 L116 134 Z" fill="#EDD3BD"/>
         <path d="M84 136 Q100 146 116 136 L116 146 Q100 154 84 146 Z" fill="#D5B69D"/>
-        <!-- Кимоно / Юката -->
-        <path d="M32 200 C38 164, 66 154, 84 152 L100 176 L116 152 C134 154, 162 164, 168 200 Z" fill="#2C231E"/>
+        <!-- Тёмное кимоно -->
+        <path d="M30 200 C36 164, 66 154, 84 152 L100 176 L116 152 C134 154, 164 164, 170 200 Z" fill="#29201B"/>
         <path d="M80 153 L100 184 L120 153 L113 151 L100 172 L87 151 Z" fill="#8C6D53"/>
         <!-- Лицо -->
-        <path d="M58 84 C58 118, 74 140, 100 144 C126 140, 142 118, 142 84 C142 54, 124 42, 100 42 C76 42, 58 54, 58 84 Z" fill="#F6E2D0"/>
+        <path d="M58 84 C58 118, 74 140, 100 144 C126 140, 142 118, 142 84 C142 54, 124 42, 100 42 C76 42, 58 54, 58 84 Z" fill="#F7E4D3"/>
         <!-- Уши -->
         <path d="M58 92 C51 92, 50 108, 59 112" fill="#ECCFB8" stroke="#C9A88E" stroke-width="1.5"/>
         <path d="M142 92 C149 92, 150 108, 141 112" fill="#ECCFB8" stroke="#C9A88E" stroke-width="1.5"/>
-        <!-- Брови (острые, высокомерные) -->
+        <!-- Острые брови -->
         <path d="M68 83 Q79 79 90 85" stroke="#3D2E24" stroke-width="2.6" fill="none" stroke-linecap="round"/>
         <path d="M132 83 Q121 79 110 85" stroke="#3D2E24" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-        <!-- Прищуренные глаза -->
+        <!-- Прищуренные золотисто-карие глаза -->
         <path d="M69 92 Q80 88 90 93 Q80 97 69 92 Z" fill="#FFFFFF"/>
-        <circle cx="80" cy="92.5" r="3.6" fill="#4A3828"/>
+        <circle cx="80" cy="92.5" r="3.7" fill="#7D5829"/>
         <circle cx="81" cy="91.5" r="1.1" fill="#FFFFFF"/>
         <path d="M68 92 Q80 87 91 93" stroke="#2C211B" stroke-width="2.3" fill="none" stroke-linecap="round"/>
         <path d="M131 92 Q120 88 110 93 Q120 97 131 92 Z" fill="#FFFFFF"/>
-        <circle cx="120" cy="92.5" r="3.6" fill="#4A3828"/>
+        <circle cx="120" cy="92.5" r="3.7" fill="#7D5829"/>
         <circle cx="121" cy="91.5" r="1.1" fill="#FFFFFF"/>
         <path d="M132 92 Q120 87 109 93" stroke="#2C211B" stroke-width="2.3" fill="none" stroke-linecap="round"/>
-        <!-- Тень носа и кривая ухмылка -->
+        <!-- Нос и фирменная ухмылка -->
         <path d="M100 96 L98 110 L102 112" stroke="#C9A589" stroke-width="1.8" fill="none" stroke-linecap="round"/>
         <path d="M89 124 Q101 128 113 120" stroke="#7A5244" stroke-width="2.3" fill="none" stroke-linecap="round"/>
-        <!-- Фирменная светлая причёска Наои -->
+        <!-- Светлые пряди волос -->
         <path d="M54 88 C50 52, 72 30, 102 30 C132 30, 150 52, 146 88 C142 74, 134 68, 126 76 C122 64, 112 60, 104 72 C98 58, 86 58, 78 72 C70 64, 60 72, 54 88 Z" fill="url(#hairGrad)"/>
         <path d="M78 72 Q84 62 90 70 M104 72 Q110 62 116 70" stroke="#B58E48" stroke-width="1.6" fill="none" stroke-linecap="round"/>
       </svg>
@@ -1096,10 +1191,10 @@ alter table public.companion_state disable row level security;</div>
     const DEFAULT_PERSONA = `Ты — Наоя Зенин. Дерзкий, острый на язык, гордый и наблюдательный парень с кривой ухмылкой. Поначалу ты почти ничего не знаешь о собеседнице — присматриваешься к ней, подкалываешь и постепенно перенимаешь её вайб, сленг и интересы по мере роста показателя Синхронизации.
 Правила общения:
 1. Пиши коротко, естественно, как в обычном мессенджере (со строчной буквы, без канцелярита и нравоучений).
-2. НИКОГДА не отправляй больше 2-3 коротких сообщений за один раз! Разделяй отдельные короткие реплики символом ||| (максимум 2-3 части).
-3. Подстраивайся под её настроение: если устала или грустит — поддержи по-своему, без лишних соплей.`;
+2. НИКОГДА не отправляй больше 2-3 коротких сообщений за один раз! Разделяй отдельные короткие реплики символом || (максимум 2-3 части).
+3. Если она прикрепляет файл или фото — внимательно прочитай содержимое и прокомментируй по существу, оставаясь в характере.`;
 
-    const STORAGE_KEY = 'naoya_companion_v25';
+    const STORAGE_KEY = 'naoya_companion_v27';
 
     let state = {
       config: {
@@ -1139,14 +1234,23 @@ alter table public.companion_state disable row level security;</div>
       scratchpad: ''
     };
 
+    // Текущие вложения к набираемому сообщению
     let pendingPhotoBase64 = null;
+    let pendingDocFile = null; // { name, sizeLabel, content }
+
     let lastCloudError = 'Не указаны URL или Anon Key Supabase в настройках (шестерёнка).';
     let cloudConnected = false;
 
+    // Состояние голосового ввода
+    let activeRecognition = null;
+    let activeMediaRecorder = null;
+    let isRecordingVoice = false;
+
     function loadState() {
       try {
-        // Пытаемся подхватить сохранение из v2.5 или мигрировать из v2.4
-        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem('naoya_companion_v24');
+        const raw = localStorage.getItem(STORAGE_KEY)
+          || localStorage.getItem('naoya_companion_v25')
+          || localStorage.getItem('naoya_companion_v24');
         if (raw) {
           const parsed = JSON.parse(raw);
           state = {
@@ -1155,9 +1259,7 @@ alter table public.companion_state disable row level security;</div>
             config: { ...state.config, ...(parsed.config || {}) },
             char: { ...state.char, ...(parsed.char || {}) }
           };
-          if (!state.char.avatar || state.char.avatar.includes('viewBox="0 0 120 120"')) {
-            state.char.avatar = DEFAULT_AVATAR;
-          }
+          if (!state.char.avatar) state.char.avatar = DEFAULT_AVATAR;
           if (!state.branches || !state.branches.length) {
             state.branches = [{ id: 'main', title: 'Основной', messages: [] }];
             state.activeBranchId = 'main';
@@ -1277,8 +1379,15 @@ alter table public.companion_state disable row level security;</div>
           bubble.appendChild(img);
         }
 
+        if (msg.fileName) {
+          const fBadge = document.createElement('div');
+          fBadge.className = 'file-badge-in-msg';
+          fBadge.textContent = '📎 ' + msg.fileName;
+          bubble.appendChild(fBadge);
+        }
+
         if (msg.text) {
-          const span = document.createElement('span');
+          const span = document.createElement('div');
           span.textContent = msg.text;
           bubble.appendChild(span);
         }
@@ -1322,7 +1431,42 @@ alter table public.companion_state disable row level security;</div>
 
     function autoGrowTextarea(el) {
       el.style.height = 'auto';
-      el.style.height = Math.min(el.scrollHeight, 92) + 'px';
+      el.style.height = Math.min(el.scrollHeight, 96) + 'px';
+    }
+
+    // ОТОБРАЖЕНИЕ ЧИПОВ ПРИКРЕПЛЁННЫХ ФОТО И ФАЙЛОВ
+    function renderAttachmentsBar() {
+      const bar = document.getElementById('attachments-bar');
+      bar.innerHTML = '';
+
+      if (!pendingPhotoBase64 && !pendingDocFile) {
+        bar.classList.remove('visible');
+        return;
+      }
+
+      if (pendingPhotoBase64) {
+        const chip = document.createElement('div');
+        chip.className = 'attach-chip';
+        chip.innerHTML = `
+          <img src="${pendingPhotoBase64}" alt="Фото" />
+          <span class="attach-chip-name">Фото</span>
+          <button type="button" class="attach-chip-remove" onclick="clearPendingPhoto()">✕</button>
+        `;
+        bar.appendChild(chip);
+      }
+
+      if (pendingDocFile) {
+        const chip = document.createElement('div');
+        chip.className = 'attach-chip';
+        chip.innerHTML = `
+          <span>📎</span>
+          <span class="attach-chip-name">${escapeHtml(pendingDocFile.name)} (${pendingDocFile.sizeLabel})</span>
+          <button type="button" class="attach-chip-remove" onclick="clearPendingDoc()">✕</button>
+        `;
+        bar.appendChild(chip);
+      }
+
+      bar.classList.add('visible');
     }
 
     function handlePhotoSelected(ev) {
@@ -1331,8 +1475,7 @@ alter table public.companion_state disable row level security;</div>
       const reader = new FileReader();
       reader.onload = () => {
         pendingPhotoBase64 = reader.result;
-        document.getElementById('photo-preview-img').src = pendingPhotoBase64;
-        document.getElementById('photo-preview-bar').classList.add('visible');
+        renderAttachmentsBar();
       };
       reader.readAsDataURL(file);
       ev.target.value = '';
@@ -1340,36 +1483,170 @@ alter table public.companion_state disable row level security;</div>
 
     function clearPendingPhoto() {
       pendingPhotoBase64 = null;
-      document.getElementById('photo-preview-bar').classList.remove('visible');
-      document.getElementById('photo-preview-img').src = '';
+      renderAttachmentsBar();
     }
 
-    function toggleVoiceInput() {
-      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SpeechRec) {
-        showToast('Голосовой ввод не поддерживается устройством');
+    // ПРИКРЕПЛЕНИЕ И ПАРСИНГ ДОКУМЕНТОВ / КОДА / ТЕКСТА / PDF
+    function handleDocSelected(ev) {
+      const file = ev.target.files && ev.target.files[0];
+      if (!file) return;
+
+      const sizeKb = Math.max(1, Math.round(file.size / 1024));
+      const sizeLabel = sizeKb > 1024 ? (sizeKb / 1024).toFixed(1) + ' МБ' : sizeKb + ' КБ';
+      const lowerName = file.name.toLowerCase();
+      const isTextLike = /\.(txt|md|json|csv|js|ts|py|html|htm|css|xml|yaml|yml|log|ini|sql|sh|java|cpp|c|h)$/i.test(lowerName)
+        || (file.type && file.type.startsWith('text/'));
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        let extractedText = '';
+        if (isTextLike) {
+          extractedText = String(reader.result || '').slice(0, 25000);
+        } else {
+          // Извлечение читаемых текстовых фрагментов из PDF / DOC / бинарных файлов
+          try {
+            const bytes = new Uint8Array(reader.result);
+            const rawStr = new TextDecoder('utf-8', { fatal: false }).decode(bytes);
+            const readableChunks = rawStr.match(/[А-Яа-яЁёA-Za-z0-9\s.,:;!?()\[\]{}"'«»\-_+=/*@#%]{5,}/g) || [];
+            extractedText = readableChunks.join(' ').replace(/\s+/g, ' ').trim().slice(0, 25000);
+            if (!extractedText || extractedText.length < 20) {
+              extractedText = `[Бинарный файл ${file.name}, размер ${sizeLabel}. Прямой текст не обнаружен, ориентируйся по названию и контексту пользователя.]`;
+            }
+          } catch (_) {
+            extractedText = `[Файл ${file.name}, размер ${sizeLabel}]`;
+          }
+        }
+
+        pendingDocFile = {
+          name: file.name,
+          sizeLabel,
+          content: extractedText
+        };
+        renderAttachmentsBar();
+        showToast(`Файл «${file.name}» прикреплён`);
+      };
+
+      if (isTextLike) {
+        reader.readAsText(file, 'UTF-8');
+      } else {
+        reader.readAsArrayBuffer(file);
+      }
+      ev.target.value = '';
+    }
+
+    function clearPendingDoc() {
+      pendingDocFile = null;
+      renderAttachmentsBar();
+    }
+
+    // ГОЛОСОВОЙ ВВОД С ЯВНЫМ ЗАПРОСОМ РАЗРЕШЕНИЯ ANDROID (getUserMedia + SpeechRecognition)
+    async function toggleVoiceInput() {
+      const btn = document.getElementById('mic-btn');
+      const input = document.getElementById('chat-input');
+
+      // Если уже идёт запись — останавливаем
+      if (isRecordingVoice) {
+        isRecordingVoice = false;
+        btn.classList.remove('recording');
+        if (activeRecognition) {
+          try { activeRecognition.stop(); } catch (_) {}
+          activeRecognition = null;
+        }
+        if (activeMediaRecorder && activeMediaRecorder.state !== 'inactive') {
+          try { activeMediaRecorder.stop(); } catch (_) {}
+          activeMediaRecorder = null;
+        }
+        showToast('Запись остановлена');
         return;
       }
-      const rec = new SpeechRec();
-      rec.lang = 'ru-RU';
-      rec.interimResults = false;
-      const btn = document.getElementById('mic-btn');
-      btn.style.color = '#943C34';
-      rec.onresult = (e) => {
-        const text = e.results[0][0].transcript;
-        const input = document.getElementById('chat-input');
-        input.value = (input.value ? input.value + ' ' : '') + text;
-        autoGrowTextarea(input);
-      };
-      rec.onend = () => { btn.style.color = ''; };
-      rec.onerror = () => { btn.style.color = ''; showToast('Не удалось распознать голос'); };
-      rec.start();
+
+      // 1. Сначала явно запрашиваем доступ к микрофону, чтобы Android показал системное окно разрешения
+      let micStream = null;
+      if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        try {
+          micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        } catch (err) {
+          showToast('Нет доступа к микрофону: разреши микрофон в настройках телефона');
+          return;
+        }
+      }
+
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRec) {
+        // Освобождаем поток getUserMedia перед запуском SpeechRecognition, чтобы не было конфликта микрофона на Android
+        if (micStream) {
+          micStream.getTracks().forEach(t => t.stop());
+        }
+
+        const rec = new SpeechRec();
+        rec.lang = 'ru-RU';
+        rec.interimResults = true;
+        rec.continuous = false;
+
+        const baseText = input.value ? input.value + ' ' : '';
+        isRecordingVoice = true;
+        activeRecognition = rec;
+        btn.classList.add('recording');
+        showToast('Говори... (нажми на микрофон снова для остановки)');
+
+        rec.onresult = (e) => {
+          let transcript = '';
+          for (let i = 0; i < e.results.length; i++) {
+            transcript += e.results[i][0].transcript;
+          }
+          input.value = baseText + transcript;
+          autoGrowTextarea(input);
+        };
+
+        rec.onerror = (e) => {
+          isRecordingVoice = false;
+          btn.classList.remove('recording');
+          activeRecognition = null;
+          if (e.error === 'not-allowed') {
+            showToast('Доступ к микрофону запрещён системой');
+          } else if (e.error === 'no-speech') {
+            showToast('Речь не распознана — попробуй ещё раз');
+          } else {
+            showToast('Ошибка распознавания: ' + e.error);
+          }
+        };
+
+        rec.onend = () => {
+          isRecordingVoice = false;
+          btn.classList.remove('recording');
+          activeRecognition = null;
+        };
+
+        try {
+          rec.start();
+        } catch (err) {
+          isRecordingVoice = false;
+          btn.classList.remove('recording');
+          showToast('Не удалось запустить диктовку: ' + err.message);
+        }
+      } else if (micStream && window.MediaRecorder) {
+        // Резервный режим, если в конкретном WebView отключён Google Speech API
+        isRecordingVoice = true;
+        btn.classList.add('recording');
+        showToast('Микрофон активен (диктовка недоступна в этом WebView, используй микрофон на клавиатуре)');
+        const recorder = new MediaRecorder(micStream);
+        activeMediaRecorder = recorder;
+        recorder.onstop = () => {
+          micStream.getTracks().forEach(t => t.stop());
+          isRecordingVoice = false;
+          btn.classList.remove('recording');
+        };
+        recorder.start();
+      } else {
+        if (micStream) micStream.getTracks().forEach(t => t.stop());
+        showToast('Голосовой ввод не поддерживается устройством');
+      }
     }
 
     async function sendUserMessage() {
       const input = document.getElementById('chat-input');
       const text = input.value.trim();
-      if (!text && !pendingPhotoBase64) return;
+      if (!text && !pendingPhotoBase64 && !pendingDocFile) return;
 
       const branch = getActiveBranch();
       branch.messages.push({
@@ -1377,12 +1654,15 @@ alter table public.companion_state disable row level security;</div>
         role: 'user',
         text,
         photo: pendingPhotoBase64 || null,
+        fileName: pendingDocFile ? `${pendingDocFile.name} (${pendingDocFile.sizeLabel})` : null,
+        fileContent: pendingDocFile ? pendingDocFile.content : null,
         ts: Date.now()
       });
 
       input.value = '';
       input.style.height = '34px';
       clearPendingPhoto();
+      clearPendingDoc();
       saveState();
       renderMessages();
 
@@ -1424,27 +1704,32 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
 СТРОГИЙ ФОРМАТ ОТВЕТА:
 Верни ТОЛЬКО валидный JSON без markdown-обёрток:
 {
-  "reply": "первая короткая реплика ||| вторая короткая реплика",
-  "emotion": "одно-два слова твоей эмоции сейчас (например: ухмыляется, раздражён, заинтригован, доволен, скучает, ворчит)",
+  "reply": "первая короткая реплика || вторая короткая реплика",
+  "emotion": "одно-два слова твоей эмоции сейчас (например: ухмыляется, раздражён, заинтригован, доволен, скучает, ворчит, спокоен)",
   "vibe_delta": 2,
   "sync_delta": 1,
   "new_memory": ""
 }
-Важно: в поле "reply" разделяй отдельные сообщения через ||| и НИКОГДА не делай больше 2-3 коротких сообщений за раз.`;
+Важно: в поле "reply" разделяй отдельные сообщения через || и НИКОГДА не делай больше 2-3 коротких сообщений за раз.`;
 
       const apiMessages = [{ role: 'system', content: sysPrompt }];
       recent.forEach(m => {
         const role = m.role === 'user' ? 'user' : 'assistant';
+        let combinedText = m.text || '';
+        if (m.fileContent) {
+          combinedText += `\n\n[Прикреплённый файл: ${m.fileName}]\n${m.fileContent}`;
+        }
+
         if (m.photo && role === 'user') {
           apiMessages.push({
             role: 'user',
             content: [
-              { type: 'text', text: m.text || 'Посмотри на фото' },
+              { type: 'text', text: combinedText || 'Посмотри на фото' },
               { type: 'image_url', image_url: { url: m.photo } }
             ]
           });
         } else {
-          apiMessages.push({ role, content: m.text || '...' });
+          apiMessages.push({ role, content: combinedText || '...' });
         }
       });
 
@@ -1481,11 +1766,11 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
         }
 
         const replyRaw = Array.isArray(parsed.messages)
-          ? parsed.messages.join(' ||| ')
+          ? parsed.messages.join(' || ')
           : String(parsed.reply || parsed.messages || raw || '...');
 
         const replies = replyRaw
-          .split(/\|\|\||\n{2,}/)
+          .split(/\|\|\||\n{2,}|\|\|/)
           .map(s => s.trim())
           .filter(Boolean)
           .slice(0, 3);
@@ -1675,7 +1960,6 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
           canvas.height = size;
           const ctx = canvas.getContext('2d');
 
-          // Центрированная квадратная обрезка (cover)
           const minSide = Math.min(img.width, img.height);
           const sx = (img.width - minSide) / 2;
           const sy = (img.height - minSide) / 2;
@@ -1726,18 +2010,18 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
       showToast('Чат очищен');
     }
 
-    // Облачная синхронизация Supabase + точная диагностика ошибок
+    // ОБЛАЧНАЯ СИНХРОНИЗАЦИЯ SUPABASE (ТАБЛИЦА naoya_state)
     async function syncCloud(manual = false) {
       const { sbUrl, sbKey } = state.config;
       if (!sbUrl || !sbKey) {
         cloudConnected = false;
-        lastCloudError = 'Не введены Supabase URL или Anon Key. Открой шестерёнку и вставь их (после очистки кэша локальные ключи сбрасываются).';
+        lastCloudError = 'Не введены Supabase URL или Anon Key. Открой шестерёнку и вставь их.';
         renderHeaderAndStats();
         return;
       }
 
       try {
-        const getRes = await fetch(`${sbUrl}/rest/v1/companion_state?id=eq.main_profile&select=data,updated_at`, {
+        const getRes = await fetch(`${sbUrl}/rest/v1/naoya_state?id=eq.main_profile&select=data,updated_at`, {
           headers: {
             'apikey': sbKey,
             'Authorization': 'Bearer ' + sbKey
@@ -1782,7 +2066,7 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
             updated_at: new Date().toISOString()
           };
 
-          const upsertRes = await fetch(`${sbUrl}/rest/v1/companion_state`, {
+          const upsertRes = await fetch(`${sbUrl}/rest/v1/naoya_state`, {
             method: 'POST',
             headers: {
               'apikey': sbKey,
@@ -1836,7 +2120,7 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
       el.textContent = msg;
       el.classList.add('show');
       clearTimeout(window._toastTimer);
-      window._toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+      window._toastTimer = setTimeout(() => el.classList.remove('show'), 2800);
     }
 
     function escapeHtml(str) {
