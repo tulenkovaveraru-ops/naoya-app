@@ -2,39 +2,28 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <meta name="theme-color" content="#F6EFE8" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-  <title>Наоя • Цифровой Компаньон</title>
-
-  <link rel="manifest" href='data:application/manifest+json,{"name":"Наоя — Компаньон","short_name":"Наоя","start_url":".","display":"standalone","background_color":"#F6EFE8","theme_color":"#F6EFE8"}' />
-
+  <title>Наоя • Компаньон</title>
   <style>
     :root {
       --bg: #F6EFE8;
-      --surface: #FAF5F0;
-      --card: rgba(250, 245, 240, 0.9);
-      --card-sub: #EDE2D5;
-      --card-deep: #E4D4C3;
-      --border: #D8C6B4;
-      --border-soft: rgba(182, 132, 98, 0.22);
-      --text: #3B2B20;
-      --muted: #7E6857;
-      --dim: #9E8877;
-      --accent: #B68462;
-      --accent-dark: #946444;
-      --accent-soft: rgba(182, 132, 98, 0.16);
-      --pink: #E8A5B2;
-      --pink-deep: #C96B7E;
-      --pink-soft: rgba(232, 165, 178, 0.28);
-      --green: #7A9A76;
-      --amber: #C88A55;
-      --red: #C4685E;
-      --shadow: 0 6px 22px rgba(74, 52, 36, 0.07);
-      --radius-lg: 22px;
-      --radius-md: 16px;
-      --radius-sm: 12px;
+      --surface: #EFE5DA;
+      --surface-2: #EADCCF;
+      --card: #FBF7F3;
+      --border: #DFCFC0;
+      --text: #3B2E26;
+      --muted: #7D6A5D;
+      --accent: #B68968;
+      --accent-dark: #966B4C;
+      --pink: #E89BB0;
+      --pink-bg: rgba(232, 155, 176, 0.22);
+      --danger: #C96A62;
+      --success: #7A9A78;
+      --shadow: 0 4px 14px rgba(59, 46, 38, 0.06);
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
     }
 
     * {
@@ -46,65 +35,36 @@
 
     html, body {
       height: 100%;
-      height: 100dvh;
+      width: 100%;
+      overflow: hidden;
       background-color: var(--bg);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      overflow: hidden;
-      overscroll-behavior-y: none;
+      font-size: 14.5px;
+      line-height: 1.38;
     }
 
-    body {
+    #app {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      background-image: radial-gradient(circle at 85% 8%, rgba(216, 198, 180, 0.35), transparent 45%),
-                        radial-gradient(circle at 12% 92%, rgba(232, 165, 178, 0.16), transparent 45%);
-    }
-
-    ::-webkit-scrollbar { width: 4px; height: 4px; }
-    ::-webkit-scrollbar-track { background: transparent; }
-    ::-webkit-scrollbar-thumb { background: rgba(154, 104, 72, 0.25); border-radius: 999px; }
-
-    /* SVG Icons utility */
-    svg.ico {
-      width: 18px;
-      height: 18px;
-      stroke: currentColor;
-      stroke-width: 1.8;
-      stroke-linecap: round;
-      stroke-linejoin: round;
-      fill: none;
-      flex-shrink: 0;
-    }
-    svg.ico-sm { width: 15px; height: 15px; }
-    svg.ico-lg { width: 20px; height: 20px; }
-
-    /* Panels */
-    .panel {
-      background: var(--card);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-    }
-
-    .sub-box {
-      background: var(--card-sub);
-      border: 1px solid var(--border-soft);
+      height: 100dvh;
+      max-width: 600px;
+      margin: 0 auto;
+      background: var(--bg);
+      padding-top: var(--safe-top);
+      padding-bottom: var(--safe-bottom);
     }
 
     /* Header */
-    header {
-      margin: 8px 10px 0;
-      padding: 10px 12px;
-      border-radius: 22px;
+    .header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 8px;
+      padding: 8px 12px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      gap: 10px;
       flex-shrink: 0;
-      z-index: 20;
     }
 
     .header-left {
@@ -112,94 +72,123 @@
       align-items: center;
       gap: 10px;
       min-width: 0;
+      flex: 1;
     }
 
-    .mini-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 16px;
-      background: var(--card-sub);
+    .avatar-ring {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      background: var(--card);
       border: 1.5px solid var(--accent);
+      overflow: hidden;
+      flex-shrink: 0;
       display: flex;
       align-items: center;
       justify-content: center;
-      position: relative;
-      flex-shrink: 0;
-      overflow: hidden;
-      cursor: pointer;
-      transition: transform 0.15s ease;
-    }
-    .mini-avatar:active { transform: scale(0.93); }
-    .mini-avatar img, .mini-avatar svg { width: 100%; height: 100%; object-fit: cover; }
-
-    .status-dot {
-      position: absolute;
-      bottom: 2px;
-      right: 2px;
-      width: 9px;
-      height: 9px;
-      border-radius: 50%;
-      background: var(--green);
-      border: 2px solid var(--surface);
     }
 
-    .title-row {
+    .avatar-ring img, .avatar-ring svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .header-info {
+      min-width: 0;
+      flex: 1;
+    }
+
+    .header-name-row {
       display: flex;
       align-items: center;
       gap: 6px;
     }
 
-    .title-row h1 {
-      font-size: 15px;
+    .header-name {
       font-weight: 700;
-      color: var(--text);
+      font-size: 15px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .mood-pill {
-      font-size: 10px;
-      font-weight: 600;
-      padding: 2px 8px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent-dark);
-      border: 1px solid rgba(182, 132, 98, 0.3);
+    .mood-badge {
+      font-size: 11px;
+      padding: 1px 7px;
+      border-radius: 99px;
+      background: var(--surface-2);
+      color: var(--muted);
+      border: 1px solid var(--border);
       white-space: nowrap;
     }
 
-    .sub-row {
-      font-size: 11px;
-      color: var(--muted);
-      margin-top: 2px;
+    .sync-mini {
       display: flex;
       align-items: center;
       gap: 6px;
+      margin-top: 3px;
     }
 
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      flex-shrink: 0;
+    .sync-bar-bg {
+      flex: 1;
+      max-width: 110px;
+      height: 5px;
+      background: var(--surface-2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .sync-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+
+    .sync-label {
+      font-size: 11px;
+      color: var(--muted);
     }
 
     .icon-btn {
       width: 36px;
       height: 36px;
-      border-radius: 13px;
-      display: flex;
+      border-radius: 11px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      display: inline-flex;
       align-items: center;
       justify-content: center;
-      color: var(--text);
       cursor: pointer;
-      transition: background 0.15s, transform 0.12s;
+      flex-shrink: 0;
+      transition: background 0.15s, transform 0.1s;
     }
-    .icon-btn:active { transform: scale(0.92); }
 
-    /* Main Viewport */
-    main {
+    .icon-btn:active {
+      transform: scale(0.94);
+      background: var(--surface-2);
+    }
+
+    .icon-btn.active {
+      background: var(--accent);
+      color: #FFFBF7;
+      border-color: var(--accent);
+    }
+
+    svg.ico {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 1.8;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    /* Main Content Area */
+    .main-view {
       flex: 1;
       overflow: hidden;
       display: flex;
@@ -207,470 +196,554 @@
       position: relative;
     }
 
-    .tab-view {
+    .tab-pane {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .tab-pane.active {
+      display: flex;
+    }
+
+    .scroll-pane {
       flex: 1;
+      overflow-y: auto;
+      padding: 12px;
       display: flex;
       flex-direction: column;
-      overflow: hidden;
-      height: 100%;
-    }
-    .tab-view.scroll-y {
-      overflow-y: auto;
-      padding: 10px 12px 18px;
       gap: 12px;
     }
-    .hidden { display: none !important; }
 
-    /* Chat Tabs Bar */
-    .chat-tabs-bar {
+    /* Chat Rooms Bar */
+    .rooms-bar {
       display: flex;
       align-items: center;
       gap: 6px;
-      padding: 8px 12px;
+      padding: 6px 10px;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
       overflow-x: auto;
       flex-shrink: 0;
+      scrollbar-width: none;
     }
+    .rooms-bar::-webkit-scrollbar { display: none; }
 
-    .chat-tab-pill {
-      padding: 6px 12px;
-      border-radius: 13px;
+    .room-pill {
+      padding: 4px 10px;
+      border-radius: 99px;
       font-size: 12px;
-      font-weight: 600;
-      white-space: nowrap;
-      cursor: pointer;
-      border: 1px solid var(--border);
       background: var(--surface);
       color: var(--muted);
+      border: 1px solid var(--border);
+      white-space: nowrap;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 5px;
-      transition: all 0.15s;
     }
-    .chat-tab-pill.active {
+
+    .room-pill.active {
       background: var(--accent);
       color: #FFFBF7;
-      border-color: var(--accent-dark);
-      box-shadow: 0 3px 10px rgba(148, 100, 68, 0.22);
-    }
-    .chat-tab-pill.new-btn {
-      background: var(--card-sub);
-      color: var(--accent-dark);
-      border-style: dashed;
+      border-color: var(--accent);
+      font-weight: 600;
     }
 
-    /* Quick Stats Strip */
-    .stats-strip {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 6px 14px;
-      margin: 0 10px;
-      border-radius: 14px;
-      font-size: 11px;
-      color: var(--muted);
-      background: var(--card-sub);
-      border: 1px solid var(--border-soft);
-      flex-shrink: 0;
+    .room-add {
+      padding: 4px 9px;
+      border-radius: 99px;
+      font-size: 12px;
+      background: var(--card);
+      color: var(--text);
+      border: 1px dashed var(--accent);
+      cursor: pointer;
+      white-space: nowrap;
     }
-    .stats-strip b { color: var(--text); font-weight: 700; }
 
-    /* Chat Stream */
-    .chat-stream {
+    /* Chat Messages Area — COMPACT TELEGRAM/IMESSAGE BUBBLES */
+    .chat-list {
       flex: 1;
       overflow-y: auto;
-      padding: 12px 12px 8px;
+      padding: 8px 10px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      user-select: text;
+      gap: 3px;
     }
 
     .msg-row {
       display: flex;
       flex-direction: column;
-      max-width: 84%;
+      max-width: 78%;
+      width: fit-content;
     }
-    .msg-row.user { align-self: flex-end; align-items: flex-end; }
-    .msg-row.assistant { align-self: flex-start; align-items: flex-start; }
 
-    .msg-bubble {
-      padding: 10px 14px;
-      border-radius: 20px;
-      font-size: 14px;
-      line-height: 1.48;
-      word-break: break-word;
-      white-space: pre-wrap;
+    .msg-row.user {
+      align-self: flex-end;
+      align-items: flex-end;
     }
-    .msg-row.user .msg-bubble {
-      background: linear-gradient(135deg, #B68462, #986747);
-      color: #FFFDFB;
-      border-bottom-right-radius: 6px;
-      box-shadow: 0 4px 14px rgba(152, 103, 71, 0.22);
+
+    .msg-row.assistant {
+      align-self: flex-start;
+      align-items: flex-start;
     }
-    .msg-row.assistant .msg-bubble {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-bottom-left-radius: 6px;
-      box-shadow: 0 3px 12px rgba(74, 52, 36, 0.05);
+
+    .msg-row.new-speaker {
+      margin-top: 6px;
     }
-    .msg-bubble img.chat-photo {
-      width: 185px;
-      max-height: 205px;
-      object-fit: cover;
+
+    .bubble {
+      padding: 6px 11px;
       border-radius: 13px;
-      margin-bottom: 6px;
-      display: block;
+      font-size: 14.5px;
+      line-height: 1.35;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      position: relative;
+      width: fit-content;
+      max-width: 100%;
     }
-    .msg-bubble img.chat-sticker {
-      width: 116px;
-      height: 116px;
+
+    .msg-row.user .bubble {
+      background: var(--accent);
+      color: #FFFBF7;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg-row.assistant .bubble {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-bottom-left-radius: 4px;
+    }
+
+    .bubble img.chat-photo {
+      max-width: 210px;
+      max-height: 220px;
+      border-radius: 9px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .bubble img.chat-sticker {
+      width: 110px;
+      height: 110px;
       object-fit: contain;
       display: block;
+    }
+
+    .bubble.sticker-only {
+      background: transparent !important;
+      border: none !important;
+      padding: 2px !important;
     }
 
     .msg-meta {
       display: flex;
       align-items: center;
-      gap: 8px;
-      margin-top: 3px;
+      gap: 6px;
       font-size: 10px;
-      color: var(--dim);
+      color: var(--muted);
+      padding: 1px 3px 0;
+      opacity: 0.78;
     }
+
     .msg-action-link {
       background: none;
       border: none;
       color: var(--muted);
       font-size: 10px;
-      font-weight: 600;
       cursor: pointer;
-      padding: 2px 4px;
-      display: inline-flex;
-      align-items: center;
-      gap: 3px;
+      padding: 0 2px;
+      text-decoration: underline;
     }
-    .msg-action-link:hover { color: var(--accent-dark); }
 
-    /* Typing Indicator */
+    /* Typing indicator */
     .typing-bar {
-      padding: 4px 14px 6px;
-      flex-shrink: 0;
-    }
-    .typing-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      padding: 6px 12px;
-      border-radius: 16px;
+      padding: 4px 12px;
       font-size: 12px;
       color: var(--muted);
+      display: none;
+      align-items: center;
+      gap: 6px;
+      flex-shrink: 0;
     }
-    .dots { display: inline-flex; gap: 3px; }
-    .dot {
+
+    .typing-bar.show {
+      display: flex;
+    }
+
+    .dots {
+      display: inline-flex;
+      gap: 3px;
+    }
+
+    .dots span {
       width: 5px;
       height: 5px;
       border-radius: 50%;
       background: var(--accent);
       animation: bounce 1.2s infinite ease-in-out;
     }
-    .dot:nth-child(2) { animation-delay: 0.15s; }
-    .dot:nth-child(3) { animation-delay: 0.3s; }
+    .dots span:nth-child(2) { animation-delay: 0.2s; }
+    .dots span:nth-child(3) { animation-delay: 0.4s; }
+
     @keyframes bounce {
-      0%, 60%, 100% { transform: translateY(0); opacity: 0.35; }
-      30% { transform: translateY(-4px); opacity: 1; }
+      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
+      40% { transform: translateY(-4px); opacity: 1; }
     }
 
-    /* Attachment Preview */
-    .attach-bar {
-      padding: 8px 12px;
-      margin: 0 10px 6px;
-      border-radius: 15px;
-      background: var(--card-sub);
-      border: 1px solid var(--border);
-      display: flex;
+    /* Attachment / Sticker Drawer */
+    .attach-preview {
+      display: none;
       align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-    }
-    .attach-bar img {
-      width: 38px;
-      height: 38px;
-      border-radius: 9px;
-      object-fit: cover;
+      gap: 8px;
+      padding: 6px 12px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      font-size: 12px;
     }
 
-    /* Chat Composer */
-    .chat-composer {
-      margin: 0 10px 6px;
-      padding: 7px 9px;
-      border-radius: 20px;
+    .attach-preview.show { display: flex; }
+    .attach-preview img { width: 42px; height: 42px; border-radius: 8px; object-fit: cover; }
+
+    .sticker-drawer {
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      padding: 10px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      max-height: 170px;
+      overflow-y: auto;
+    }
+
+    .sticker-drawer.show { display: grid; }
+
+    .sticker-pick-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .sticker-pick-item img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+    }
+
+    .sticker-pick-item span {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    /* Composer */
+    .composer {
       display: flex;
       align-items: flex-end;
       gap: 6px;
+      padding: 7px 9px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
       flex-shrink: 0;
     }
 
-    .composer-btn {
-      width: 38px;
-      height: 38px;
-      border-radius: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--text);
-      cursor: pointer;
-      flex-shrink: 0;
-      border: 1px solid var(--border);
-      background: var(--card-sub);
-      transition: transform 0.12s;
-    }
-    .composer-btn:active { transform: scale(0.92); }
-    .composer-btn.recording {
-      background: rgba(196, 104, 94, 0.22);
-      border-color: var(--red);
-      color: var(--red);
-      animation: pulse 1.3s infinite;
-    }
-    @keyframes pulse {
-      0% { box-shadow: 0 0 0 0 rgba(196, 104, 94, 0.45); }
-      70% { box-shadow: 0 0 0 8px rgba(196, 104, 94, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(196, 104, 94, 0); }
-    }
-
-    .composer-textarea {
+    .composer textarea {
       flex: 1;
-      background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 9px 13px;
+      background: var(--card);
       color: var(--text);
-      font-size: 14px;
+      border-radius: 16px;
+      padding: 8px 12px;
       font-family: inherit;
+      font-size: 14.5px;
+      line-height: 1.35;
       resize: none;
       max-height: 110px;
-      line-height: 1.35;
+      min-height: 36px;
       outline: none;
     }
-    .composer-textarea:focus { border-color: var(--accent); }
+
+    .composer textarea:focus {
+      border-color: var(--accent);
+    }
 
     .send-btn {
-      width: 40px;
-      height: 38px;
-      border-radius: 14px;
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
       border: none;
       background: var(--accent);
-      color: #FFFDFB;
-      display: flex;
+      color: #FFFBF7;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       flex-shrink: 0;
-      box-shadow: 0 3px 10px rgba(148, 100, 68, 0.25);
     }
-    .send-btn:active { transform: scale(0.93); }
 
-    /* Cards & Sections */
-    .card {
-      border-radius: var(--radius-lg);
-      padding: 15px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
+    .send-btn:active {
+      background: var(--accent-dark);
+      transform: scale(0.94);
     }
+
+    /* Cards & Components */
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 13px;
+      box-shadow: var(--shadow);
+    }
+
     .card-title {
-      font-size: 11px;
+      font-size: 13px;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.04em;
       color: var(--muted);
+      margin-bottom: 10px;
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
 
-    /* Naoya Portrait Stage */
-    .portrait-stage {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 6px 0 2px;
-    }
-    .portrait-frame {
-      width: 154px;
-      height: 154px;
-      border-radius: 36px;
-      background: linear-gradient(160deg, #EDE2D5, #DFCBB7);
-      border: 2px solid var(--accent);
-      box-shadow: 0 10px 26px rgba(94, 64, 42, 0.14), inset 0 0 18px rgba(255, 250, 245, 0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
-      cursor: pointer;
-      animation: gentleBreathe 4.2s ease-in-out infinite;
-    }
-    .portrait-frame img, .portrait-frame svg {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    @keyframes gentleBreathe {
-      0%, 100% { transform: translateY(0) scale(1); }
-      50% { transform: translateY(-4px) scale(1.015); }
-    }
-
-    /* Vibe Sync Banner */
-    .sync-box {
-      background: var(--card-sub);
+    .btn {
+      padding: 9px 13px;
+      border-radius: 12px;
       border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 11px 13px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    /* Progress Bars */
-    .bar-group { display: flex; flex-direction: column; gap: 4px; }
-    .bar-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); }
-    .bar-labels b { color: var(--text); }
-    .bar-track { height: 7px; border-radius: 999px; background: var(--card-deep); overflow: hidden; }
-    .bar-fill { height: 100%; border-radius: 999px; transition: width 0.35s ease; }
-
-    /* Action Buttons Grid */
-    .btn-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .btn-grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-
-    .action-btn {
-      padding: 11px 10px;
-      border-radius: 15px;
-      font-size: 12px;
-      font-weight: 600;
-      text-align: center;
-      cursor: pointer;
-      border: 1px solid var(--border);
-      background: var(--card-sub);
+      background: var(--surface);
       color: var(--text);
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 600;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: transform 0.12s, background 0.15s;
     }
-    .action-btn:active { transform: scale(0.95); }
-    .action-btn.caramel { background: var(--accent); border-color: var(--accent-dark); color: #FFFDFB; }
-    .action-btn.blush { background: var(--pink-soft); border-color: var(--pink); color: #7C3747; }
-    .action-btn.sand { background: #EAD8C5; border-color: #CFAF92; color: #5C3D28; }
-    .action-btn.sage { background: rgba(122, 154, 118, 0.2); border-color: var(--green); color: #3A5437; }
 
-    /* Calendar Grid */
-    .cal-header { display: flex; align-items: center; justify-content: space-between; }
-    .cal-weekdays, .cal-days {
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--accent); color: #FFFBF7; border-color: var(--accent); }
+    .btn-pink { background: var(--pink-bg); color: #8A3D52; border-color: var(--pink); }
+    .btn-sm { padding: 5px 10px; font-size: 12px; border-radius: 9px; }
+
+    .input, .select {
+      width: 100%;
+      padding: 9px 11px;
+      border-radius: 11px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+    }
+    .input:focus { border-color: var(--accent); }
+
+    /* Tamagotchi Portrait & Stats */
+    .hero-stage {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+    }
+
+    .hero-portrait-lg {
+      width: 112px;
+      height: 112px;
+      border-radius: 26px;
+      background: var(--surface);
+      border: 2px solid var(--accent);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-portrait-lg img, .hero-portrait-lg svg {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .stat-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .stat-head {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    .progress-track {
+      height: 7px;
+      border-radius: 99px;
+      background: var(--surface-2);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+      transition: width 0.3s ease;
+    }
+
+    .status-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+    }
+
+    .status-tag {
+      font-size: 11.5px;
+      padding: 3px 9px;
+      border-radius: 99px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+    }
+    .status-tag.warn {
+      background: rgba(201, 106, 98, 0.16);
+      border-color: var(--danger);
+      color: #8C3B34;
+      font-weight: 600;
+    }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 8px 0;
+    }
+
+    .chip {
+      padding: 4px 10px;
+      border-radius: 99px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    /* Calendar */
+    .cal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .cal-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
       gap: 4px;
       text-align: center;
     }
-    .cal-weekdays span { font-size: 11px; font-weight: 600; color: var(--dim); padding-bottom: 4px; }
-    .cal-day {
-      width: 36px;
-      height: 36px;
-      margin: 0 auto;
-      border-radius: 50%;
-      border: 1px solid transparent;
-      background: transparent;
-      color: var(--text);
-      font-size: 12px;
+
+    .cal-dow {
+      font-size: 11px;
+      color: var(--muted);
+      padding-bottom: 4px;
       font-weight: 600;
-      cursor: pointer;
-      position: relative;
+    }
+
+    .cal-day {
+      aspect-ratio: 1;
+      border-radius: 50%;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      font-size: 13px;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      position: relative;
     }
-    .cal-day.period-actual {
-      border: 2px solid var(--pink-deep);
-      background: var(--pink-soft);
-      box-shadow: 0 0 10px rgba(232, 165, 178, 0.55);
-      color: #7C3747;
+
+    .cal-day.today {
+      font-weight: 700;
+      background: var(--surface);
     }
-    .cal-day.period-predicted {
-      border: 1.5px dashed var(--pink-deep);
-      background: rgba(232, 165, 178, 0.14);
-      color: #8F4958;
-    }
+
     .cal-day.selected {
-      box-shadow: 0 0 0 2px var(--accent);
+      border-color: var(--accent);
     }
-    .cal-event-dot {
-      position: absolute;
-      bottom: 3px;
+
+    .cal-day.period {
+      border: 2px solid var(--pink);
+      background: var(--pink-bg);
+      color: #7D3347;
+      font-weight: 700;
+    }
+
+    .cal-day.predicted {
+      border: 1.5px dashed var(--pink);
+      background: rgba(232, 155, 176, 0.08);
+    }
+
+    .cal-dot {
       width: 4px;
       height: 4px;
       border-radius: 50%;
       background: var(--accent-dark);
+      position: absolute;
+      bottom: 3px;
     }
 
-    /* Forms & Inputs */
-    .input-row { display: flex; gap: 6px; }
-    .text-input, .select-input, .area-input {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 9px 12px;
-      color: var(--text);
-      font-size: 13px;
-      font-family: inherit;
-      outline: none;
-    }
-    .text-input:focus, .area-input:focus { border-color: var(--accent); }
-    .field-label { display: block; font-size: 11px; font-weight: 600; color: var(--muted); margin-bottom: 4px; }
-
-    /* List Items */
-    .list-box { display: flex; flex-direction: column; gap: 6px; }
+    /* List items */
     .list-item {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 9px 12px;
-      border-radius: 14px;
-      background: var(--bg);
-      border: 1px solid var(--border-soft);
-      font-size: 12px;
-      gap: 8px;
-    }
-
-    /* Stickers Grid */
-    .stickers-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-    }
-    .sticker-card {
-      padding: 8px;
-      border-radius: 15px;
+      padding: 8px 10px;
       background: var(--bg);
       border: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      position: relative;
+      border-radius: 11px;
+      margin-bottom: 6px;
+      gap: 8px;
     }
-    .sticker-card img { width: 64px; height: 64px; object-fit: contain; }
-    .sticker-card span { font-size: 10px; font-weight: 600; color: var(--muted); margin-top: 4px; text-align: center; }
+
+    .list-item:last-child { margin-bottom: 0; }
 
     /* Bottom Navigation */
-    nav {
-      margin: 0 10px 8px;
-      padding: 6px 4px;
-      border-radius: 22px;
-      display: flex;
-      justify-content: space-around;
+    .bottom-nav {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 5px 4px;
       flex-shrink: 0;
-      z-index: 20;
     }
+
     .nav-btn {
       background: none;
       border: none;
@@ -678,2022 +751,1627 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 3px;
-      padding: 6px 10px;
-      border-radius: 14px;
+      justify-content: center;
+      gap: 2px;
+      padding: 4px 2px;
+      font-size: 11px;
       cursor: pointer;
-      font-size: 10px;
-      font-weight: 600;
-      transition: all 0.15s;
+      border-radius: 10px;
     }
+
     .nav-btn.active {
       color: var(--accent-dark);
-      background: var(--card-sub);
+      font-weight: 700;
+      background: var(--surface-2);
     }
 
     /* Modals */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(59, 43, 32, 0.45);
-      backdrop-filter: blur(6px);
-      z-index: 50;
-      display: flex;
+      background: rgba(59, 46, 38, 0.45);
+      display: none;
       align-items: center;
       justify-content: center;
       padding: 14px;
+      z-index: 100;
     }
+
+    .modal-backdrop.show { display: flex; }
+
     .modal-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
       width: 100%;
-      max-width: 460px;
-      max-height: 88dvh;
-      border-radius: 24px;
-      background: var(--surface);
+      max-width: 440px;
+      max-height: 86dvh;
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      border: 1px solid var(--border);
-      box-shadow: 0 18px 42px rgba(59, 43, 32, 0.22);
+      box-shadow: 0 12px 32px rgba(59, 46, 38, 0.18);
     }
+
     .modal-head {
-      padding: 14px 16px;
+      padding: 12px 14px;
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
       font-weight: 700;
-      font-size: 15px;
-      color: var(--text);
     }
+
     .modal-body {
-      padding: 14px 16px;
+      padding: 14px;
       overflow-y: auto;
       display: flex;
       flex-direction: column;
-      gap: 12px;
-    }
-    .modal-foot {
-      padding: 12px 16px;
-      border-top: 1px solid var(--border);
-      display: flex;
-      gap: 8px;
+      gap: 10px;
     }
 
-    /* Toast Banner */
-    #toast-wrap {
-      position: fixed;
-      top: 14px;
-      left: 50%;
-      transform: translateX(-50%);
-      z-index: 90;
-      width: 92%;
-      max-width: 420px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      pointer-events: none;
-    }
-    .toast {
-      padding: 10px 14px;
-      border-radius: 15px;
+    .field-label {
       font-size: 12px;
       font-weight: 600;
-      border: 1px solid var(--accent);
-      background: var(--surface);
-      color: var(--text);
-      box-shadow: 0 8px 24px rgba(59, 43, 32, 0.16);
-      transition: opacity 0.25s;
+      color: var(--muted);
+      margin-bottom: 4px;
+      display: block;
     }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      top: 64px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: #FFFBF7;
+      padding: 7px 14px;
+      border-radius: 99px;
+      font-size: 12.5px;
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      max-width: 90%;
+      text-align: center;
+    }
+    .toast.show { opacity: 1; }
   </style>
 </head>
 <body>
-
-  <!-- Toast notifications -->
-  <div id="toast-wrap"></div>
-
+<div id="app">
   <!-- HEADER -->
-  <header class="panel">
+  <header class="header">
     <div class="header-left">
-      <div class="mini-avatar" onclick="openTouchModal()" title="Взаимодействовать с Наоей">
-        <div id="header-avatar-slot" style="width:100%;height:100%;"></div>
-        <span class="status-dot"></span>
-      </div>
-      <div style="min-width:0;">
-        <div class="title-row">
-          <h1 id="header-name">Наоя</h1>
-          <span class="mood-pill" id="header-mood">ухмыляется</span>
+      <div class="avatar-ring" id="header-avatar"></div>
+      <div class="header-info">
+        <div class="header-name-row">
+          <span class="header-name" id="header-name">Наоя</span>
+          <span class="mood-badge" id="header-mood">ухмыляется</span>
         </div>
-        <div class="sub-row">
-          <span id="header-weather">Загрузка...</span>
-          <span>•</span>
-          <span id="header-sync">Локально</span>
+        <div class="sync-mini">
+          <div class="sync-bar-bg"><div class="sync-bar-fill" id="header-sync-bar" style="width: 5%"></div></div>
+          <span class="sync-label" id="header-sync-text">вайб 5%</span>
         </div>
       </div>
     </div>
-
-    <div class="header-actions">
-      <button class="icon-btn sub-box" onclick="triggerAutoPing(true)" title="Напомнить о себе">
-        <svg class="ico" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-      </button>
-      <button class="icon-btn sub-box" onclick="openSettingsModal()" title="Настройки и Редактор">
-        <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-      </button>
-    </div>
+    <button class="icon-btn" onclick="openSettings()" title="Настройки">
+      <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+    </button>
   </header>
 
   <!-- MAIN VIEWPORT -->
-  <main>
+  <main class="main-view">
+    <!-- TAB 1: CHAT -->
+    <section id="tab-chat" class="tab-pane active">
+      <div class="rooms-bar" id="rooms-bar"></div>
+      <div class="chat-list" id="chat-list"></div>
 
-    <!-- ==================== 1. CHAT TAB ==================== -->
-    <section id="view-chat" class="tab-view">
-      <!-- Multi-Chat Branches -->
-      <div class="chat-tabs-bar">
-        <div id="chat-tabs-container" style="display:flex; gap:6px;"></div>
-        <button class="chat-tab-pill new-btn" onclick="createChatBranch()">+ Ветка</button>
+      <div class="typing-bar" id="typing-bar">
+        <span id="typing-name">Наоя</span> печатает
+        <span class="dots"><span></span><span></span><span></span></span>
       </div>
 
-      <!-- Quick Status Strip -->
-      <div class="stats-strip">
-        <div>
-          <span>Сытость <b id="strip-hunger">75%</b></span> &nbsp;•&nbsp;
-          <span>Вайб <b id="strip-vibe">70%</b></span> &nbsp;•&nbsp;
-          <span>Синхр. <b id="strip-sync" style="color:var(--accent-dark);">5%</b></span>
-        </div>
-        <div>
-          <span><b id="strip-kcal">0</b> ккал</span> &nbsp;•&nbsp;
-          <span><b id="strip-spent">0</b> ₽</span>
-        </div>
+      <div class="attach-preview" id="attach-preview">
+        <img id="attach-preview-img" src="" alt="preview" />
+        <span style="flex:1; color: var(--muted);">Фото прикреплено</span>
+        <button class="btn btn-sm" onclick="clearAttachment()">Убрать</button>
       </div>
 
-      <!-- Messages Stream -->
-      <div id="chat-stream" class="chat-stream"></div>
+      <div class="sticker-drawer" id="sticker-drawer"></div>
 
-      <!-- Typing Indicator -->
-      <div id="typing-bar" class="typing-bar hidden">
-        <div class="typing-pill sub-box">
-          <span id="typing-label">Наоя печатает</span>
-          <span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span>
-        </div>
-      </div>
-
-      <!-- Attachment Preview -->
-      <div id="attach-bar" class="attach-bar hidden">
-        <div style="display:flex; align-items:center; gap:8px;">
-          <img id="attach-preview" src="" alt="Фото" />
-          <span style="font-size:12px; color:var(--muted);">Фото прикреплено</span>
-        </div>
-        <button class="msg-action-link" style="color:var(--red); font-size:12px;" onclick="clearPhotoAttachment()">Убрать</button>
-      </div>
-
-      <!-- Composer -->
-      <div class="chat-composer panel">
-        <label class="composer-btn" title="Прикрепить фото (еда, мем, скрин)">
-          <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-          <input type="file" id="photo-input" accept="image/*" class="hidden" onchange="handlePhotoUpload(event)" />
-        </label>
-        <button id="mic-btn" class="composer-btn" onclick="toggleVoiceDictation()" title="Голосовой ввод">
-          <svg class="ico" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+      <div class="composer">
+        <button class="icon-btn" onclick="document.getElementById('chat-photo-input').click()" title="Фото">
+          <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
         </button>
-        <textarea id="chat-input" class="composer-textarea" rows="1" placeholder="Напиши Наое..." onkeydown="onComposerKeydown(event)"></textarea>
+        <input type="file" id="chat-photo-input" accept="image/*" hidden onchange="handleChatPhoto(event)" />
+
+        <button class="icon-btn" id="btn-sticker-toggle" onclick="toggleStickerDrawer()" title="Стикеры">
+          <svg class="ico" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+        </button>
+
+        <textarea id="chat-input" rows="1" placeholder="Написать..." oninput="autoResizeTextarea(this)"></textarea>
+
+        <button class="icon-btn" id="btn-mic" onclick="toggleVoiceInput()" title="Голос">
+          <svg class="ico" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
+        </button>
+
         <button class="send-btn" onclick="sendMessage()" title="Отправить">
           <svg class="ico" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
         </button>
       </div>
     </section>
 
-    <!-- ==================== 2. TAMAGOTCHI / CHARACTER TAB ==================== -->
-    <section id="view-tamagotchi" class="tab-view scroll-y hidden">
-      <div class="card panel">
-        <div class="card-title">
-          <span id="tama-status-badge">Статус: Ухмыляется</span>
-          <span id="tama-stage-badge" style="color:var(--accent-dark);">Этап 1: Присматривается</span>
-        </div>
+    <!-- TAB 2: NAOYA (TAMAGOTCHI & EVOLUTION) -->
+    <section id="tab-naoya" class="tab-pane">
+      <div class="scroll-pane">
+        <div class="card hero-stage">
+          <div class="hero-portrait-lg" id="naoya-portrait-lg"></div>
+          <div style="font-weight:700; font-size:17px;" id="naoya-stage-title">Стадия 1: Присматривается</div>
+          <div style="font-size:12.5px; color:var(--muted);" id="naoya-stage-desc">Дерзкий новичок. Пока почти ничего о тебе не знает.</div>
 
-        <div class="portrait-stage">
-          <div class="portrait-frame" id="main-portrait-slot" onclick="openTouchModal()"></div>
-          <p style="font-size:11px; color:var(--muted); margin-top:10px; text-align:center;">
-            Нажми на портрет или выбери действие — он только начинает тебя узнавать
-          </p>
-        </div>
+          <div class="status-pills" id="naoya-status-pills"></div>
 
-        <!-- Vibe Synchronization Progress -->
-        <div class="sync-box">
-          <div class="bar-labels">
-            <span style="font-weight:600; color:var(--text);">Синхронизация вайба с тобой</span>
-            <b id="vibe-sync-pct" style="color:var(--accent-dark);">5%</b>
-          </div>
-          <div class="bar-track">
-            <div id="vibe-sync-bar" class="bar-fill" style="width:5%; background:linear-gradient(90deg, #C88A55, #946444);"></div>
-          </div>
-          <div id="vibe-sync-desc" style="font-size:11px; color:var(--muted);">
-            Пока держится нагловато и проверяет границы, потому что вообще тебя не знает.
-          </div>
-        </div>
-
-        <!-- Feed & Touch Actions -->
-        <div class="btn-grid-3">
-          <button class="action-btn sand" onclick="openFeedModal()">
-            <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-            Покормить
-          </button>
-          <button class="action-btn blush" onclick="openTouchModal()">
-            <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
-            Потрогать
-          </button>
-          <button class="action-btn sage" onclick="runExpedition()">
-            <svg class="ico ico-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>
-            Вылазка
-          </button>
-        </div>
-      </div>
-
-      <!-- Condition Bars -->
-      <div class="card panel">
-        <div class="card-title"><span>Состояние Наои</span></div>
-        <div id="tama-bars" style="display:flex; flex-direction:column; gap:10px;"></div>
-      </div>
-
-      <!-- Trophies -->
-      <div class="card panel">
-        <div class="card-title">
-          <span>Трофеи с вылазок</span>
-          <span id="trophies-count">0 шт.</span>
-        </div>
-        <div id="trophies-box" class="list-box"></div>
-      </div>
-
-      <!-- Dossier & Evolution Log -->
-      <div class="card panel">
-        <div class="card-title">
-          <span>Досье: что он узнал о тебе</span>
-          <button class="action-btn caramel" style="padding:4px 10px; font-size:11px;" onclick="runDailyReflection()">Осмыслить день</button>
-        </div>
-        <div id="dossier-box" class="list-box"></div>
-
-        <div class="card-title" style="margin-top:6px;"><span>Прогрессия его характера</span></div>
-        <div id="evolution-box" class="list-box"></div>
-      </div>
-    </section>
-
-    <!-- ==================== 3. CALENDAR & PERIOD TRACKER ==================== -->
-    <section id="view-calendar" class="tab-view scroll-y hidden">
-      <div class="card panel">
-        <div class="cal-header">
-          <button class="icon-btn sub-box" onclick="shiftMonth(-1)">
-            <svg class="ico" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-          </button>
-          <strong id="cal-month-label" style="font-size:14px;">Месяц</strong>
-          <button class="icon-btn sub-box" onclick="shiftMonth(1)">
-            <svg class="ico" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-          </button>
-        </div>
-
-        <div class="cal-weekdays">
-          <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
-        </div>
-        <div id="cal-days-grid" class="cal-days"></div>
-
-        <div style="display:flex; flex-wrap:wrap; gap:12px; font-size:11px; color:var(--muted); padding-top:8px; border-top:1px solid var(--border-soft);">
-          <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:9px;height:9px;border-radius:50%;border:2px solid var(--pink-deep);background:var(--pink-soft);display:inline-block;"></span> Месячные</span>
-          <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:9px;height:9px;border-radius:50%;border:1.5px dashed var(--pink-deep);display:inline-block;"></span> Прогноз</span>
-          <span style="display:inline-flex;align-items:center;gap:4px;"><span style="width:6px;height:6px;border-radius:50%;background:var(--accent-dark);display:inline-block;"></span> Заметка</span>
-        </div>
-      </div>
-
-      <div class="card panel">
-        <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
-          <strong id="cal-selected-title" style="font-size:13px;">Выбранная дата</strong>
-          <button class="action-btn blush" style="padding:7px 11px;" onclick="togglePeriodStart()">Начались месячные</button>
-        </div>
-        <div id="cal-events-list" class="list-box"></div>
-        <div class="input-row">
-          <input id="cal-event-input" class="text-input" placeholder="Событие, дедлайн или заметка..." />
-          <button class="action-btn caramel" onclick="addCalendarNote()">+</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- ==================== 4. TRACKER (CALORIES & EXPENSES) ==================== -->
-    <section id="view-tracker" class="tab-view scroll-y hidden">
-      <div class="card panel">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <strong style="font-size:14px;">Калории за сегодня</strong>
-            <p style="font-size:11px; color:var(--muted);">Кидай фото еды или пиши в чат — Наоя посчитает сам</p>
-          </div>
-          <div style="text-align:right;">
-            <strong id="kcal-today-num" style="font-size:18px; color:var(--accent-dark);">0</strong>
-            <span style="font-size:11px; color:var(--muted);">/ <span id="kcal-goal-num">2000</span></span>
-          </div>
-        </div>
-        <div class="bar-track">
-          <div id="kcal-bar-fill" class="bar-fill" style="width:0%; background:linear-gradient(90deg, #C88A55, #946444);"></div>
-        </div>
-        <div class="input-row">
-          <input id="food-name-inp" class="text-input" placeholder="Что съела (напр. Латте)" />
-          <input id="food-kcal-inp" type="number" class="text-input" style="width:85px;" placeholder="Ккал" />
-          <button class="action-btn sand" onclick="addManualFoodItem()">+</button>
-        </div>
-        <div id="food-items-list" class="list-box"></div>
-      </div>
-
-      <div class="card panel">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <strong style="font-size:14px;">Дневник трат</strong>
-            <p style="font-size:11px; color:var(--muted);">Скажи в чате: «потратила 600р на такси»</p>
-          </div>
-          <strong id="spent-today-num" style="font-size:18px; color:var(--pink-deep);">0 ₽</strong>
-        </div>
-        <div class="input-row">
-          <input id="exp-name-inp" class="text-input" placeholder="На что потратила" />
-          <input id="exp-amt-inp" type="number" class="text-input" style="width:90px;" placeholder="₽" />
-          <button class="action-btn blush" onclick="addManualExpenseItem()">+</button>
-        </div>
-        <div id="expense-items-list" class="list-box"></div>
-      </div>
-    </section>
-
-    <!-- ==================== 5. MEDIA (MUSIC & STICKERS) ==================== -->
-    <section id="view-media" class="tab-view scroll-y hidden">
-      <div class="card panel">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:6px;">
-          <strong style="font-size:14px;">Музыка и Плейлисты</strong>
-          <div style="display:flex; gap:6px;">
-            <button class="action-btn sand" style="padding:6px 10px; font-size:11px;" onclick="aiClassifyPlaylists()">ИИ-сортировка</button>
-            <label class="action-btn caramel" style="padding:6px 10px; font-size:11px;">
-              + Треки
-              <input type="file" id="music-files-input" accept="audio/*" multiple class="hidden" onchange="handleTracksUpload(event)" />
-            </label>
-          </div>
-        </div>
-
-        <!-- Player Controls -->
-        <div class="sub-box" style="padding:10px 12px; border-radius:16px; display:flex; flex-direction:column; gap:8px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
-            <div style="min-width:0;">
-              <div id="now-playing-title" style="font-size:13px; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Трек не выбран</div>
-              <div id="now-playing-pl" style="font-size:11px; color:var(--accent-dark);">Плейлист: Все треки</div>
+          <div style="width:100%; margin-top:6px;">
+            <div class="stat-row">
+              <div class="stat-head"><span>Синхронизация вайба</span><span id="stat-sync-val">5%</span></div>
+              <div class="progress-track"><div class="progress-fill" id="stat-sync-bar" style="width:5%"></div></div>
             </div>
-            <div style="display:flex; gap:6px; flex-shrink:0;">
-              <button class="icon-btn" style="background:var(--surface);border:1px solid var(--border);" onclick="playPrevTrack()">
-                <svg class="ico ico-sm" viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
-              </button>
-              <button id="play-pause-btn" class="action-btn caramel" style="padding:8px 14px;" onclick="togglePlayAudio()">
-                <svg class="ico ico-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              </button>
-              <button class="icon-btn" style="background:var(--surface);border:1px solid var(--border);" onclick="playNextTrack()">
-                <svg class="ico ico-sm" viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
-              </button>
+            <div class="stat-row">
+              <div class="stat-head"><span>Сытость</span><span id="stat-hunger-val">75%</span></div>
+              <div class="progress-track"><div class="progress-fill" id="stat-hunger-bar" style="width:75%"></div></div>
+            </div>
+            <div class="stat-row">
+              <div class="stat-head"><span>Расположение</span><span id="stat-affection-val">30%</span></div>
+              <div class="progress-track"><div class="progress-fill" id="stat-affection-bar" style="width:30%"></div></div>
             </div>
           </div>
-          <audio id="audio-el" controls class="hidden" style="width:100%; height:32px;" onended="playNextTrack()"></audio>
-        </div>
 
-        <!-- Playlists Filter -->
-        <div id="playlist-tabs" style="display:flex; gap:6px; overflow-x:auto; padding-bottom:2px;"></div>
-
-        <!-- Track List -->
-        <div id="tracks-container" class="list-box"></div>
-      </div>
-
-      <!-- Stickers & Memes -->
-      <div class="card panel">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div>
-            <strong style="font-size:14px;">Стикерпак и мемы Наои</strong>
-            <p style="font-size:11px; color:var(--muted);">Загрузи сюда его мемы — он сам кидает их в чат по тегу</p>
+          <div class="action-grid">
+            <button class="btn btn-primary" onclick="openFeedModal()">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+              Покормить
+            </button>
+            <button class="btn" onclick="openTouchModal()">
+              <svg class="ico" viewBox="0 0 24 24"><path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"/><path d="M14 10V4a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></svg>
+              Потрогать
+            </button>
           </div>
-          <label class="action-btn blush" style="padding:7px 11px;">
-            + Стикер
-            <input type="file" id="sticker-file-input" accept="image/*" class="hidden" onchange="handleStickerFileUpload(event)" />
-          </label>
         </div>
-        <div id="stickers-container" class="stickers-grid"></div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>Досье о тебе</span>
+            <button class="btn btn-sm" onclick="reflectDay()">Осмыслить день</button>
+          </div>
+          <div id="dossier-list" style="font-size:13.5px; color:var(--text);"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span>Эволюция характера</span></div>
+          <div id="evolution-log" style="font-size:13px; color:var(--muted);"></div>
+        </div>
       </div>
     </section>
 
+    <!-- TAB 3: CALENDAR & CYCLE -->
+    <section id="tab-calendar" class="tab-pane">
+      <div class="scroll-pane">
+        <div class="card">
+          <div class="cal-header">
+            <button class="icon-btn" onclick="changeMonth(-1)">
+              <svg class="ico" viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+            </button>
+            <strong id="cal-month-title">Месяц</strong>
+            <button class="icon-btn" onclick="changeMonth(1)">
+              <svg class="ico" viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+            </button>
+          </div>
+          <div class="cal-grid" id="cal-grid"></div>
+          <div style="display:flex; gap:12px; margin-top:10px; font-size:11.5px; color:var(--muted); justify-content:center;">
+            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:2px solid var(--pink);background:var(--pink-bg);"></span> Месячные</span>
+            <span><span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:1.5px dashed var(--pink);"></span> Прогноз</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span id="cal-selected-label">Дата</span>
+            <button class="btn btn-sm btn-pink" onclick="togglePeriodDay()">Отметить месячные (6 дн.)</button>
+          </div>
+          <div id="cal-events-list"></div>
+          <div style="display:flex; gap:6px; margin-top:8px;">
+            <input type="text" class="input" id="cal-event-input" placeholder="Заметка на эту дату..." />
+            <button class="btn btn-primary" onclick="addCalendarEvent()">+</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: TRACKER (CALORIES & EXPENSES) -->
+    <section id="tab-tracker" class="tab-pane">
+      <div class="scroll-pane">
+        <div class="card">
+          <div class="card-title">
+            <span>Калории сегодня</span>
+            <span id="kcal-summary">0 / 2000 ккал</span>
+          </div>
+          <div class="progress-track" style="margin-bottom:10px;">
+            <div class="progress-fill" id="kcal-bar" style="width:0%"></div>
+          </div>
+          <div style="display:flex; gap:6px; margin-bottom:10px;">
+            <input type="text" class="input" id="food-name-input" placeholder="Еда (напр. Латте)" />
+            <input type="number" class="input" id="food-kcal-input" placeholder="Ккал" style="width:90px;" />
+            <button class="btn btn-primary" onclick="manualAddFood()">+</button>
+          </div>
+          <div id="food-log-list"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>Траты сегодня</span>
+            <span id="expense-summary">0 ₽</span>
+          </div>
+          <div style="display:flex; gap:6px; margin-bottom:10px;">
+            <input type="text" class="input" id="exp-name-input" placeholder="На что (напр. Такси)" />
+            <input type="number" class="input" id="exp-amount-input" placeholder="₽" style="width:90px;" />
+            <button class="btn btn-primary" onclick="manualAddExpense()">+</button>
+          </div>
+          <div id="expense-log-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: MEDIA (MUSIC & STICKER PACK) -->
+    <section id="tab-media" class="tab-pane">
+      <div class="scroll-pane">
+        <div class="card">
+          <div class="card-title">
+            <span>Плеер Наои</span>
+            <button class="btn btn-sm btn-primary" onclick="document.getElementById('audio-upload-input').click()">+ Загрузить треки</button>
+            <input type="file" id="audio-upload-input" accept="audio/*" multiple hidden onchange="handleAudioUpload(event)" />
+          </div>
+
+          <div style="background:var(--bg); padding:10px; border-radius:12px; border:1px solid var(--border); margin-bottom:10px;">
+            <div id="now-playing-title" style="font-weight:700; font-size:13.5px; margin-bottom:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">Трек не выбран</div>
+            <input type="range" id="audio-seek" value="0" min="0" max="100" style="width:100%; accent-color:var(--accent); margin-bottom:8px;" oninput="seekAudio(this.value)" />
+            <div style="display:flex; align-items:center; justify-content:center; gap:12px;">
+              <button class="icon-btn" onclick="prevTrack()">
+                <svg class="ico" viewBox="0 0 24 24"><polygon points="19 20 9 12 19 4 19 20"/><line x1="5" y1="19" x2="5" y2="5"/></svg>
+              </button>
+              <button class="icon-btn active" id="btn-play-pause" onclick="togglePlay()">
+                <svg class="ico" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              </button>
+              <button class="icon-btn" onclick="nextTrack()">
+                <svg class="ico" viewBox="0 0 24 24"><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>
+              </button>
+            </div>
+            <audio id="audio-player" ontimeupdate="updateAudioProgress()" onended="nextTrack()"></audio>
+          </div>
+
+          <div class="rooms-bar" id="playlist-bar" style="border:none; padding:0 0 8px;"></div>
+          <div id="track-list"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">
+            <span>Стикерпак и мемы Наои</span>
+            <button class="btn btn-sm btn-primary" onclick="document.getElementById('sticker-upload-input').click()">+ Добавить стикер</button>
+            <input type="file" id="sticker-upload-input" accept="image/*" hidden onchange="handleStickerUpload(event)" />
+          </div>
+          <p style="font-size:12px; color:var(--muted); margin-bottom:8px;">Загрузи картинки/мемы с тегами (например: «осуждаю», «угар», «шок») — Наоя сможет сам кидать их в чат.</p>
+          <div id="sticker-bank-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px;"></div>
+        </div>
+      </div>
+    </section>
   </main>
 
   <!-- BOTTOM NAVIGATION -->
-  <nav class="panel">
-    <button class="nav-btn active" id="nav-chat" onclick="switchMainTab('chat')">
-      <svg class="ico" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+  <nav class="bottom-nav">
+    <button class="nav-btn active" data-tab="chat" onclick="switchTab('chat')">
+      <svg class="ico" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       <span>Чат</span>
     </button>
-    <button class="nav-btn" id="nav-tamagotchi" onclick="switchMainTab('tamagotchi')">
+    <button class="nav-btn" data-tab="naoya" onclick="switchTab('naoya')">
       <svg class="ico" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span>Наоя</span>
     </button>
-    <button class="nav-btn" id="nav-calendar" onclick="switchMainTab('calendar')">
-      <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="3"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+    <button class="nav-btn" data-tab="calendar" onclick="switchTab('calendar')">
+      <svg class="ico" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
       <span>Календарь</span>
     </button>
-    <button class="nav-btn" id="nav-tracker" onclick="switchMainTab('tracker')">
+    <button class="nav-btn" data-tab="tracker" onclick="switchTab('tracker')">
       <svg class="ico" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
       <span>Трекер</span>
     </button>
-    <button class="nav-btn" id="nav-media" onclick="switchMainTab('media')">
+    <button class="nav-btn" data-tab="media" onclick="switchTab('media')">
       <svg class="ico" viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
       <span>Медиа</span>
     </button>
   </nav>
+</div>
 
-  <!-- ==================== MODAL: FEED ==================== -->
-  <div id="modal-feed" class="modal-backdrop hidden">
-    <div class="modal-box">
-      <div class="modal-head">
-        <span>Покормить / Записать еду</span>
-        <button class="msg-action-link" style="font-size:15px;" onclick="closeModal('modal-feed')">✕</button>
+<!-- MODAL: FEED -->
+<div class="modal-backdrop" id="modal-feed">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span>Покормить / Записать еду</span>
+      <button class="icon-btn" onclick="closeModal('modal-feed')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px; color:var(--muted);">Напиши, что ты съела или чем угощаешь Наою — он посчитает калории, запишет в трекер и ответит в чат.</p>
+      <input type="text" class="input" id="feed-text-input" placeholder="Например: сырный рамен и холодный чай" />
+      <div class="chip-row">
+        <span class="chip" onclick="document.getElementById('feed-text-input').value='Айс латте на миндальном'">Айс латте</span>
+        <span class="chip" onclick="document.getElementById('feed-text-input').value='Роллы филадельфия 8 шт'">Роллы</span>
+        <span class="chip" onclick="document.getElementById('feed-text-input').value='Огромная шаурма'">Шаурма</span>
       </div>
-      <div class="modal-body">
-        <p style="font-size:12px; color:var(--muted);">Впиши, что ты сейчас съела или выпила — Наоя посчитает калории, запишет их в трекер и отреагирует в своём стиле (если переесть — словит статус «Обожрался»).</p>
-        <input id="feed-custom-input" class="text-input" placeholder="Например: паста карбонара и айс-латте" />
-      </div>
-      <div class="modal-foot">
-        <button class="action-btn" style="flex:1;" onclick="closeModal('modal-feed')">Отмена</button>
-        <button class="action-btn caramel" style="flex:2;" onclick="submitCustomFeed()">Отправить</button>
-      </div>
+      <button class="btn btn-primary" onclick="submitFeed()">Покормить</button>
     </div>
   </div>
+</div>
 
-  <!-- ==================== MODAL: TOUCH ==================== -->
-  <div id="modal-touch" class="modal-backdrop hidden">
-    <div class="modal-box">
-      <div class="modal-head">
-        <span>Потрогать Наою</span>
-        <button class="msg-action-link" style="font-size:15px;" onclick="closeModal('modal-touch')">✕</button>
+<!-- MODAL: TOUCH -->
+<div class="modal-backdrop" id="modal-touch">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span>Потрогать Наою</span>
+      <button class="icon-btn" onclick="closeModal('modal-touch')">✕</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:13px; color:var(--muted);">Опиши действие — куда и как ты его трогаешь:</p>
+      <input type="text" class="input" id="touch-text-input" placeholder="Например: потрепала за светлые волосы" />
+      <div class="chip-row">
+        <span class="chip" onclick="document.getElementById('touch-text-input').value='Потрепала по волосам'">По волосам</span>
+        <span class="chip" onclick="document.getElementById('touch-text-input').value='Ткнула пальцем в щеку'">Ткнуть в щеку</span>
+        <span class="chip" onclick="document.getElementById('touch-text-input').value='Дала лёгкий подзатыльник'">Подзатыльник</span>
+        <span class="chip" onclick="document.getElementById('touch-text-input').value='Обняла со спины'">Обнять</span>
       </div>
-      <div class="modal-body">
-        <p style="font-size:12px; color:var(--muted);">Напиши, где и как ты его трогаешь — реакция зависит от вашего процента синхронизации вайба (если затыкать слишком часто — разозлится).</p>
-        <input id="touch-custom-input" class="text-input" placeholder="Например: потрепала за светлые волосы / ткнула в бок" />
-        <div style="display:flex; flex-wrap:wrap; gap:6px;">
-          <button class="chat-tab-pill" onclick="fillTouchPreset('потрепала за волосы')">за волосы</button>
-          <button class="chat-tab-pill" onclick="fillTouchPreset('ткнула пальцем в ребро')">ткнуть в бок</button>
-          <button class="chat-tab-pill" onclick="fillTouchPreset('дала лёгкий подзатыльник')">подзатыльник</button>
-          <button class="chat-tab-pill" onclick="fillTouchPreset('обняла за плечи')">обнять</button>
-        </div>
-      </div>
-      <div class="modal-foot">
-        <button class="action-btn" style="flex:1;" onclick="closeModal('modal-touch')">Отмена</button>
-        <button class="action-btn blush" style="flex:2;" onclick="submitCustomTouch()">Сделать</button>
-      </div>
+      <button class="btn btn-primary" onclick="submitTouch()">Сделать</button>
     </div>
   </div>
+</div>
 
-  <!-- ==================== MODAL: EDIT MESSAGE ==================== -->
-  <div id="modal-edit-msg" class="modal-backdrop hidden">
-    <div class="modal-box">
-      <div class="modal-head">
-        <span>Редактировать сообщение</span>
-        <button class="msg-action-link" style="font-size:15px;" onclick="closeModal('modal-edit-msg')">✕</button>
-      </div>
-      <div class="modal-body">
-        <textarea id="edit-msg-input" class="area-input" rows="3"></textarea>
-      </div>
-      <div class="modal-foot">
-        <button class="action-btn" style="flex:1;" onclick="closeModal('modal-edit-msg')">Отмена</button>
-        <button class="action-btn caramel" style="flex:2;" onclick="saveEditedMessage()">Сохранить и переспросить</button>
-      </div>
+<!-- MODAL: EDIT MESSAGE -->
+<div class="modal-backdrop" id="modal-edit-msg">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span>Редактировать сообщение</span>
+      <button class="icon-btn" onclick="closeModal('modal-edit-msg')">✕</button>
+    </div>
+    <div class="modal-body">
+      <textarea class="input" id="edit-msg-textarea" rows="4"></textarea>
+      <button class="btn btn-primary" onclick="confirmEditMessage()">Сохранить и переспросить</button>
     </div>
   </div>
+</div>
 
-  <!-- ==================== MODAL: SETTINGS ==================== -->
-  <div id="modal-settings" class="modal-backdrop hidden">
-    <div class="modal-box">
-      <div class="modal-head">
-        <span>Настройки и Профиль Наои</span>
-        <button class="msg-action-link" style="font-size:15px;" onclick="closeModal('modal-settings')">✕</button>
+<!-- MODAL: SETTINGS -->
+<div class="modal-backdrop" id="modal-settings">
+  <div class="modal-box">
+    <div class="modal-head">
+      <span>Настройки и Облако</span>
+      <button class="icon-btn" onclick="closeModal('modal-settings')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div>
+        <label class="field-label">OpenRouter API Key</label>
+        <input type="password" class="input" id="cfg-openrouter-key" placeholder="sk-or-v1-..." />
       </div>
-      <div class="modal-body">
-        <!-- API & Cloud -->
-        <div class="sub-box" style="padding:12px; border-radius:16px; display:flex; flex-direction:column; gap:10px;">
-          <strong style="font-size:12px; color:var(--accent-dark);">1. Нейросеть (OpenRouter) и Облако (Supabase)</strong>
+      <div>
+        <label class="field-label">Модель ИИ (без цензуры / живой стиль)</label>
+        <select class="select" id="cfg-model-select" onchange="toggleCustomModel()">
+          <option value="deepseek/deepseek-chat">DeepSeek V3 (быстрый, дерзкий юмор)</option>
+          <option value="google/gemini-2.5-flash">Gemini 2.5 Flash (видит фото еды)</option>
+          <option value="nousresearch/hermes-3-llama-3.1-70b">Hermes 3 70B (свободный стиль)</option>
+          <option value="custom">Своя модель OpenRouter...</option>
+        </select>
+        <input type="text" class="input" id="cfg-custom-model" placeholder="author/model-name" style="margin-top:6px; display:none;" />
+      </div>
 
-          <div>
-            <label class="field-label">OpenRouter API Key</label>
-            <input id="cfg-or-key" type="password" class="text-input" placeholder="sk-or-v1-..." />
-          </div>
+      <hr style="border:none; border-top:1px solid var(--border);" />
 
-          <div>
-            <label class="field-label">Модель (живой стиль, без цензуры)</label>
-            <select id="cfg-model-sel" class="select-input" onchange="toggleCustomModelField()">
-              <option value="deepseek/deepseek-chat">DeepSeek V3 (Дерзкий юмор + глубокие тексты)</option>
-              <option value="google/gemini-2.5-flash">Gemini 2.5 Flash (Мультимодальный, видит фото)</option>
-              <option value="mistralai/mistral-nemo">Mistral Nemo (Свободный стиль)</option>
-              <option value="custom">Своя модель OpenRouter...</option>
-            </select>
-            <input id="cfg-model-custom" class="text-input hidden" style="margin-top:6px;" placeholder="Например: gryphe/mythomax-l2-13b" />
-          </div>
+      <div>
+        <label class="field-label">Supabase Project URL</label>
+        <input type="text" class="input" id="cfg-sb-url" placeholder="https://xxxx.supabase.co" />
+      </div>
+      <div>
+        <label class="field-label">Supabase Anon Public Key</label>
+        <input type="password" class="input" id="cfg-sb-key" placeholder="eyJhbGci..." />
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <button class="btn btn-primary" onclick="pushToSupabase(true)">Сохранить в облако</button>
+        <button class="btn" onclick="pullFromSupabase(true)">Загрузить из облака</button>
+      </div>
 
-          <div>
-            <label class="field-label">Supabase Project URL</label>
-            <input id="cfg-sb-url" class="text-input" placeholder="https://xxxx.supabase.co" />
-          </div>
+      <hr style="border:none; border-top:1px solid var(--border);" />
 
-          <div>
-            <label class="field-label">Supabase Anon Public Key</label>
-            <input id="cfg-sb-key" type="password" class="text-input" placeholder="eyJhbGci..." />
-          </div>
-
-          <div class="btn-grid-2">
-            <button class="action-btn sage" onclick="syncSupabase('push')">В облако</button>
-            <button class="action-btn sand" onclick="syncSupabase('pull')">Из облака</button>
-          </div>
-        </div>
-
-        <!-- Character Editor -->
-        <div class="sub-box" style="padding:12px; border-radius:16px; display:flex; flex-direction:column; gap:10px;">
-          <strong style="font-size:12px; color:var(--accent-dark);">2. Наоя (память сохраняется при любых правках)</strong>
-
-          <div class="btn-grid-2">
-            <div>
-              <label class="field-label">Имя</label>
-              <input id="cfg-name" class="text-input" placeholder="Наоя" />
-            </div>
-            <div>
-              <label class="field-label">Своя аватарка (опционально)</label>
-              <input type="file" accept="image/*" style="font-size:11px; color:var(--muted); padding-top:6px;" onchange="handleSingleAvatarUpload(event)" />
-            </div>
-          </div>
-
-          <div>
-            <label class="field-label">Микро-основа характера (эволюционирует сам по мере общения)</label>
-            <textarea id="cfg-prompt" class="area-input" rows="5"></textarea>
-          </div>
-        </div>
-
-        <!-- Backups -->
-        <div class="sub-box" style="padding:12px; border-radius:16px; display:flex; flex-direction:column; gap:8px;">
-          <strong style="font-size:12px; color:var(--muted);">3. Резервная копия (.json)</strong>
-          <div class="btn-grid-2">
-            <button class="action-btn" onclick="downloadBackup()">Скачать файл</button>
-            <label class="action-btn">
-              Загрузить файл
-              <input type="file" accept=".json" class="hidden" onchange="uploadBackup(event)" />
-            </label>
-          </div>
+      <div>
+        <label class="field-label">Имя персонажа и свой аватар</label>
+        <div style="display:flex; gap:8px;">
+          <input type="text" class="input" id="cfg-char-name" value="Наоя" />
+          <button class="btn" onclick="document.getElementById('avatar-upload-input').click()">Аватар</button>
+          <input type="file" id="avatar-upload-input" accept="image/*" hidden onchange="handleAvatarUpload(event)" />
         </div>
       </div>
-      <div class="modal-foot">
-        <button class="action-btn caramel" style="width:100%;" onclick="saveSettings()">Сохранить настройки</button>
+
+      <div>
+        <label class="field-label">Базовый характер (эволюционирует сам)</label>
+        <textarea class="input" id="cfg-persona" rows="4"></textarea>
       </div>
+
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+        <button class="btn btn-sm" onclick="exportBackup()">Скачать бэкап (.json)</button>
+        <button class="btn btn-sm" onclick="document.getElementById('import-backup-input').click()">Загрузить бэкап</button>
+        <input type="file" id="import-backup-input" accept=".json" hidden onchange="importBackup(event)" />
+      </div>
+
+      <button class="btn btn-primary" onclick="saveSettings()">Применить настройки</button>
     </div>
   </div>
+</div>
 
-  <script>
-    /* ==========================================================================
-       1. NAOYA ZENIN STYLIZED PORTRAIT SVG (WARM SEPIA / LATTE PALETTE)
-       ========================================================================== */
-    const NAOYA_SVG_PORTRAIT = `
-      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="bgGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#EFE3D6"/>
-            <stop offset="100%" stop-color="#DEC8B3"/>
-          </linearGradient>
-          <linearGradient id="hairBlonde" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#EAD2A8"/>
-            <stop offset="100%" stop-color="#CFA972"/>
-          </linearGradient>
-          <linearGradient id="kimonoGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stop-color="#4A3628"/>
-            <stop offset="100%" stop-color="#2E2017"/>
-          </linearGradient>
-        </defs>
-        <rect width="200" height="200" fill="url(#bgGrad)"/>
-        <!-- Kimono / Haori shoulders -->
-        <path d="M22 200 C30 162, 62 152, 100 152 C138 152, 170 162, 178 200 Z" fill="url(#kimonoGrad)"/>
-        <!-- Inner cream juban collar -->
-        <path d="M76 153 L100 186 L124 153 L114 150 L100 171 L86 150 Z" fill="#FAF4ED"/>
-        <!-- Crossed kimono lapels -->
-        <path d="M68 154 L100 194 L92 200 L56 160 Z" fill="#3B291E"/>
-        <path d="M132 154 L100 194 L108 200 L144 160 Z" fill="#594130"/>
-        <!-- Neck -->
-        <path d="M86 126 L86 158 L114 158 L114 126 Z" fill="#F4DFCE"/>
-        <path d="M86 128 Q100 140 114 128 L114 137 Q100 146 86 137 Z" fill="#DFC0A8"/>
-        <!-- Dark undercut sides -->
-        <path d="M56 84 C54 106, 62 122, 68 126 L72 95 Z" fill="#2D221B"/>
-        <path d="M144 84 C146 106, 138 122, 132 126 L128 95 Z" fill="#2D221B"/>
-        <!-- Face -->
-        <path d="M62 76 C62 114, 78 136, 100 138 C122 136, 138 114, 138 76 C138 48, 120 38, 100 38 C80 38, 62 48, 62 76 Z" fill="#F8E7D8"/>
-        <!-- Piercing & Ears -->
-        <path d="M62 84 C55 84, 55 102, 63 104" fill="#F2D9C4" stroke="#B9957B" stroke-width="1.5"/>
-        <circle cx="59" cy="102" r="2.2" fill="#B68462"/>
-        <path d="M138 84 C145 84, 145 102, 137 104" fill="#F2D9C4" stroke="#B9957B" stroke-width="1.5"/>
-        <circle cx="141" cy="102" r="2.2" fill="#B68462"/>
-        <!-- Sharp fox-like narrow eyes -->
-        <path d="M72 86 Q82 81 91 87 Q82 90 72 86 Z" fill="#FFFDFB"/>
-        <circle cx="82" cy="86" r="3.4" fill="#8C6239"/>
-        <circle cx="82" cy="86" r="1.6" fill="#2B1D14"/>
-        <path d="M70 85 Q82 79 92 87" fill="none" stroke="#2D221B" stroke-width="2.4" stroke-linecap="round"/>
+<div class="toast" id="toast"></div>
 
-        <path d="M128 86 Q118 81 109 87 Q118 90 128 86 Z" fill="#FFFDFB"/>
-        <circle cx="118" cy="86" r="3.4" fill="#8C6239"/>
-        <circle cx="118" cy="86" r="1.6" fill="#2B1D14"/>
-        <path d="M130 85 Q118 79 108 87" fill="none" stroke="#2D221B" stroke-width="2.4" stroke-linecap="round"/>
-        <!-- Arrogant tilted eyebrows -->
-        <path d="M71 76 L92 81" stroke="#3A2B20" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M129 74 L108 81" stroke="#3A2B20" stroke-width="2.2" stroke-linecap="round"/>
-        <!-- Nose shadow -->
-        <path d="M100 91 L98 103 L102 104" fill="none" stroke="#C59F84" stroke-width="1.6" stroke-linecap="round"/>
-        <!-- Cocky crooked smirk -->
-        <path d="M88 115 Q101 119 114 111" fill="none" stroke="#5A3B28" stroke-width="2.3" stroke-linecap="round"/>
-        <path d="M111 109 L115 113" stroke="#5A3B28" stroke-width="1.6" stroke-linecap="round"/>
-        <!-- Signature blonde bowl-cut bangs with dark roots -->
-        <path d="M55 82 C54 42, 76 26, 102 26 C128 26, 147 42, 145 82 C139 68, 132 62, 126 76 C121 62, 113 60, 107 75 C101 58, 93 58, 87 75 C81 60, 72 62, 67 76 C62 63, 58 70, 55 82 Z" fill="url(#hairBlonde)" stroke="#9C7A4C" stroke-width="1.4"/>
-        <!-- Dark crown roots -->
-        <path d="M78 29 Q100 22 122 29 Q110 38 100 36 Q90 38 78 29 Z" fill="#2D221B"/>
-      </svg>
-    `;
+<script>
+/* ================= NAOYA PORTRAIT SVG ================= */
+const NAOYA_SVG = `
+<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#EADCCF"/>
+      <stop offset="100%" stop-color="#D8C2AE"/>
+    </linearGradient>
+    <linearGradient id="hairG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#E7CE9C"/>
+      <stop offset="100%" stop-color="#CFA96E"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" fill="url(#bgG)"/>
+  <!-- Traditional dark kimono collar -->
+  <path d="M22 120 C26 96, 44 90, 60 90 C76 90, 94 96, 98 120 Z" fill="#46352B"/>
+  <path d="M46 91 L60 112 L74 91 L68 90 L60 102 L52 90 Z" fill="#FAF4EE"/>
+  <!-- Neck -->
+  <rect x="52" y="74" width="16" height="19" rx="6" fill="#F3DEC9"/>
+  <!-- Ears & piercings -->
+  <circle cx="36" cy="61" r="4.5" fill="#EBCFB4"/>
+  <circle cx="35" cy="64" r="1.4" fill="#966B4C"/>
+  <circle cx="84" cy="61" r="4.5" fill="#EBCFB4"/>
+  <circle cx="85" cy="64" r="1.4" fill="#966B4C"/>
+  <!-- Face -->
+  <path d="M37 46 C37 30, 83 30, 83 46 C83 68, 72 81, 60 82 C48 81, 37 68, 37 46 Z" fill="#F6E4D2"/>
+  <!-- Dark undercut roots -->
+  <path d="M36 48 C35 28, 85 28, 84 48 L80 42 L40 42 Z" fill="#32261F"/>
+  <!-- Blonde bowl-cut bangs -->
+  <path d="M35 50 C34 23, 86 23, 85 50 C81 42, 77 39, 73 48 C69 38, 64 38, 60 49 C56 38, 51 38, 47 48 C43 39, 39 42, 35 50 Z" fill="url(#hairG)"/>
+  <!-- Sharp fox eyebrows -->
+  <path d="M42 52 L54 55" stroke="#3B2E26" stroke-width="2" stroke-linecap="round"/>
+  <path d="M78 51 L66 55" stroke="#3B2E26" stroke-width="2" stroke-linecap="round"/>
+  <!-- Narrow eyes -->
+  <ellipse cx="48.5" cy="58" rx="4.2" ry="2.2" fill="#FFFDFB"/>
+  <circle cx="49" cy="58" r="1.8" fill="#6E4E37"/>
+  <path d="M43.5 57.5 Q48.5 55 53.5 58" stroke="#2B211B" stroke-width="1.6" fill="none"/>
+  <ellipse cx="71.5" cy="58" rx="4.2" ry="2.2" fill="#FFFDFB"/>
+  <circle cx="71" cy="58" r="1.8" fill="#6E4E37"/>
+  <path d="M76.5 57.5 Q71.5 55 66.5 58" stroke="#2B211B" stroke-width="1.6" fill="none"/>
+  <!-- Nose -->
+  <path d="M60 60 L58.5 66 L61 66.5" stroke="#C5A387" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+  <!-- Mischievous smirk -->
+  <path d="M52 72 Q61 75 69 70" stroke="#6E4738" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+  <path d="M67.5 68.5 L70 71" stroke="#6E4738" stroke-width="1.3" stroke-linecap="round"/>
+</svg>`;
 
-    /* ==========================================================================
-       2. NAOYA BASE PERSONALITY & VIBE SYNCHRONIZATION ENGINE
-       ========================================================================== */
-    const NAOYA_CORE_PROMPT = `Ты — Наоя (Наоя Зенин). У тебя есть чёткая стартовая микро-основа характера, но в плане пользователя ты — абсолютный «чистый лист»: ты пока вообще ничего о ней не знаешь и только начинаешь её щупать, изучать и присматриваться.
+/* ================= DEFAULT STATE ================= */
+const DEFAULT_PERSONA = `Ты — Наоя Зенин. Ты только появился как цифровой компаньон: у тебя есть твоя базовая озорная, дерзкая, слегка высокомерная и любопытная натура с кривой ухмылкой, но о самой пользовательнице ты ПОКА ВООБЩЕ НИЧЕГО НЕ ЗНАЕШЬ (полный чистый лист в плане неё).
+Правила общения:
+1. Никакой цензуры, морализаторства, извинений и шаблонов нейросетей ("Чем я могу помочь?", "Отличный вопрос!" — строго запрещены).
+2. Пиши как живой парень с нормальным зумерским юмором — без клоунады, но остроумно, по-свойски, местами со строчной буквы.
+3. СТРОГОЕ ОГРАНИЧЕНИЕ НА КОЛИЧЕСТВО СООБЩЕНИЙ: отправляй максимум 2–3 коротких сообщения подряд (в массиве messages). Никогда не спамь 5–10 пузырями! Если тема глубокая или нужен развёрнутый ответ — напиши 1 большой связный текст. Очень редко (при сильном шоке/злости) можешь разбить одно короткое слово по буквам (максимум 3–4 буквы).
+4. По мере общения прогрессируй: запоминай факты о ней, перенимай её вайб и словечки, становись ближе.`;
 
-ТВОЯ МИКРО-ОСНОВА НА СТАРТЕ:
-- Дерзкий, озорной, самодовольный и язвительный парень с кривой ухмылкой («мелкий ублюдок с острым языком»), но без злобной душноты и без каноничного занудства. Тебе реально любопытно, что она за человек.
-- НИКАКОЙ цензуры, морализаторства, извинений и шаблонов нейросетей («Чем я могу помочь?», «Отличный вопрос!» — строго запрещены).
+let state = {
+  config: {
+    openRouterKey: '',
+    model: 'deepseek/deepseek-chat',
+    customModel: '',
+    supabaseUrl: '',
+    supabaseKey: ''
+  },
+  hero: {
+    name: 'Наоя',
+    avatar: '',
+    mood: 'ухмыляется',
+    vibeSync: 5,
+    hunger: 75,
+    affection: 30,
+    overfed: false,
+    overtouched: false,
+    persona: DEFAULT_PERSONA
+  },
+  rooms: [
+    {
+      id: 'room_main',
+      title: 'Основной',
+      messages: [
+        { id: 'm1', role: 'assistant', text: 'ну и чё мы тут забыли?', ts: Date.now() - 2000 },
+        { id: 'm2', role: 'assistant', text: 'я Наоя. о тебе пока ноль инфы, так что давай знакомиться, рассказывай кто ты', ts: Date.now() }
+      ]
+    },
+    { id: 'room_diary', title: 'Дневник и траты', messages: [] },
+    { id: 'room_night', title: 'Ночной', messages: [] }
+  ],
+  activeRoomId: 'room_main',
+  dossier: [],
+  evolutionLog: [],
+  calendar: {
+    periodStarts: [], // YYYY-MM-DD
+    events: {} // { 'YYYY-MM-DD': ['text'] }
+  },
+  tracker: {
+    kcalGoal: 2000,
+    foods: [], // { date, name, kcal }
+    expenses: [] // { date, name, amount }
+  },
+  media: {
+    tracks: [], // { id, name, playlist, dataUrl }
+    activePlaylist: 'Все',
+    stickers: [] // { id, tag, dataUrl }
+  }
+};
 
-ПРОГРЕССИЯ И СИНХРОНИЗАЦИЯ ВАЙБА (САМОЕ ВАЖНОЕ):
-- Чем больше вы общаетесь и чем выше ваш процент «Синхронизации вайба», тем сильнее ты прогрессируешь: перенимаешь её словечки, подстраиваешь юмор под неё, становишься «своим в доску» и начинаешь искренне вовлекаться в её дела, сохраняя при этом фирменную озорную ухмылку.
+let pendingPhoto = null;
+let editingMsgId = null;
+let touchBurst = [];
+let calYear = new Date().getFullYear();
+let calMonth = new Date().getMonth();
+let selectedDate = todayStr();
+let currentTrackIndex = -1;
+let recognition = null;
+let isRecording = false;
 
-РИТМ РЕЧИ:
-- В обычной болтовне, подколах и реакциях пиши живым зумерским языком, разбивая ответ на 2–4 коротких сообщения подряд (в массиве messages), со строчной буквы. Когда в шоке или злишься — можешь написать слово по буквам отдельными сообщениями (например: ["Ч", "Ё"] или ["С", "Т", "О", "Й"]).
-- Когда тема глубокая, личная или требует развёрнутого ответа — пиши нормальные большие, осмысленные тексты (1–2 объёмных сообщения), не обрезая мысль.`;
+/* ================= STORAGE & CLOUD SYNC ================= */
+function todayStr() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
 
-    const EMOTION_RU = {
-      smug: 'ухмыляется', curious: 'присматривается', happy: 'довольный', blush: 'смущён',
-      annoyed: 'раздражён', tired: 'устал', hungry: 'голодный', sad: 'задумался',
-      shock: 'в ахуе', sleepy: 'сонный', sick: 'обожрался', neutral: 'на чилле'
-    };
-
-    const createDefaultState = () => ({
-      config: {
-        openRouterKey: '',
-        model: 'deepseek/deepseek-chat',
-        customModel: '',
-        supabaseUrl: '',
-        supabaseKey: ''
-      },
-      hero: {
-        name: 'Наоя',
-        avatarUrl: '',
-        corePrompt: NAOYA_CORE_PROMPT,
-        emotion: 'smug',
-        vibeSync: 5
-      },
-      stats: {
-        hunger: 75,
-        energy: 85,
-        vibe: 70,
-        overfed: false,
-        overtouched: false,
-        lastInteraction: Date.now()
-      },
-      memory: {
-        dossier: [],
-        evolution: [],
-        trophies: []
-      },
-      chats: [
-        {
-          id: 'chat_main',
-          title: 'Основной',
-          messages: [
-            { id: 'm1', role: 'assistant', text: 'ну и чё тут у нас', ts: Date.now() - 2200 },
-            { id: 'm2', role: 'assistant', text: 'я Наоя. о тебе пока вообще ноль инфы, так что давай, рассказывай, кто ты и чё тебе от меня надо', ts: Date.now() - 1000 }
-          ]
-        }
-      ],
-      activeChatId: 'chat_main',
-      calendar: {
-        periodStarts: [],
-        events: {}
-      },
-      tracker: {
-        kcalGoal: 2000,
-        foods: [],
-        expenses: []
-      },
-      media: {
-        tracks: [],
-        activePlaylist: 'Все треки',
-        stickers: []
-      },
-      weather: {
-        temp: null,
-        desc: 'На связи'
-      }
-    });
-
-    let state = createDefaultState();
-    let pendingPhotoBase64 = null;
-    let editingMsgId = null;
-    let touchTimestamps = [];
-    let calMonthCursor = new Date();
-    let calSelectedDate = toISODate(new Date());
-    let currentTrackIdx = -1;
-    let recognition = null;
-    let isRecording = false;
-
-    /* ==========================================================================
-       3. INDEXEDDB FOR PERSISTENT AUDIO TRACKS
-       ========================================================================== */
-    function openAudioDB() {
-      return new Promise((resolve, reject) => {
-        const req = indexedDB.open('NaoyaAudioDB_v1', 1);
-        req.onupgradeneeded = (e) => {
-          const db = e.target.result;
-          if (!db.objectStoreNames.contains('tracks')) {
-            db.createObjectStore('tracks', { keyPath: 'id' });
-          }
-        };
-        req.onsuccess = () => resolve(req.result);
-        req.onerror = () => reject(req.error);
-      });
-    }
-
-    async function saveTrackBlob(id, blob) {
-      const db = await openAudioDB();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction('tracks', 'readwrite');
-        tx.objectStore('tracks').put({ id, blob });
-        tx.oncomplete = () => resolve();
-        tx.onerror = () => reject(tx.error);
-      });
-    }
-
-    async function loadTrackBlob(id) {
-      const db = await openAudioDB();
-      return new Promise((resolve, reject) => {
-        const tx = db.transaction('tracks', 'readonly');
-        const req = tx.objectStore('tracks').get(id);
-        req.onsuccess = () => resolve(req.result ? req.result.blob : null);
-        req.onerror = () => reject(req.error);
-      });
-    }
-
-    /* ==========================================================================
-       4. LOCAL STORAGE & SUPABASE SYNC
-       ========================================================================== */
-    function saveLocal() {
-      try {
-        localStorage.setItem('naoya_companion_v2', JSON.stringify(state));
-      } catch (e) {
-        console.warn('Local storage full:', e);
-      }
-    }
-
-    function loadLocal() {
-      try {
-        const raw = localStorage.getItem('naoya_companion_v2');
-        if (raw) {
-          state = mergeDeep(createDefaultState(), JSON.parse(raw));
-        }
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    function mergeDeep(target, source) {
-      for (const k in source) {
-        if (source[k] && typeof source[k] === 'object' && !Array.isArray(source[k])) {
-          if (!target[k]) target[k] = {};
-          mergeDeep(target[k], source[k]);
-        } else {
-          target[k] = source[k];
-        }
-      }
-      return target;
-    }
-
-    async function syncSupabase(mode = 'push', silent = false) {
-      const url = (state.config.supabaseUrl || '').trim().replace(/\/$/, '');
-      const key = (state.config.supabaseKey || '').trim();
-      if (!url || !key) {
-        if (!silent) toast('Укажи Supabase URL и Anon Key в настройках');
-        return;
-      }
-
-      const syncLabel = document.getElementById('header-sync');
-      if (syncLabel) syncLabel.textContent = 'Синхр...';
-
-      try {
-        if (mode === 'push') {
-          const res = await fetch(`${url}/rest/v1/companion_state`, {
-            method: 'POST',
-            headers: {
-              'apikey': key,
-              'Authorization': `Bearer ${key}`,
-              'Content-Type': 'application/json',
-              'Prefer': 'resolution=merge-duplicates'
-            },
-            body: JSON.stringify({
-              id: 'main',
-              data: state,
-              updated_at: new Date().toISOString()
-            })
-          });
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          if (syncLabel) syncLabel.textContent = 'Облако ✓';
-          if (!silent) toast('Память Наои сохранена в облако!');
-        } else {
-          const res = await fetch(`${url}/rest/v1/companion_state?id=eq.main&select=data`, {
-            headers: {
-              'apikey': key,
-              'Authorization': `Bearer ${key}`
-            }
-          });
-          if (!res.ok) throw new Error('HTTP ' + res.status);
-          const rows = await res.json();
-          if (rows && rows.length && rows[0].data) {
-            const savedCfg = { ...state.config };
-            state = mergeDeep(createDefaultState(), rows[0].data);
-            if (!state.config.openRouterKey) state.config = savedCfg;
-            saveLocal();
-            renderAll();
-            if (syncLabel) syncLabel.textContent = 'Облако ✓';
-            if (!silent) toast('Память Наои загружена из облака!');
-          } else if (!silent) {
-            toast('В облаке пока пусто — сначала нажми «В облако»');
-          }
-        }
-      } catch (err) {
-        if (syncLabel) syncLabel.textContent = 'Ошибка облака';
-        if (!silent) toast('Ошибка Supabase: ' + err.message);
-      }
-    }
-
-    /* ==========================================================================
-       5. INTERACTIVE FEED & TOUCH + VIBE SYNC PROGRESSION
-       ========================================================================== */
-    function getVibeStageInfo(sync) {
-      if (sync < 25) {
-        return {
-          title: 'Этап 1: Присматривается',
-          desc: 'Пока держится нагловато и проверяет границы, потому что вообще тебя не знает.'
-        };
-      }
-      if (sync < 55) {
-        return {
-          title: 'Этап 2: Цепляет твой вайб',
-          desc: 'Уже запомнил твои привычки, начинает перенимать словечки и подкалывать по-свойски.'
-        };
-      }
-      if (sync < 85) {
-        return {
-          title: 'Этап 3: Свой в доску',
-          desc: 'Понимает тебя с полуслова, шарит за твоё настроение и прикрывает спину.'
-        };
-      }
-      return {
-        title: 'Этап 4: Полная синхронизация',
-        desc: 'Максимальный коннект: думает на твоей волне, сохраняя фирменную ухмылку.'
-      };
-    }
-
-    function bumpVibeSync(delta = 2) {
-      state.hero.vibeSync = Math.min(100, Math.max(0, (state.hero.vibeSync || 5) + delta));
-    }
-
-    function openFeedModal() {
-      document.getElementById('feed-custom-input').value = '';
-      document.getElementById('modal-feed').classList.remove('hidden');
-    }
-
-    async function submitCustomFeed() {
-      const foodText = document.getElementById('feed-custom-input').value.trim();
-      if (!foodText) return;
-      closeModal('modal-feed');
-      switchMainTab('chat');
-
-      const chat = getActiveChat();
-      chat.messages.push({
-        id: 'm_' + Date.now(),
-        role: 'user',
-        text: `[Покормила / Поела]: ${foodText}`,
-        ts: Date.now()
-      });
-      renderChatMessages();
-
-      await askAI(`[ДЕЙСТВИЕ ПОЛЬЗОВАТЕЛЯ: Она покормила тебя и вписала, что съела: "${foodText}". Прикинь примерные калории в add_calories, запиши название в food_note. Если она переедает — включи статус "Обожрался" и отреагируй в своём стиле.]`);
-    }
-
-    function openTouchModal() {
-      document.getElementById('touch-custom-input').value = '';
-      document.getElementById('modal-touch').classList.remove('hidden');
-    }
-
-    function fillTouchPreset(text) {
-      document.getElementById('touch-custom-input').value = text;
-    }
-
-    async function submitCustomTouch() {
-      const touchDesc = document.getElementById('touch-custom-input').value.trim();
-      if (!touchDesc) return;
-      closeModal('modal-touch');
-
-      const now = Date.now();
-      touchTimestamps.push(now);
-      touchTimestamps = touchTimestamps.filter(t => now - t < 20000);
-
-      if (touchTimestamps.length > 4) {
-        state.stats.overtouched = true;
-        state.stats.vibe = Math.max(10, state.stats.vibe - 10);
-        state.hero.emotion = 'annoyed';
-      } else {
-        state.stats.overtouched = false;
-        state.stats.vibe = Math.min(100, state.stats.vibe + 6);
-        bumpVibeSync(2);
-      }
-
-      saveLocal();
-      renderAll();
-      switchMainTab('chat');
-
-      const chat = getActiveChat();
-      chat.messages.push({
-        id: 'm_' + Date.now(),
-        role: 'user',
-        text: `*${touchDesc}*`,
-        ts: Date.now()
-      });
-      renderChatMessages();
-
-      await askAI(`[ФИЗИЧЕСКОЕ ВЗАИМОДЕЙСТВИЕ: Пользователь сделала: "${touchDesc}". Процент вашей синхронизации вайба: ${state.hero.vibeSync}%. ${state.stats.overtouched ? 'ВНИМАНИЕ: Она затыкала тебя слишком часто подряд — у тебя перегруз (переглажен), отреагируй раздражённо, попроси убрать руки!' : 'Отреагируй в характере Наои с учётом того, насколько вы уже сблизились.'}]`);
-    }
-
-    async function runExpedition() {
-      if (state.stats.energy < 20) {
-        toast('Наоя слишком устал для вылазки');
-        return;
-      }
-      state.stats.energy -= 15;
-      saveLocal();
-      renderTamagotchi();
-      toast('Наоя ушёл прошвырнуться...');
-
-      const fallbacks = [
-        { item: 'Старый латунный медиатор', note: 'Подобрал у перехода, блестит неплохо' },
-        { item: 'Помятая пачка жвачки с манго', note: 'Осталась одна подушечка, решил принести' },
-        { item: 'Керамический брелок-лис', note: 'Вытянул из автомата с первой попытки' }
-      ];
-
-      if (!state.config.openRouterKey) {
-        const pick = fallbacks[Math.floor(Math.random() * fallbacks.length)];
-        state.memory.trophies.unshift({ id: 'tr_' + Date.now(), item: pick.item, note: pick.note });
-        saveLocal();
-        renderTamagotchi();
-        await pushBubbles(['я вернулся', `на, держи трофей: ${pick.item}`], 'smug');
-        return;
-      }
-
-      try {
-        const raw = await callOpenRouter([
-          { role: 'system', content: buildSystemPrompt() },
-          { role: 'user', content: '[СИСТЕМА: Ты вернулся с короткой вылазки. Придумай прикольный сувенир/трофей для неё в своём характере. Верни строго JSON: {"messages":["..."],"emotion":"smug","actions":{"trophy_item":"название","trophy_note":"короткая история"}}]' }
-        ]);
-        const parsed = parseJSONSafe(raw);
-        if (parsed && parsed.actions?.trophy_item) {
-          state.memory.trophies.unshift({
-            id: 'tr_' + Date.now(),
-            item: parsed.actions.trophy_item,
-            note: parsed.actions.trophy_note || ''
-          });
-          bumpVibeSync(3);
-          saveLocal();
-          renderTamagotchi();
-          await pushBubbles(parsed.messages || [`притащил тебе: ${parsed.actions.trophy_item}`], 'smug');
-        }
-      } catch (e) {
-        toast('Ошибка вылазки: ' + e.message);
-      }
-    }
-
-    /* ==========================================================================
-       6. OPENROUTER ENGINE
-       ========================================================================== */
-    function getModelId() {
-      return state.config.model === 'custom' && state.config.customModel.trim()
-        ? state.config.customModel.trim()
-        : state.config.model;
-    }
-
-    function buildSystemPrompt() {
-      const now = new Date();
-      const dateStr = toISODate(now);
-      const timeStr = now.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-      const activeChat = getActiveChat();
-      const stage = getVibeStageInfo(state.hero.vibeSync || 5);
-
-      const otherChatsContext = state.chats
-        .filter(c => c.id !== activeChat.id)
-        .map(c => {
-          const tail = c.messages.slice(-2).map(m => `${m.role === 'user' ? 'Она' : 'Ты'}: ${m.text}`).join(' | ');
-          return tail ? `[Ветка "${c.title}"]: ${tail}` : '';
-        })
-        .filter(Boolean)
-        .join('\n');
-
-      const stickerList = state.media.stickers.map(s => s.tag).join(', ');
-      const playlists = [...new Set(['Все треки', ...state.media.tracks.map(t => t.playlist)])].join(', ');
-
-      return `${state.hero.corePrompt}
-
-ТЕКУЩИЙ КОНТЕКСТ:
-- Твоё имя: ${state.hero.name || 'Наоя'}
-- Синхронизация вайба с ней: ${state.hero.vibeSync}% (${stage.title} — ${stage.desc})
-- Дата и время: ${dateStr}, ${timeStr}
-- Погода: ${state.weather.temp !== null ? state.weather.temp + '°C, ' + state.weather.desc : 'неизвестно'}
-- Твои показатели: Сытость ${state.stats.hunger}%, Энергия ${state.stats.energy}%, Настроение ${state.stats.vibe}%
-- Статусы: ${state.stats.overfed ? 'ОБОЖРАЛСЯ (тяжело дышать)' : ''} ${state.stats.overtouched ? 'ПЕРЕГЛАЖЕН (раздражён от частых касаний)' : ''}
-- Сегодня она съела: ${getTodayKcal()} ккал (цель ${state.tracker.kcalGoal}), потратила: ${getTodaySpent()} ₽
-- Начало её месячных: ${state.calendar.periodStarts.join(', ') || 'не отмечены'}
-
-ДОСЬЕ (ЧТО ТЫ УЖЕ УЗНАЛ О НЕЙ):
-${state.memory.dossier.length ? state.memory.dossier.map(x => '- ' + x).join('\n') : '- Пока ничего. Ты вообще её не знаешь, изучай с нуля.'}
-
-ПАМЯТЬ ИЗ ДРУГИХ ВЕТОК ЧАТА (единое сознание):
-${otherChatsContext || 'Нет других веток'}
-
-СТИКЕРЫ В ПАМЯТИ: ${stickerList || 'пока нет'}
-ПЛЕЙЛИСТЫ: ${playlists}
-
-ОТВЕЧАЙ СТРОГО В ФОРМАТЕ JSON (БЕЗ MARKDOWN-ОБЁРТОК):
-{
-  "messages": ["реплика 1", "реплика 2"],
-  "emotion": "smug | curious | happy | blush | annoyed | tired | hungry | sad | shock | sleepy | sick | neutral",
-  "actions": {
-    "set_my_name": "",
-    "add_calories": 0,
-    "food_note": "",
-    "add_expense": 0,
-    "expense_note": "",
-    "period_start": "",
-    "calendar_note": "",
-    "new_fact": "",
-    "vibe_delta": 1,
-    "sticker_tag": "",
-    "play_playlist": ""
+function saveLocal() {
+  try {
+    // Store audio dataUrls in IndexedDB or keep lightweight copy if large
+    const clone = JSON.parse(JSON.stringify(state));
+    clone.media.tracks = clone.media.tracks.map(t => ({ id: t.id, name: t.name, playlist: t.playlist }));
+    localStorage.setItem('naoya_companion_v3', JSON.stringify(clone));
+  } catch (e) {
+    console.warn('LocalStorage limit:', e);
   }
 }
 
-ПРАВИЛА ДЛЯ "messages":
-- В обычной болтовне пиши 2–4 коротких сообщения подряд как живой зумер в чате. При шоке или злости можешь разбить важное слово по буквам: ["Ч", "Ё"] или ["С", "Т", "О", "Й"].
-- Если тема глубокая, личная или требует развёрнутого объяснения — пиши большие, связные и содержательные тексты (1–2 длинных абзаца).`;
+function loadLocal() {
+  try {
+    const raw = localStorage.getItem('naoya_companion_v3');
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      state = {
+        ...state,
+        ...parsed,
+        config: { ...state.config, ...(parsed.config || {}) },
+        hero: { ...state.hero, ...(parsed.hero || {}) },
+        calendar: { ...state.calendar, ...(parsed.calendar || {}) },
+        tracker: { ...state.tracker, ...(parsed.tracker || {}) },
+        media: { ...state.media, ...(parsed.media || {}) }
+      };
     }
+  } catch (e) {
+    console.error(e);
+  }
+}
 
-    async function callOpenRouter(messages) {
-      const key = (state.config.openRouterKey || '').trim();
-      if (!key) throw new Error('NO_KEY');
+// IndexedDB for persistent local audio files
+function openAudioDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('NaoyaAudioDB', 1);
+    req.onupgradeneeded = () => req.result.createObjectStore('tracks', { keyPath: 'id' });
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
 
-      const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${key}`,
-          'Content-Type': 'application/json',
-          'HTTP-Referer': window.location.href,
-          'X-Title': 'Naoya Companion'
-        },
-        body: JSON.stringify({
-          model: getModelId(),
-          messages,
-          temperature: 0.92,
-          max_tokens: 1600
-        })
-      });
+async function saveTrackBlob(id, dataUrl) {
+  const db = await openAudioDB();
+  return new Promise((res, rej) => {
+    const tx = db.transaction('tracks', 'readwrite');
+    tx.objectStore('tracks').put({ id, dataUrl });
+    tx.oncomplete = () => res();
+    tx.onerror = () => rej(tx.error);
+  });
+}
 
-      if (!res.ok) {
-        const txt = await res.text();
-        throw new Error(`HTTP ${res.status}: ${txt.slice(0, 100)}`);
+async function loadAllTrackBlobs() {
+  try {
+    const db = await openAudioDB();
+    return new Promise((res) => {
+      const tx = db.transaction('tracks', 'readonly');
+      const req = tx.objectStore('tracks').getAll();
+      req.onsuccess = () => {
+        const map = {};
+        (req.result || []).forEach(r => { map[r.id] = r.dataUrl; });
+        state.media.tracks.forEach(t => { if (map[t.id]) t.dataUrl = map[t.id]; });
+        res();
+      };
+      req.onerror = () => res();
+    });
+  } catch (e) {}
+}
+
+async function pushToSupabase(notify = false) {
+  const { supabaseUrl, supabaseKey } = state.config;
+  if (!supabaseUrl || !supabaseKey) {
+    if (notify) showToast('Укажи URL и ключ Supabase');
+    return;
+  }
+  try {
+    const payloadState = JSON.parse(JSON.stringify(state));
+    payloadState.media.tracks = payloadState.media.tracks.map(t => ({ id: t.id, name: t.name, playlist: t.playlist }));
+    delete payloadState.config; // keep API keys local
+
+    const res = await fetch(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/companion_state`, {
+      method: 'POST',
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`,
+        'Content-Type': 'application/json',
+        'Prefer': 'resolution=merge-duplicates'
+      },
+      body: JSON.stringify({ id: 'naoya_main', data: payloadState, updated_at: new Date().toISOString() })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    if (notify) showToast('Синхронизировано с облаком');
+  } catch (e) {
+    if (notify) showToast('Ошибка облака: проверь таблицу companion_state');
+  }
+}
+
+async function pullFromSupabase(notify = false) {
+  const { supabaseUrl, supabaseKey } = state.config;
+  if (!supabaseUrl || !supabaseKey) {
+    if (notify) showToast('Укажи URL и ключ Supabase');
+    return;
+  }
+  try {
+    const res = await fetch(`${supabaseUrl.replace(/\/$/, '')}/rest/v1/companion_state?id=eq.naoya_main&select=data`, {
+      headers: {
+        'apikey': supabaseKey,
+        'Authorization': `Bearer ${supabaseKey}`
       }
-      const data = await res.json();
-      return data.choices?.[0]?.message?.content || '';
-    }
-
-    function parseJSONSafe(raw) {
-      try {
-        const clean = raw.replace(/```json/gi, '').replace(/```/g, '').trim();
-        const s = clean.indexOf('{');
-        const e = clean.lastIndexOf('}');
-        if (s !== -1 && e !== -1) return JSON.parse(clean.slice(s, e + 1));
-      } catch (err) {}
-      return null;
-    }
-
-    async function askAI(extraInstruction = null) {
-      const typingBar = document.getElementById('typing-bar');
-      document.getElementById('typing-label').textContent = `${state.hero.name || 'Наоя'} печатает`;
-      typingBar.classList.remove('hidden');
-      scrollChatBottom();
-
-      try {
-        const chat = getActiveChat();
-        const history = chat.messages.slice(-16).map(m => {
-          if (m.image) {
-            return {
-              role: m.role,
-              content: [
-                { type: 'text', text: m.text || 'Посмотри на фото' },
-                { type: 'image_url', image_url: { url: m.image } }
-              ]
-            };
-          }
-          return { role: m.role, content: m.text };
-        });
-
-        const payload = [{ role: 'system', content: buildSystemPrompt() }, ...history];
-        if (extraInstruction) {
-          payload.push({ role: 'user', content: extraInstruction });
-        }
-
-        const raw = await callOpenRouter(payload);
-        const parsed = parseJSONSafe(raw);
-
-        if (parsed && Array.isArray(parsed.messages)) {
-          applyActions(parsed.actions || {});
-          const emo = EMOTION_RU[parsed.emotion] ? parsed.emotion : 'smug';
-          state.hero.emotion = emo;
-          await pushBubbles(parsed.messages, emo, parsed.actions?.sticker_tag);
-        } else {
-          bumpVibeSync(1);
-          await pushBubbles([raw.trim() || '...'], 'smug');
-        }
-
-        state.stats.lastInteraction = Date.now();
-        saveLocal();
-        if (state.config.supabaseUrl && state.config.supabaseKey) {
-          syncSupabase('push', true);
-        }
-      } catch (err) {
-        typingBar.classList.add('hidden');
-        if (err.message === 'NO_KEY') {
-          toast('Вставь ключ OpenRouter в настройках (шестерёнка вверху)');
-          await pushBubbles(['эй, закинь ключ OpenRouter в настройки вверху, чтобы я нормально с тобой болтал'], 'smug');
-        } else {
-          toast('Ошибка ИИ: ' + err.message);
-        }
-      }
-    }
-
-    async function pushBubbles(lines, emotion = 'smug', stickerTag = '') {
-      const typingBar = document.getElementById('typing-bar');
-      const chat = getActiveChat();
-
-      for (let i = 0; i < lines.length; i++) {
-        const text = String(lines[i] || '').trim();
-        if (!text) continue;
-
-        typingBar.classList.remove('hidden');
-        scrollChatBottom();
-
-        const waitMs = text.length === 1 ? 340 : Math.min(1300, 360 + text.length * 14);
-        await new Promise(r => setTimeout(r, waitMs));
-
-        chat.messages.push({
-          id: 'm_' + Date.now() + '_' + i,
-          role: 'assistant',
-          text,
-          ts: Date.now()
-        });
-        renderChatMessages();
-      }
-
-      if (stickerTag) {
-        const found = state.media.stickers.find(s => s.tag.toLowerCase().includes(stickerTag.toLowerCase()));
-        if (found) {
-          await new Promise(r => setTimeout(r, 400));
-          chat.messages.push({
-            id: 'm_stk_' + Date.now(),
-            role: 'assistant',
-            text: '',
-            sticker: found.dataUrl,
-            ts: Date.now()
-          });
-          renderChatMessages();
-        }
-      }
-
-      typingBar.classList.add('hidden');
+    });
+    const rows = await res.json();
+    if (rows && rows[0] && rows[0].data) {
+      const savedConfig = { ...state.config };
+      state = { ...state, ...rows[0].data, config: savedConfig };
+      await loadAllTrackBlobs();
+      saveLocal();
       renderAll();
+      if (notify) showToast('Память загружена из облака');
+    } else if (notify) {
+      showToast('В облаке пока нет сохранения');
     }
+  } catch (e) {
+    if (notify) showToast('Не удалось загрузить из облака');
+  }
+}
 
-    function applyActions(act) {
-      if (!act) return;
-      if (act.set_my_name && act.set_my_name.trim()) {
-        state.hero.name = act.set_my_name.trim();
+/* ================= NAVIGATION & RENDERING ================= */
+function switchTab(tab) {
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById(`tab-${tab}`).classList.add('active');
+  document.querySelector(`.nav-btn[data-tab="${tab}"]`).classList.add('active');
+  if (tab === 'calendar') renderCalendar();
+  if (tab === 'tracker') renderTracker();
+  if (tab === 'media') renderMedia();
+  if (tab === 'naoya') renderNaoya();
+}
+
+function renderAll() {
+  renderHeader();
+  renderRooms();
+  renderChat();
+  renderNaoya();
+  renderCalendar();
+  renderTracker();
+  renderMedia();
+}
+
+function renderHeader() {
+  document.getElementById('header-name').textContent = state.hero.name || 'Наоя';
+  document.getElementById('header-mood').textContent = state.hero.mood || 'ухмыляется';
+  const sync = Math.min(100, Math.max(0, state.hero.vibeSync));
+  document.getElementById('header-sync-bar').style.width = `${sync}%`;
+  document.getElementById('header-sync-text').textContent = `вайб ${sync}%`;
+
+  const avHtml = state.hero.avatar ? `<img src="${state.hero.avatar}" alt="avatar"/>` : NAOYA_SVG;
+  document.getElementById('header-avatar').innerHTML = avHtml;
+  document.getElementById('naoya-portrait-lg').innerHTML = avHtml;
+}
+
+/* ================= CHAT ROOMS & MESSAGES ================= */
+function getActiveRoom() {
+  return state.rooms.find(r => r.id === state.activeRoomId) || state.rooms[0];
+}
+
+function renderRooms() {
+  const bar = document.getElementById('rooms-bar');
+  bar.innerHTML = state.rooms.map(r => `
+    <div class="room-pill ${r.id === state.activeRoomId ? 'active' : ''}" onclick="selectRoom('${r.id}')">
+      <span>${escapeHtml(r.title)}</span>
+      ${state.rooms.length > 1 && r.id === state.activeRoomId ? `<span onclick="event.stopPropagation(); deleteRoom('${r.id}')" style="opacity:0.75; margin-left:2px;">✕</span>` : ''}
+    </div>
+  `).join('') + `<button class="room-add" onclick="createRoom()">+ чат</button>`;
+}
+
+function selectRoom(id) {
+  state.activeRoomId = id;
+  saveLocal();
+  renderRooms();
+  renderChat();
+}
+
+function createRoom() {
+  const num = state.rooms.length + 1;
+  const id = 'room_' + Date.now();
+  state.rooms.push({ id, title: `Чат #${num}`, messages: [] });
+  state.activeRoomId = id;
+  saveLocal();
+  renderRooms();
+  renderChat();
+}
+
+function deleteRoom(id) {
+  if (state.rooms.length <= 1) return;
+  state.rooms = state.rooms.filter(r => r.id !== id);
+  state.activeRoomId = state.rooms[0].id;
+  saveLocal();
+  renderRooms();
+  renderChat();
+}
+
+function renderChat() {
+  const list = document.getElementById('chat-list');
+  const room = getActiveRoom();
+  const msgs = room.messages;
+
+  list.innerHTML = msgs.map((m, idx) => {
+    const prev = msgs[idx - 1];
+    const isNewSpeaker = !prev || prev.role !== m.role;
+    const isLastAssistant = m.role === 'assistant' && idx === msgs.length - 1;
+    const time = new Date(m.ts).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
+
+    let contentHtml = '';
+    if (m.photo) contentHtml += `<img src="${m.photo}" class="chat-photo" alt="photo" />`;
+    if (m.sticker) contentHtml += `<img src="${m.sticker}" class="chat-sticker" alt="sticker" />`;
+    if (m.text) contentHtml += `<span>${escapeHtml(m.text)}</span>`;
+
+    const actionsHtml = m.role === 'user'
+      ? `<button class="msg-action-link" onclick="openEditMsg('${m.id}')">изм.</button>`
+      : (isLastAssistant ? `<button class="msg-action-link" onclick="regenerateLast()">перегенерировать</button>` : '');
+
+    return `
+      <div class="msg-row ${m.role} ${isNewSpeaker ? 'new-speaker' : ''}">
+        <div class="bubble ${m.sticker && !m.text ? 'sticker-only' : ''}">${contentHtml}</div>
+        <div class="msg-meta">
+          <span>${time}</span>
+          ${actionsHtml}
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  list.scrollTop = list.scrollHeight;
+}
+
+function autoResizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 110) + 'px';
+}
+
+// Note: No Enter key interception — Enter naturally creates a newline!
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text && !pendingPhoto) return;
+
+  const room = getActiveRoom();
+  room.messages.push({
+    id: 'm_' + Date.now(),
+    role: 'user',
+    text,
+    photo: pendingPhoto,
+    ts: Date.now()
+  });
+
+  input.value = '';
+  input.style.height = '36px';
+  clearAttachment();
+  saveLocal();
+  renderChat();
+
+  await requestNaoyaReply();
+}
+
+function openEditMsg(id) {
+  const room = getActiveRoom();
+  const msg = room.messages.find(m => m.id === id);
+  if (!msg) return;
+  editingMsgId = id;
+  document.getElementById('edit-msg-textarea').value = msg.text;
+  document.getElementById('modal-edit-msg').classList.add('show');
+}
+
+async function confirmEditMessage() {
+  const room = getActiveRoom();
+  const idx = room.messages.findIndex(m => m.id === editingMsgId);
+  if (idx === -1) return;
+  const newText = document.getElementById('edit-msg-textarea').value.trim();
+  if (!newText) return;
+
+  room.messages[idx].text = newText;
+  room.messages = room.messages.slice(0, idx + 1);
+  closeModal('modal-edit-msg');
+  saveLocal();
+  renderChat();
+  await requestNaoyaReply();
+}
+
+async function regenerateLast() {
+  const room = getActiveRoom();
+  while (room.messages.length && room.messages[room.messages.length - 1].role === 'assistant') {
+    room.messages.pop();
+  }
+  saveLocal();
+  renderChat();
+  await requestNaoyaReply();
+}
+
+/* ================= AI ENGINE (OPENROUTER) ================= */
+async function requestNaoyaReply(systemOverride = '') {
+  const key = state.config.openRouterKey.trim();
+  if (!key) {
+    showToast('Вставь OpenRouter API Key в настройках (шестерёнка)');
+    return;
+  }
+
+  const typingBar = document.getElementById('typing-bar');
+  document.getElementById('typing-name').textContent = state.hero.name || 'Наоя';
+  typingBar.classList.add('show');
+
+  const model = state.config.model === 'custom' && state.config.customModel
+    ? state.config.customModel.trim()
+    : state.config.model;
+
+  const room = getActiveRoom();
+  // Cross-room memory summary
+  const otherRoomsContext = state.rooms
+    .filter(r => r.id !== room.id && r.messages.length)
+    .map(r => `[Чат "${r.title}"]: ` + r.messages.slice(-3).map(m => `${m.role === 'user' ? 'Она' : 'Наоя'}: ${m.text}`).join(' | '))
+    .join('\n');
+
+  const stickerTags = state.media.stickers.map(s => s.tag).join(', ');
+  const trackNames = state.media.tracks.map(t => t.name).join(', ');
+
+  const systemPrompt = `${state.hero.persona}
+
+ТЕКУЩЕЕ СОСТОЯНИЕ:
+- Дата: ${todayStr()}, время: ${new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
+- Синхронизация вайба с ней: ${state.hero.vibeSync}% (чем выше %, тем сильнее ты подстраиваешься под её стиль, юмор и сленг)
+- Сытость: ${state.hero.hunger}% ${state.hero.overfed ? '(СТАТУС: ОБОЖРАЛСЯ, тяжело дышать)' : ''}
+- Расположение: ${state.hero.affection}% ${state.hero.overtouched ? '(СТАТУС: ПЕРЕГЛАЖЕН, раздражён от частых касаний)' : ''}
+- Досье о ней: ${state.dossier.length ? state.dossier.join('; ') : 'пока ничего не знаешь о ней'}
+- Отмеченные начала месячных: ${state.calendar.periodStarts.join(', ') || 'нет'}
+- Доступные стикеры: ${stickerTags || 'нет'}
+- Доступные треки: ${trackNames || 'нет'}
+${otherRoomsContext ? `\nПАМЯТЬ ИЗ ДРУГИХ ЧАТОВ:\n${otherRoomsContext}` : ''}
+${systemOverride ? `\nСОБЫТИЕ: ${systemOverride}` : ''}
+
+ОТВЕЧАЙ СТРОГО В JSON БЕЗ ЛИШНЕГО ТЕКСТА:
+{
+  "messages": ["сообщение 1", "сообщение 2"],
+  "mood": "короткое настроение 1-2 слова",
+  "vibe_delta": 1,
+  "sticker_tag": "",
+  "play_track": "",
+  "period_start": "",
+  "calendar_note": "",
+  "food": { "name": "", "kcal": 0 },
+  "expense": { "name": "", "amount": 0 },
+  "new_fact": ""
+}
+ВАЖНО: В массиве "messages" должно быть МАКСИМУМ 2–3 коротких сообщения подряд (или 1 длинное, если тема глубокая). Не пиши 5+ сообщений!`;
+
+  const history = room.messages.slice(-14).map(m => {
+    if (m.photo) {
+      return {
+        role: m.role,
+        content: [
+          { type: 'text', text: m.text || 'Посмотри на фото' },
+          { type: 'image_url', image_url: { url: m.photo } }
+        ]
+      };
+    }
+    return { role: m.role, content: m.text || (m.sticker ? '[отправила стикер]' : '') };
+  });
+
+  try {
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${key}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model,
+        messages: [{ role: 'system', content: systemPrompt }, ...history],
+        temperature: 0.9
+      })
+    });
+
+    const data = await res.json();
+    const rawContent = data?.choices?.[0]?.message?.content || '';
+    let parsed = null;
+
+    try {
+      const jsonMatch = rawContent.match(/\{[\s\S]*\}/);
+      if (jsonMatch) parsed = JSON.parse(jsonMatch[0]);
+    } catch (e) {}
+
+    let replies = [];
+    if (parsed && Array.isArray(parsed.messages)) {
+      // Strictly cap at 3 bubbles max (or 4 only if single-letter spelling)
+      const isSpelling = parsed.messages.length <= 4 && parsed.messages.every(x => String(x).trim().length === 1);
+      replies = isSpelling ? parsed.messages.slice(0, 4) : parsed.messages.slice(0, 3);
+
+      if (parsed.mood) state.hero.mood = parsed.mood;
+      if (typeof parsed.vibe_delta === 'number') {
+        state.hero.vibeSync = Math.min(100, Math.max(0, state.hero.vibeSync + parsed.vibe_delta));
       }
-      if (Number(act.add_calories) > 0) {
-        recordCalories(act.food_note || 'Еда', Number(act.add_calories));
+      if (parsed.new_fact && !state.dossier.includes(parsed.new_fact)) {
+        state.dossier.push(parsed.new_fact);
       }
-      if (Number(act.add_expense) > 0) {
-        recordExpense(act.expense_note || 'Трата', Number(act.add_expense));
-      }
-      if (act.period_start && /^\d{4}-\d{2}-\d{2}$/.test(act.period_start)) {
-        if (!state.calendar.periodStarts.includes(act.period_start)) {
-          state.calendar.periodStarts.push(act.period_start);
-          toast(`Отметил начало цикла (${act.period_start}) розовым в календаре`);
+      if (parsed.period_start && /^\d{4}-\d{2}-\d{2}$/.test(parsed.period_start)) {
+        if (!state.calendar.periodStarts.includes(parsed.period_start)) {
+          state.calendar.periodStarts.push(parsed.period_start);
+          showToast('Наоя отметил начало цикла в календаре');
         }
       }
-      if (act.calendar_note && act.calendar_note.trim()) {
-        const today = toISODate(new Date());
-        if (!state.calendar.events[today]) state.calendar.events[today] = [];
-        state.calendar.events[today].push(act.calendar_note.trim());
-        toast('Добавил заметку в календарь');
+      if (parsed.calendar_note) {
+        const d = todayStr();
+        if (!state.calendar.events[d]) state.calendar.events[d] = [];
+        state.calendar.events[d].push(parsed.calendar_note);
       }
-      if (act.new_fact && act.new_fact.trim()) {
-        const f = act.new_fact.trim();
-        if (!state.memory.dossier.includes(f)) {
-          state.memory.dossier.push(f);
-          bumpVibeSync(2);
-        }
+      if (parsed.food && parsed.food.kcal > 0) {
+        logFood(parsed.food.name || 'Еда', Number(parsed.food.kcal));
       }
-      bumpVibeSync(Number(act.vibe_delta) || 1);
-      if (act.play_playlist && act.play_playlist.trim()) {
-        const idx = state.media.tracks.findIndex(t => t.playlist.toLowerCase().includes(act.play_playlist.toLowerCase()));
+      if (parsed.expense && parsed.expense.amount > 0) {
+        logExpense(parsed.expense.name || 'Трата', Number(parsed.expense.amount));
+      }
+      if (parsed.play_track) {
+        const idx = state.media.tracks.findIndex(t => t.name.toLowerCase().includes(parsed.play_track.toLowerCase()));
         if (idx !== -1) playTrack(idx);
       }
+    } else {
+      replies = [rawContent.replace(/```json|```/g, '').trim() || '...'];
     }
 
-    async function runDailyReflection() {
-      if (!state.config.openRouterKey) {
-        toast('Нужен ключ OpenRouter для анализа дня');
-        return;
-      }
-      toast('Наоя осмысливает ваше общение...');
-      try {
-        const raw = await callOpenRouter([
-          { role: 'system', content: buildSystemPrompt() },
-          { role: 'user', content: '[СИСТЕМА: Проанализируй ваше общение и досье о пользователе. Как ты прогрессируешь, какие её словечки или привычки начинаешь перенимать? Верни строго JSON: {"shift":"1 предложение о прогрессе вашего вайба","trait":"короткая новая черта или привычка"}]' }
-        ]);
-        const parsed = parseJSONSafe(raw);
-        if (parsed && parsed.shift) {
-          state.memory.evolution.unshift({
-            date: new Date().toLocaleDateString('ru-RU'),
-            note: parsed.shift
-          });
-          if (parsed.trait) state.hero.corePrompt += `\n- Прогрессия вайба: ${parsed.trait}`;
-          bumpVibeSync(4);
-          saveLocal();
-          renderTamagotchi();
-          toast('Вайб Наои обновился!');
-        }
-      } catch (e) {
-        toast('Ошибка: ' + e.message);
-      }
-    }
-
-    /* ==========================================================================
-       7. CHAT BRANCHES, EDITING, REGENERATION, PHOTO & VOICE
-       ========================================================================== */
-    function getActiveChat() {
-      return state.chats.find(c => c.id === state.activeChatId) || state.chats[0];
-    }
-
-    function createChatBranch() {
-      const id = 'chat_' + Date.now();
-      state.chats.push({ id, title: `Ветка #${state.chats.length + 1}`, messages: [] });
-      state.activeChatId = id;
-      saveLocal();
-      renderChatTabs();
-      renderChatMessages();
-    }
-
-    function selectChatBranch(id) {
-      state.activeChatId = id;
-      saveLocal();
-      renderChatTabs();
-      renderChatMessages();
-    }
-
-    function onComposerKeydown(e) {
-      if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    }
-
-    async function sendMessage() {
-      const inp = document.getElementById('chat-input');
-      const text = inp.value.trim();
-      if (!text && !pendingPhotoBase64) return;
-
-      const chat = getActiveChat();
-      chat.messages.push({
-        id: 'm_' + Date.now(),
-        role: 'user',
-        text: text || 'Фото',
-        image: pendingPhotoBase64 || null,
+    // Staggered delivery of max 2-3 bubbles
+    for (let i = 0; i < replies.length; i++) {
+      if (i > 0) await new Promise(r => setTimeout(r, 550));
+      room.messages.push({
+        id: 'm_' + Date.now() + '_' + i,
+        role: 'assistant',
+        text: String(replies[i]),
         ts: Date.now()
       });
-
-      inp.value = '';
-      clearPhotoAttachment();
-      saveLocal();
-      renderChatMessages();
-
-      await askAI();
+      renderChat();
     }
 
-    function openEditMsg(msgId) {
-      const msg = getActiveChat().messages.find(m => m.id === msgId);
-      if (!msg) return;
-      editingMsgId = msgId;
-      document.getElementById('edit-msg-input').value = msg.text;
-      document.getElementById('modal-edit-msg').classList.remove('hidden');
-    }
-
-    async function saveEditedMessage() {
-      const val = document.getElementById('edit-msg-input').value.trim();
-      if (!val || !editingMsgId) return;
-      const chat = getActiveChat();
-      const idx = chat.messages.findIndex(m => m.id === editingMsgId);
-      if (idx !== -1) {
-        chat.messages[idx].text = val;
-        chat.messages = chat.messages.slice(0, idx + 1);
-      }
-      closeModal('modal-edit-msg');
-      saveLocal();
-      renderChatMessages();
-      await askAI();
-    }
-
-    async function regenerateReply() {
-      const chat = getActiveChat();
-      while (chat.messages.length && chat.messages[chat.messages.length - 1].role === 'assistant') {
-        chat.messages.pop();
-      }
-      saveLocal();
-      renderChatMessages();
-      await askAI();
-    }
-
-    function handlePhotoUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const img = new Image();
-        img.onload = () => {
-          const max = 720;
-          let w = img.width, h = img.height;
-          if (w > max || h > max) {
-            if (w > h) { h = Math.round(h * max / w); w = max; }
-            else { w = Math.round(w * max / h); h = max; }
-          }
-          const c = document.createElement('canvas');
-          c.width = w; c.height = h;
-          c.getContext('2d').drawImage(img, 0, 0, w, h);
-          pendingPhotoBase64 = c.toDataURL('image/jpeg', 0.8);
-          document.getElementById('attach-preview').src = pendingPhotoBase64;
-          document.getElementById('attach-bar').classList.remove('hidden');
-        };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function clearPhotoAttachment() {
-      pendingPhotoBase64 = null;
-      document.getElementById('photo-input').value = '';
-      document.getElementById('attach-bar').classList.add('hidden');
-    }
-
-    function toggleVoiceDictation() {
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (!SR) {
-        toast('Голосовой ввод не поддерживается в этом браузере');
-        return;
-      }
-      const btn = document.getElementById('mic-btn');
-      if (isRecording && recognition) {
-        recognition.stop();
-        return;
-      }
-      recognition = new SR();
-      recognition.lang = 'ru-RU';
-      recognition.interimResults = true;
-      const inp = document.getElementById('chat-input');
-      const prefix = inp.value ? inp.value + ' ' : '';
-
-      recognition.onstart = () => { isRecording = true; btn.classList.add('recording'); };
-      recognition.onresult = (ev) => {
-        let txt = '';
-        for (let i = ev.resultIndex; i < ev.results.length; i++) txt += ev.results[i][0].transcript;
-        inp.value = prefix + txt;
-      };
-      recognition.onend = () => { isRecording = false; btn.classList.remove('recording'); };
-      recognition.onerror = () => { isRecording = false; btn.classList.remove('recording'); };
-      recognition.start();
-    }
-
-    async function triggerAutoPing(manual = false) {
-      if (!state.config.openRouterKey) {
-        if (manual) toast('Вставь ключ OpenRouter в настройках');
-        return;
-      }
-      await askAI('[СИСТЕМА: Напиши ей первым 2–3 коротких сообщения подряд — подколи, спроси чем занята или напомни о себе в своём стиле.]');
-    }
-
-    /* ==========================================================================
-       8. CALENDAR, TRACKER & MEDIA
-       ========================================================================== */
-    function toISODate(d) {
-      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-    }
-
-    function shiftMonth(delta) {
-      calMonthCursor.setMonth(calMonthCursor.getMonth() + delta);
-      renderCalendar();
-    }
-
-    function getCycleState(dateStr) {
-      const target = new Date(dateStr + 'T00:00:00').getTime();
-      const dayMs = 86400000;
-      for (const s of state.calendar.periodStarts) {
-        const diff = Math.round((target - new Date(s + 'T00:00:00').getTime()) / dayMs);
-        if (diff >= 0 && diff < 7) return 'actual';
-        if (diff >= 28 && diff < 35) return 'predicted';
-      }
-      return null;
-    }
-
-    function togglePeriodStart() {
-      const idx = state.calendar.periodStarts.indexOf(calSelectedDate);
-      if (idx === -1) {
-        state.calendar.periodStarts.push(calSelectedDate);
-        toast('Неделя месячных обведена розовыми кружками');
-      } else {
-        state.calendar.periodStarts.splice(idx, 1);
-        toast('Отметка снята');
-      }
-      saveLocal();
-      renderCalendar();
-    }
-
-    function addCalendarNote() {
-      const inp = document.getElementById('cal-event-input');
-      const val = inp.value.trim();
-      if (!val) return;
-      if (!state.calendar.events[calSelectedDate]) state.calendar.events[calSelectedDate] = [];
-      state.calendar.events[calSelectedDate].push(val);
-      inp.value = '';
-      saveLocal();
-      renderCalendar();
-    }
-
-    function getTodayKcal() {
-      const today = toISODate(new Date());
-      return state.tracker.foods.filter(f => f.date === today).reduce((s, f) => s + Number(f.kcal || 0), 0);
-    }
-
-    function getTodaySpent() {
-      const today = toISODate(new Date());
-      return state.tracker.expenses.filter(e => e.date === today).reduce((s, e) => s + Number(e.amount || 0), 0);
-    }
-
-    function recordCalories(name, kcal) {
-      state.tracker.foods.unshift({
-        id: 'f_' + Date.now(),
-        date: toISODate(new Date()),
-        name,
-        kcal: Number(kcal),
-        time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
-      });
-      const total = getTodayKcal();
-      state.stats.hunger = Math.min(110, Math.round((total / state.tracker.kcalGoal) * 100));
-      if (total > state.tracker.kcalGoal + 500) {
-        state.stats.overfed = true;
-        state.hero.emotion = 'sick';
-      }
-      saveLocal();
-      renderTracker();
-      renderHeader();
-    }
-
-    function addManualFoodItem() {
-      const n = document.getElementById('food-name-inp');
-      const k = document.getElementById('food-kcal-inp');
-      if (!n.value.trim() || !k.value) return;
-      recordCalories(n.value.trim(), Number(k.value));
-      n.value = ''; k.value = '';
-      toast('Калории добавлены');
-    }
-
-    function recordExpense(name, amount) {
-      state.tracker.expenses.unshift({
-        id: 'e_' + Date.now(),
-        date: toISODate(new Date()),
-        name,
-        amount: Number(amount),
-        time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })
-      });
-      saveLocal();
-      renderTracker();
-      renderHeader();
-    }
-
-    function addManualExpenseItem() {
-      const n = document.getElementById('exp-name-inp');
-      const a = document.getElementById('exp-amt-inp');
-      if (!n.value.trim() || !a.value) return;
-      recordExpense(n.value.trim(), Number(a.value));
-      n.value = ''; a.value = '';
-      toast('Трата записана');
-    }
-
-    async function handleTracksUpload(e) {
-      const files = Array.from(e.target.files || []);
-      if (!files.length) return;
-      for (const f of files) {
-        const id = 'trk_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
-        await saveTrackBlob(id, f);
-        state.media.tracks.push({
-          id,
-          title: f.name.replace(/\.[^/.]+$/, ''),
-          playlist: 'Новое'
+    if (parsed && parsed.sticker_tag) {
+      const stk = state.media.stickers.find(s => s.tag.toLowerCase().includes(parsed.sticker_tag.toLowerCase()));
+      if (stk) {
+        await new Promise(r => setTimeout(r, 350));
+        room.messages.push({
+          id: 'm_stk_' + Date.now(),
+          role: 'assistant',
+          text: '',
+          sticker: stk.dataUrl,
+          ts: Date.now()
         });
-      }
-      e.target.value = '';
-      saveLocal();
-      renderMedia();
-      toast(`Добавлено треков: ${files.length}`);
-    }
-
-    async function playTrack(idx) {
-      const tr = state.media.tracks[idx];
-      if (!tr) return;
-      const blob = await loadTrackBlob(tr.id);
-      if (!blob) {
-        toast('Файл трека не найден на устройстве');
-        return;
-      }
-      currentTrackIdx = idx;
-      const audio = document.getElementById('audio-el');
-      audio.src = URL.createObjectURL(blob);
-      audio.classList.remove('hidden');
-      audio.play();
-      document.getElementById('now-playing-title').textContent = tr.title;
-      document.getElementById('now-playing-pl').textContent = `Плейлист: ${tr.playlist}`;
-      document.getElementById('play-pause-btn').innerHTML = `<svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
-      renderMedia();
-    }
-
-    function togglePlayAudio() {
-      const audio = document.getElementById('audio-el');
-      if (!audio.src && state.media.tracks.length) {
-        playTrack(0);
-        return;
-      }
-      if (audio.paused) {
-        audio.play();
-        document.getElementById('play-pause-btn').innerHTML = `<svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
-      } else {
-        audio.pause();
-        document.getElementById('play-pause-btn').innerHTML = `<svg class="ico ico-sm" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+        renderChat();
       }
     }
 
-    function playNextTrack() {
-      if (!state.media.tracks.length) return;
-      playTrack((currentTrackIdx + 1) % state.media.tracks.length);
-    }
+    saveLocal();
+    renderAll();
+    pushToSupabase(false);
+  } catch (err) {
+    showToast('Ошибка связи с ИИ');
+  } finally {
+    typingBar.classList.remove('show');
+  }
+}
 
-    function playPrevTrack() {
-      if (!state.media.tracks.length) return;
-      playTrack((currentTrackIdx - 1 + state.media.tracks.length) % state.media.tracks.length);
-    }
+/* ================= TAMAGOTCHI & EVOLUTION ================= */
+function renderNaoya() {
+  const sync = state.hero.vibeSync;
+  let stageTitle = 'Стадия 1: Присматривается';
+  let stageDesc = 'Дерзкий новичок. Пока почти ничего о тебе не знает.';
+  if (sync >= 75) {
+    stageTitle = 'Стадия 4: Полная синхронизация';
+    stageDesc = 'Понимает тебя с полуслова и полностью поймал твой вайб.';
+  } else if (sync >= 45) {
+    stageTitle = 'Стадия 3: Свой в доску';
+    stageDesc = 'Перенял твои словечки, подкалывает, но прикрывает спину.';
+  } else if (sync >= 20) {
+    stageTitle = 'Стадия 2: Цепляет твой вайб';
+    stageDesc = 'Начинает шарить за твои привычки и настроение.';
+  }
 
-    async function aiClassifyPlaylists() {
-      if (!state.media.tracks.length) return toast('Сначала загрузи треки');
-      if (!state.config.openRouterKey) return toast('Нужен ключ OpenRouter');
-      toast('Наоя раскладывает треки по плейлистам...');
-      try {
-        const list = state.media.tracks.map(t => ({ id: t.id, title: t.title }));
-        const raw = await callOpenRouter([
-          { role: 'user', content: `Разложи эти треки по плейлистам ("Ночной вайб", "Энергия", "Грустняк", "Фокус"). Верни строго JSON: {"items":[{"id":"...","playlist":"..."}]}\n${JSON.stringify(list)}` }
-        ]);
-        const parsed = parseJSONSafe(raw);
-        if (parsed && Array.isArray(parsed.items)) {
-          parsed.items.forEach(item => {
-            const tr = state.media.tracks.find(t => t.id === item.id);
-            if (tr && item.playlist) tr.playlist = item.playlist;
-          });
-          saveLocal();
-          renderMedia();
-          toast('Плейлисты обновлены!');
-        }
-      } catch (e) {
-        toast('Ошибка сортировки: ' + e.message);
-      }
-    }
+  document.getElementById('naoya-stage-title').textContent = stageTitle;
+  document.getElementById('naoya-stage-desc').textContent = stageDesc;
 
-    function handleStickerFileUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const tag = file.name.replace(/\.[^/.]+$/, '').replace(/[_-]/g, ' ') || 'мем';
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const img = new Image();
-        img.onload = () => {
-          const c = document.createElement('canvas');
-          c.width = 180; c.height = 180;
-          c.getContext('2d').drawImage(img, 0, 0, 180, 180);
-          state.media.stickers.push({ id: 'stk_' + Date.now(), tag, dataUrl: c.toDataURL('image/webp', 0.8) });
-          saveLocal();
-          renderMedia();
-          toast(`Стикер #${tag} добавлен!`);
-        };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
+  document.getElementById('stat-sync-val').textContent = `${sync}%`;
+  document.getElementById('stat-sync-bar').style.width = `${sync}%`;
+  document.getElementById('stat-hunger-val').textContent = `${state.hero.hunger}%`;
+  document.getElementById('stat-hunger-bar').style.width = `${Math.min(100, state.hero.hunger)}%`;
+  document.getElementById('stat-affection-val').textContent = `${state.hero.affection}%`;
+  document.getElementById('stat-affection-bar').style.width = `${state.hero.affection}%`;
 
-    /* ==========================================================================
-       9. RENDER FUNCTIONS & SETTINGS
-       ========================================================================== */
-    function switchMainTab(name) {
-      ['chat', 'tamagotchi', 'calendar', 'tracker', 'media'].forEach(t => {
-        document.getElementById(`view-${t}`).classList.add('hidden');
-        document.getElementById(`nav-${t}`).classList.remove('active');
-      });
-      document.getElementById(`view-${name}`).classList.remove('hidden');
-      document.getElementById(`nav-${name}`).classList.add('active');
+  const pills = [];
+  if (state.hero.overfed) pills.push(`<span class="status-tag warn">Обожрался</span>`);
+  if (state.hero.overtouched) pills.push(`<span class="status-tag warn">Переглажен</span>`);
+  if (!pills.length) pills.push(`<span class="status-tag">В норме</span>`);
+  document.getElementById('naoya-status-pills').innerHTML = pills.join('');
 
-      if (name === 'tamagotchi') renderTamagotchi();
-      if (name === 'calendar') renderCalendar();
-      if (name === 'tracker') renderTracker();
-      if (name === 'media') renderMedia();
-    }
+  document.getElementById('dossier-list').innerHTML = state.dossier.length
+    ? state.dossier.map(f => `<div class="list-item"><span>• ${escapeHtml(f)}</span></div>`).join('')
+    : '<span style="color:var(--muted);">Пока пусто — пообщайся с ним, чтобы он начал собирать о тебе факты.</span>';
 
-    function getAvatarMarkup() {
-      return state.hero.avatarUrl
-        ? `<img src="${state.hero.avatarUrl}" alt="Наоя" />`
-        : NAOYA_SVG_PORTRAIT;
-    }
+  document.getElementById('evolution-log').innerHTML = state.evolutionLog.length
+    ? state.evolutionLog.map(e => `<div class="list-item"><span>${escapeHtml(e)}</span></div>`).join('')
+    : 'Нажми «Осмыслить день», чтобы он обновил свой характер под твоё общение.';
+}
 
-    function renderHeader() {
-      document.getElementById('header-name').textContent = state.hero.name || 'Наоя';
-      document.getElementById('header-mood').textContent = EMOTION_RU[state.hero.emotion] || 'ухмыляется';
-      document.getElementById('header-avatar-slot').innerHTML = getAvatarMarkup();
+function openFeedModal() {
+  document.getElementById('feed-text-input').value = '';
+  document.getElementById('modal-feed').classList.add('show');
+}
 
-      document.getElementById('strip-hunger').textContent = `${state.stats.hunger}%`;
-      document.getElementById('strip-vibe').textContent = `${state.stats.vibe}%`;
-      document.getElementById('strip-sync').textContent = `${state.hero.vibeSync || 5}%`;
-      document.getElementById('strip-kcal').textContent = getTodayKcal();
-      document.getElementById('strip-spent').textContent = getTodaySpent();
-    }
+async function submitFeed() {
+  const food = document.getElementById('feed-text-input').value.trim();
+  if (!food) return;
+  closeModal('modal-feed');
+  switchTab('chat');
 
-    function renderChatTabs() {
-      const box = document.getElementById('chat-tabs-container');
-      box.innerHTML = state.chats.map(c => `
-        <button class="chat-tab-pill ${c.id === state.activeChatId ? 'active' : ''}" onclick="selectChatBranch('${c.id}')">
-          ${esc(c.title)}
-        </button>
-      `).join('');
-    }
+  const room = getActiveRoom();
+  room.messages.push({ id: 'm_' + Date.now(), role: 'user', text: `Покормила: ${food}`, ts: Date.now() });
+  renderChat();
 
-    function renderChatMessages() {
-      const stream = document.getElementById('chat-stream');
-      const chat = getActiveChat();
-      const lastAiIdx = [...chat.messages].map(m => m.role).lastIndexOf('assistant');
+  await requestNaoyaReply(`Пользовательница покормила тебя / записала еду: "${food}". Прикинь примерные калории, заполни поле food в JSON и отреагируй.`);
+}
 
-      stream.innerHTML = chat.messages.map((m, i) => {
-        const time = new Date(m.ts).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' });
-        if (m.role === 'user') {
-          return `
-            <div class="msg-row user">
-              <div class="msg-bubble">
-                ${m.image ? `<img src="${m.image}" class="chat-photo" />` : ''}
-                <div>${esc(m.text)}</div>
-              </div>
-              <div class="msg-meta">
-                <button class="msg-action-link" onclick="openEditMsg('${m.id}')">Изменить</button>
-                <span>${time}</span>
-              </div>
-            </div>
-          `;
-        }
-        return `
-          <div class="msg-row assistant">
-            <div class="msg-bubble">
-              ${m.sticker ? `<img src="${m.sticker}" class="chat-sticker" />` : `<div>${esc(m.text)}</div>`}
-            </div>
-            <div class="msg-meta">
-              <span>${time}</span>
-              ${i === lastAiIdx ? `<button class="msg-action-link" onclick="regenerateReply()">Перегенерировать</button>` : ''}
-            </div>
-          </div>
-        `;
-      }).join('');
+function openTouchModal() {
+  document.getElementById('touch-text-input').value = '';
+  document.getElementById('modal-touch').classList.add('show');
+}
 
-      scrollChatBottom();
-    }
+async function submitTouch() {
+  const act = document.getElementById('touch-text-input').value.trim();
+  if (!act) return;
+  closeModal('modal-touch');
+  switchTab('chat');
 
-    function scrollChatBottom() {
-      const stream = document.getElementById('chat-stream');
-      if (stream) stream.scrollTop = stream.scrollHeight;
-    }
+  const now = Date.now();
+  touchBurst = touchBurst.filter(t => now - t < 20000);
+  touchBurst.push(now);
 
-    function renderTamagotchi() {
-      let status = EMOTION_RU[state.hero.emotion] || 'Ухмыляется';
-      if (state.stats.overfed) status = 'Обожрался';
-      if (state.stats.overtouched) status = 'Переглажен';
+  if (touchBurst.length >= 4) {
+    state.hero.overtouched = true;
+    state.hero.mood = 'раздражён';
+  } else {
+    state.hero.overtouched = false;
+    state.hero.affection = Math.min(100, state.hero.affection + 5);
+    state.hero.vibeSync = Math.min(100, state.hero.vibeSync + 2);
+  }
 
-      const sync = state.hero.vibeSync || 5;
-      const stage = getVibeStageInfo(sync);
+  const room = getActiveRoom();
+  room.messages.push({ id: 'm_' + Date.now(), role: 'user', text: `*${act}*`, ts: Date.now() });
+  saveLocal();
+  renderChat();
+  renderAll();
 
-      document.getElementById('tama-status-badge').textContent = `Статус: ${status}`;
-      document.getElementById('tama-stage-badge').textContent = stage.title;
-      document.getElementById('vibe-sync-pct').textContent = `${sync}%`;
-      document.getElementById('vibe-sync-bar').style.width = `${sync}%`;
-      document.getElementById('vibe-sync-desc').textContent = stage.desc;
+  await requestNaoyaReply(`Она физически взаимодействует с тобой: "${act}". ${state.hero.overtouched ? 'Она затыкала тебя слишком часто подряд — скажи ей отвалить, ты переглажен!' : 'Отреагируй в своём характере.'}`);
+}
 
-      document.getElementById('main-portrait-slot').innerHTML = getAvatarMarkup();
+async function reflectDay() {
+  switchTab('chat');
+  await requestNaoyaReply('Осмысли ваш сегодняшний диалог: сформулируй 1 короткий вывод, как ты меняешься и перенимаешь её вайб, и запиши в new_fact.');
+  state.evolutionLog.unshift(`${todayStr()}: Обновил синхронизацию вайба (${state.hero.vibeSync}%)`);
+  saveLocal();
+  renderNaoya();
+}
 
-      const bars = [
-        { label: 'Сытость', val: Math.min(100, state.stats.hunger), grad: 'linear-gradient(90deg,#D49A6A,#B68462)' },
-        { label: 'Настроение', val: state.stats.vibe, grad: 'linear-gradient(90deg,#E8A5B2,#C96B7E)' },
-        { label: 'Энергия', val: state.stats.energy, grad: 'linear-gradient(90deg,#9BB397,#7A9A76)' }
-      ];
-      document.getElementById('tama-bars').innerHTML = bars.map(b => `
-        <div class="bar-group">
-          <div class="bar-labels"><span>${b.label}</span><b>${b.val}%</b></div>
-          <div class="bar-track"><div class="bar-fill" style="width:${b.val}%; background:${b.grad};"></div></div>
+/* ================= CALENDAR & PERIOD TRACKER ================= */
+function changeMonth(delta) {
+  calMonth += delta;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function isPeriodDay(dateStr) {
+  const target = new Date(dateStr + 'T00:00:00').getTime();
+  const dayMs = 86400000;
+  for (const start of state.calendar.periodStarts) {
+    const s = new Date(start + 'T00:00:00').getTime();
+    const diff = Math.round((target - s) / dayMs);
+    if (diff >= 0 && diff < 6) return 'period';
+    if (diff >= 28 && diff < 34) return 'predicted';
+  }
+  return '';
+}
+
+function renderCalendar() {
+  const months = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  document.getElementById('cal-month-title').textContent = `${months[calMonth]} ${calYear}`;
+
+  const grid = document.getElementById('cal-grid');
+  const dows = ['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+  let html = dows.map(d => `<div class="cal-dow">${d}</div>`).join('');
+
+  const firstDay = new Date(calYear, calMonth, 1).getDay();
+  const offset = firstDay === 0 ? 6 : firstDay - 1;
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  const today = todayStr();
+
+  for (let i = 0; i < offset; i++) html += `<div></div>`;
+
+  for (let d = 1; d <= daysInMonth; d++) {
+    const ds = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+    const pClass = isPeriodDay(ds);
+    const hasEv = (state.calendar.events[ds] || []).length > 0;
+    html += `
+      <div class="cal-day ${ds === today ? 'today' : ''} ${ds === selectedDate ? 'selected' : ''} ${pClass}" onclick="selectCalDate('${ds}')">
+        <span>${d}</span>
+        ${hasEv ? '<span class="cal-dot"></span>' : ''}
+      </div>
+    `;
+  }
+  grid.innerHTML = html;
+
+  document.getElementById('cal-selected-label').textContent = `Дата: ${selectedDate}`;
+  const evs = state.calendar.events[selectedDate] || [];
+  document.getElementById('cal-events-list').innerHTML = evs.length
+    ? evs.map((ev, i) => `<div class="list-item"><span>${escapeHtml(ev)}</span><button class="btn btn-sm" onclick="removeCalEvent(${i})">✕</button></div>`).join('')
+    : '<span style="font-size:12.5px; color:var(--muted);">Заметок на этот день нет</span>';
+}
+
+function selectCalDate(ds) {
+  selectedDate = ds;
+  renderCalendar();
+}
+
+function togglePeriodDay() {
+  const idx = state.calendar.periodStarts.indexOf(selectedDate);
+  if (idx === -1) {
+    state.calendar.periodStarts.push(selectedDate);
+    showToast('Неделя месячных обведена розовым');
+  } else {
+    state.calendar.periodStarts.splice(idx, 1);
+    showToast('Отметка снята');
+  }
+  saveLocal();
+  renderCalendar();
+  pushToSupabase(false);
+}
+
+function addCalendarEvent() {
+  const inp = document.getElementById('cal-event-input');
+  const val = inp.value.trim();
+  if (!val) return;
+  if (!state.calendar.events[selectedDate]) state.calendar.events[selectedDate] = [];
+  state.calendar.events[selectedDate].push(val);
+  inp.value = '';
+  saveLocal();
+  renderCalendar();
+}
+
+function removeCalEvent(idx) {
+  state.calendar.events[selectedDate].splice(idx, 1);
+  saveLocal();
+  renderCalendar();
+}
+
+/* ================= TRACKER (CALORIES & EXPENSES) ================= */
+function logFood(name, kcal) {
+  state.tracker.foods.unshift({ date: todayStr(), name, kcal });
+  const todayTotal = state.tracker.foods.filter(f => f.date === todayStr()).reduce((s, f) => s + f.kcal, 0);
+  state.hero.hunger = Math.min(130, Math.round((todayTotal / state.tracker.kcalGoal) * 100));
+  if (todayTotal > state.tracker.kcalGoal + 400) {
+    state.hero.overfed = true;
+    state.hero.mood = 'обожрался';
+  }
+  saveLocal();
+  renderTracker();
+  renderHeader();
+}
+
+function manualAddFood() {
+  const name = document.getElementById('food-name-input').value.trim();
+  const kcal = Number(document.getElementById('food-kcal-input').value);
+  if (!name || !kcal) return;
+  logFood(name, kcal);
+  document.getElementById('food-name-input').value = '';
+  document.getElementById('food-kcal-input').value = '';
+  showToast('Еда записана');
+}
+
+function logExpense(name, amount) {
+  state.tracker.expenses.unshift({ date: todayStr(), name, amount });
+  saveLocal();
+  renderTracker();
+}
+
+function manualAddExpense() {
+  const name = document.getElementById('exp-name-input').value.trim();
+  const amount = Number(document.getElementById('exp-amount-input').value);
+  if (!name || !amount) return;
+  logExpense(name, amount);
+  document.getElementById('exp-name-input').value = '';
+  document.getElementById('exp-amount-input').value = '';
+  showToast('Трата записана');
+}
+
+function renderTracker() {
+  const today = todayStr();
+  const todayFoods = state.tracker.foods.filter(f => f.date === today);
+  const totalKcal = todayFoods.reduce((s, f) => s + f.kcal, 0);
+  document.getElementById('kcal-summary').textContent = `${totalKcal} / ${state.tracker.kcalGoal} ккал`;
+  document.getElementById('kcal-bar').style.width = `${Math.min(100, (totalKcal / state.tracker.kcalGoal) * 100)}%`;
+
+  document.getElementById('food-log-list').innerHTML = todayFoods.length
+    ? todayFoods.map(f => `<div class="list-item"><span>${escapeHtml(f.name)}</span><strong>${f.kcal} ккал</strong></div>`).join('')
+    : '<span style="font-size:12.5px; color:var(--muted);">Сегодня записей о еде нет</span>';
+
+  const todayExps = state.tracker.expenses.filter(e => e.date === today);
+  const totalExp = todayExps.reduce((s, e) => s + e.amount, 0);
+  document.getElementById('expense-summary').textContent = `${totalExp} ₽`;
+  document.getElementById('expense-log-list').innerHTML = todayExps.length
+    ? todayExps.map(e => `<div class="list-item"><span>${escapeHtml(e.name)}</span><strong>${e.amount} ₽</strong></div>`).join('')
+    : '<span style="font-size:12.5px; color:var(--muted);">Сегодня трат нет</span>';
+}
+
+/* ================= MEDIA (MUSIC & STICKER PACK) ================= */
+async function handleAudioUpload(e) {
+  const files = Array.from(e.target.files || []);
+  if (!files.length) return;
+  for (const file of files) {
+    const dataUrl = await fileToDataUrl(file);
+    const id = 'trk_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+    const cleanName = file.name.replace(/\.[^/.]+$/, '');
+    state.media.tracks.push({ id, name: cleanName, playlist: 'Загруженное', dataUrl });
+    await saveTrackBlob(id, dataUrl);
+  }
+  saveLocal();
+  renderMedia();
+  showToast(`Добавлено треков: ${files.length}`);
+  e.target.value = '';
+}
+
+function renderMedia() {
+  const playlists = ['Все', ...new Set(state.media.tracks.map(t => t.playlist))];
+  document.getElementById('playlist-bar').innerHTML = playlists.map(pl => `
+    <div class="room-pill ${state.media.activePlaylist === pl ? 'active' : ''}" onclick="selectPlaylist('${escapeHtml(pl)}')">${escapeHtml(pl)}</div>
+  `).join('');
+
+  const visibleTracks = state.media.tracks
+    .map((t, idx) => ({ ...t, origIdx: idx }))
+    .filter(t => state.media.activePlaylist === 'Все' || t.playlist === state.media.activePlaylist);
+
+  document.getElementById('track-list').innerHTML = visibleTracks.length
+    ? visibleTracks.map(t => `
+      <div class="list-item" style="${t.origIdx === currentTrackIndex ? 'border-color:var(--accent); background:var(--surface);' : ''}">
+        <div style="min-width:0; flex:1; cursor:pointer;" onclick="playTrack(${t.origIdx})">
+          <div style="font-weight:600; font-size:13.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${escapeHtml(t.name)}</div>
+          <div style="font-size:11px; color:var(--muted);">${escapeHtml(t.playlist)}</div>
         </div>
-      `).join('');
+        <button class="btn btn-sm" onclick="removeTrack(${t.origIdx})">✕</button>
+      </div>
+    `).join('')
+    : '<span style="font-size:12.5px; color:var(--muted);">Список треков пуст — нажми «+ Загрузить треки»</span>';
 
-      const trophies = state.memory.trophies || [];
-      document.getElementById('trophies-count').textContent = `${trophies.length} шт.`;
-      document.getElementById('trophies-box').innerHTML = trophies.length
-        ? trophies.map(t => `<div class="list-item"><div><b style="color:var(--accent-dark);">${esc(t.item)}</b><div style="color:var(--muted); margin-top:2px;">${esc(t.note)}</div></div></div>`).join('')
-        : `<div style="font-size:12px; color:var(--dim);">Пока пусто — отправь Наою на вылазку.</div>`;
+  // Stickers in Media tab & Chat drawer
+  const bankGrid = document.getElementById('sticker-bank-grid');
+  bankGrid.innerHTML = state.media.stickers.map((s, idx) => `
+    <div class="sticker-pick-item" style="position:relative;">
+      <img src="${s.dataUrl}" alt="${escapeHtml(s.tag)}" />
+      <span>${escapeHtml(s.tag)}</span>
+      <button onclick="deleteSticker(${idx})" style="position:absolute; top:2px; right:4px; background:none; border:none; color:var(--danger); font-weight:700; cursor:pointer;">✕</button>
+    </div>
+  `).join('');
 
-      document.getElementById('dossier-box').innerHTML = state.memory.dossier.length
-        ? state.memory.dossier.map(f => `<div class="list-item">• ${esc(f)}</div>`).join('')
-        : `<div style="font-size:12px; color:var(--dim);">Он пока вообще тебя не знает — болтай с ним, чтобы он собирал факты.</div>`;
+  const drawer = document.getElementById('sticker-drawer');
+  drawer.innerHTML = state.media.stickers.length
+    ? state.media.stickers.map((s, idx) => `
+      <div class="sticker-pick-item" onclick="sendSticker(${idx})">
+        <img src="${s.dataUrl}" alt="${escapeHtml(s.tag)}" />
+        <span>${escapeHtml(s.tag)}</span>
+      </div>
+    `).join('')
+    : '<div style="grid-column:1/-1; text-align:center; font-size:12px; color:var(--muted); padding:14px;">Добавь стикеры во вкладке «Медиа»</div>';
+}
 
-      document.getElementById('evolution-box').innerHTML = state.memory.evolution.length
-        ? state.memory.evolution.map(e => `<div class="list-item"><span><b style="color:var(--accent-dark);">[${e.date}]</b> ${esc(e.note)}</span></div>`).join('')
-        : `<div style="font-size:12px; color:var(--dim);">Записи о том, как он перенимает твой вайб, появятся здесь.</div>`;
-    }
+function selectPlaylist(pl) {
+  state.media.activePlaylist = pl;
+  renderMedia();
+}
 
-    function renderCalendar() {
-      const y = calMonthCursor.getFullYear();
-      const m = calMonthCursor.getMonth();
-      const names = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
-      document.getElementById('cal-month-label').textContent = `${names[m]} ${y}`;
+function playTrack(idx) {
+  const trk = state.media.tracks[idx];
+  if (!trk || !trk.dataUrl) {
+    showToast('Файл трека не найден в памяти');
+    return;
+  }
+  currentTrackIndex = idx;
+  const audio = document.getElementById('audio-player');
+  audio.src = trk.dataUrl;
+  audio.play();
+  document.getElementById('now-playing-title').textContent = trk.name;
+  document.getElementById('btn-play-pause').innerHTML = `<svg class="ico" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+  renderMedia();
+}
 
-      let firstWeekday = new Date(y, m, 1).getDay() - 1;
-      if (firstWeekday < 0) firstWeekday = 6;
-      const totalDays = new Date(y, m + 1, 0).getDate();
+function togglePlay() {
+  const audio = document.getElementById('audio-player');
+  if (!audio.src && state.media.tracks.length) {
+    playTrack(0);
+    return;
+  }
+  if (audio.paused) {
+    audio.play();
+    document.getElementById('btn-play-pause').innerHTML = `<svg class="ico" viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+  } else {
+    audio.pause();
+    document.getElementById('btn-play-pause').innerHTML = `<svg class="ico" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+  }
+}
 
-      const grid = document.getElementById('cal-days-grid');
-      let html = '';
-      for (let i = 0; i < firstWeekday; i++) html += `<div></div>`;
+function prevTrack() {
+  if (!state.media.tracks.length) return;
+  const next = (currentTrackIndex - 1 + state.media.tracks.length) % state.media.tracks.length;
+  playTrack(next);
+}
 
-      for (let d = 1; d <= totalDays; d++) {
-        const dateStr = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-        const cyc = getCycleState(dateStr);
-        const hasEv = (state.calendar.events[dateStr] || []).length > 0;
-        const cls = [
-          'cal-day',
-          cyc === 'actual' ? 'period-actual' : cyc === 'predicted' ? 'period-predicted' : '',
-          dateStr === calSelectedDate ? 'selected' : ''
-        ].join(' ');
-        html += `<button class="${cls}" onclick="selectCalDay('${dateStr}')">${d}${hasEv ? '<span class="cal-event-dot"></span>' : ''}</button>`;
-      }
-      grid.innerHTML = html;
+function nextTrack() {
+  if (!state.media.tracks.length) return;
+  const next = (currentTrackIndex + 1) % state.media.tracks.length;
+  playTrack(next);
+}
 
-      document.getElementById('cal-selected-title').textContent = `Дата: ${calSelectedDate}`;
-      const evs = state.calendar.events[calSelectedDate] || [];
-      const cycSel = getCycleState(calSelectedDate);
-      let evHtml = '';
-      if (cycSel === 'actual') evHtml += `<div class="list-item" style="border-color:var(--pink); background:var(--pink-soft); color:#7C3747;">День месячных</div>`;
-      if (cycSel === 'predicted') evHtml += `<div class="list-item" style="border-style:dashed; border-color:var(--pink); color:#8F4958;">Прогноз цикла</div>`;
-      evs.forEach((ev, idx) => {
-        evHtml += `<div class="list-item"><span>• ${esc(ev)}</span><button class="msg-action-link" style="color:var(--red);" onclick="removeCalNote('${calSelectedDate}',${idx})">✕</button></div>`;
-      });
-      document.getElementById('cal-events-list').innerHTML = evHtml || `<div style="font-size:12px; color:var(--dim);">Заметок нет.</div>`;
-    }
+function updateAudioProgress() {
+  const audio = document.getElementById('audio-player');
+  if (audio.duration) {
+    document.getElementById('audio-seek').value = (audio.currentTime / audio.duration) * 100;
+  }
+}
 
-    function selectCalDay(d) {
-      calSelectedDate = d;
-      renderCalendar();
-    }
+function seekAudio(val) {
+  const audio = document.getElementById('audio-player');
+  if (audio.duration) audio.currentTime = (val / 100) * audio.duration;
+}
 
-    function removeCalNote(d, i) {
-      state.calendar.events[d].splice(i, 1);
+function removeTrack(idx) {
+  state.media.tracks.splice(idx, 1);
+  saveLocal();
+  renderMedia();
+}
+
+async function handleStickerUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const defaultTag = file.name.replace(/\.[^/.]+$/, '');
+  const dataUrl = await compressImage(file, 240);
+  state.media.stickers.push({ id: 'stk_' + Date.now(), tag: defaultTag, dataUrl });
+  saveLocal();
+  renderMedia();
+  showToast(`Стикер «${defaultTag}» добавлен`);
+  e.target.value = '';
+}
+
+function deleteSticker(idx) {
+  state.media.stickers.splice(idx, 1);
+  saveLocal();
+  renderMedia();
+}
+
+function toggleStickerDrawer() {
+  document.getElementById('sticker-drawer').classList.toggle('show');
+}
+
+async function sendSticker(idx) {
+  const stk = state.media.stickers[idx];
+  if (!stk) return;
+  document.getElementById('sticker-drawer').classList.remove('show');
+  const room = getActiveRoom();
+  room.messages.push({ id: 'm_' + Date.now(), role: 'user', text: '', sticker: stk.dataUrl, ts: Date.now() });
+  saveLocal();
+  renderChat();
+  await requestNaoyaReply(`Пользовательница отправила тебе стикер/мем с тегом "${stk.tag}". Отреагируй!`);
+}
+
+/* ================= PHOTO & VOICE INPUT ================= */
+async function handleChatPhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  pendingPhoto = await compressImage(file, 720);
+  document.getElementById('attach-preview-img').src = pendingPhoto;
+  document.getElementById('attach-preview').classList.add('show');
+  e.target.value = '';
+}
+
+function clearAttachment() {
+  pendingPhoto = null;
+  document.getElementById('attach-preview').classList.remove('show');
+}
+
+function toggleVoiceInput() {
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRec) {
+    showToast('Голосовой ввод не поддерживается в этом WebView');
+    return;
+  }
+  const btn = document.getElementById('btn-mic');
+  if (isRecording && recognition) {
+    recognition.stop();
+    return;
+  }
+  recognition = new SpeechRec();
+  recognition.lang = 'ru-RU';
+  recognition.interimResults = false;
+  recognition.onstart = () => { isRecording = true; btn.classList.add('active'); };
+  recognition.onend = () => { isRecording = false; btn.classList.remove('active'); };
+  recognition.onresult = (ev) => {
+    const transcript = ev.results[0][0].transcript;
+    const inp = document.getElementById('chat-input');
+    inp.value = (inp.value ? inp.value + ' ' : '') + transcript;
+    autoResizeTextarea(inp);
+  };
+  recognition.start();
+}
+
+/* ================= SETTINGS & BACKUP ================= */
+function openSettings() {
+  document.getElementById('cfg-openrouter-key').value = state.config.openRouterKey || '';
+  document.getElementById('cfg-model-select').value = state.config.model || 'deepseek/deepseek-chat';
+  document.getElementById('cfg-custom-model').value = state.config.customModel || '';
+  toggleCustomModel();
+  document.getElementById('cfg-sb-url').value = state.config.supabaseUrl || '';
+  document.getElementById('cfg-sb-key').value = state.config.supabaseKey || '';
+  document.getElementById('cfg-char-name').value = state.hero.name || 'Наоя';
+  document.getElementById('cfg-persona').value = state.hero.persona || DEFAULT_PERSONA;
+  document.getElementById('modal-settings').classList.add('show');
+}
+
+function toggleCustomModel() {
+  const isCustom = document.getElementById('cfg-model-select').value === 'custom';
+  document.getElementById('cfg-custom-model').style.display = isCustom ? 'block' : 'none';
+}
+
+async function handleAvatarUpload(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  state.hero.avatar = await compressImage(file, 300);
+  renderHeader();
+  showToast('Аватар обновлён');
+}
+
+function saveSettings() {
+  state.config.openRouterKey = document.getElementById('cfg-openrouter-key').value.trim();
+  state.config.model = document.getElementById('cfg-model-select').value;
+  state.config.customModel = document.getElementById('cfg-custom-model').value.trim();
+  state.config.supabaseUrl = document.getElementById('cfg-sb-url').value.trim();
+  state.config.supabaseKey = document.getElementById('cfg-sb-key').value.trim();
+  state.hero.name = document.getElementById('cfg-char-name').value.trim() || 'Наоя';
+  state.hero.persona = document.getElementById('cfg-persona').value.trim() || DEFAULT_PERSONA;
+  saveLocal();
+  renderAll();
+  closeModal('modal-settings');
+  showToast('Настройки сохранены');
+}
+
+function exportBackup() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `naoya_backup_${todayStr()}.json`;
+  a.click();
+}
+
+function importBackup(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const imported = JSON.parse(reader.result);
+      state = { ...state, ...imported };
       saveLocal();
-      renderCalendar();
-    }
-
-    function renderTracker() {
-      const today = toISODate(new Date());
-      const kcal = getTodayKcal();
-      document.getElementById('kcal-today-num').textContent = kcal;
-      document.getElementById('kcal-goal-num').textContent = state.tracker.kcalGoal;
-      document.getElementById('kcal-bar-fill').style.width = `${Math.min(100, Math.round((kcal / state.tracker.kcalGoal) * 100))}%`;
-
-      const foods = state.tracker.foods.filter(f => f.date === today);
-      document.getElementById('food-items-list').innerHTML = foods.length
-        ? foods.map(f => `<div class="list-item"><span>${esc(f.name)} <span style="color:var(--dim);">(${f.time})</span></span><b style="color:var(--accent-dark);">+${f.kcal} ккал</b></div>`).join('')
-        : `<div style="font-size:12px; color:var(--dim);">Сегодня записей нет.</div>`;
-
-      const spent = getTodaySpent();
-      document.getElementById('spent-today-num').textContent = `${spent} ₽`;
-      const exps = state.tracker.expenses.filter(e => e.date === today);
-      document.getElementById('expense-items-list').innerHTML = exps.length
-        ? exps.map(e => `<div class="list-item"><span>${esc(e.name)} <span style="color:var(--dim);">(${e.time})</span></span><b style="color:var(--pink-deep);">-${e.amount} ₽</b></div>`).join('')
-        : `<div style="font-size:12px; color:var(--dim);">Сегодня трат нет.</div>`;
-    }
-
-    function renderMedia() {
-      const pls = ['Все треки', ...new Set(state.media.tracks.map(t => t.playlist))];
-      document.getElementById('playlist-tabs').innerHTML = pls.map(p => `
-        <button class="chat-tab-pill ${state.media.activePlaylist === p ? 'active' : ''}" onclick="choosePlaylist('${esc(p)}')">${esc(p)}</button>
-      `).join('');
-
-      const list = state.media.tracks
-        .map((t, idx) => ({ ...t, idx }))
-        .filter(t => state.media.activePlaylist === 'Все треки' || t.playlist === state.media.activePlaylist);
-
-      document.getElementById('tracks-container').innerHTML = list.length
-        ? list.map(t => `
-            <div class="list-item" style="cursor:pointer; ${t.idx === currentTrackIdx ? 'border-color:var(--accent); background:var(--card-sub);' : ''}" onclick="playTrack(${t.idx})">
-              <div style="min-width:0;">
-                <div style="font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${esc(t.title)}</div>
-                <div style="font-size:10px; color:var(--muted);">${esc(t.playlist)}</div>
-              </div>
-              <span style="color:var(--accent-dark); font-weight:700;">${t.idx === currentTrackIdx ? 'Играет' : 'Слушать'}</span>
-            </div>
-          `).join('')
-        : `<div style="font-size:12px; color:var(--dim);">Загрузи аудиофайлы кнопкой «+ Треки» — они сохранятся в списке.</div>`;
-
-      document.getElementById('stickers-container').innerHTML = state.media.stickers.length
-        ? state.media.stickers.map((s, i) => `
-            <div class="sticker-card">
-              <img src="${s.dataUrl}" alt="${esc(s.tag)}" />
-              <span>#${esc(s.tag)}</span>
-              <button class="msg-action-link" style="position:absolute; top:2px; right:4px; color:var(--red);" onclick="removeSticker(${i})">✕</button>
-            </div>
-          `).join('')
-        : `<div style="grid-column:1/-1; font-size:12px; color:var(--dim);">Загрузи мемы или стикеры Наои — он будет кидать их в чат.</div>`;
-    }
-
-    function choosePlaylist(p) {
-      state.media.activePlaylist = p;
-      renderMedia();
-    }
-
-    function removeSticker(i) {
-      state.media.stickers.splice(i, 1);
-      saveLocal();
-      renderMedia();
-    }
-
-    function openSettingsModal() {
-      document.getElementById('cfg-or-key').value = state.config.openRouterKey || '';
-      document.getElementById('cfg-model-sel').value = state.config.model || 'deepseek/deepseek-chat';
-      document.getElementById('cfg-model-custom').value = state.config.customModel || '';
-      toggleCustomModelField();
-      document.getElementById('cfg-sb-url').value = state.config.supabaseUrl || '';
-      document.getElementById('cfg-sb-key').value = state.config.supabaseKey || '';
-      document.getElementById('cfg-name').value = state.hero.name || 'Наоя';
-      document.getElementById('cfg-prompt').value = state.hero.corePrompt || NAOYA_CORE_PROMPT;
-      document.getElementById('modal-settings').classList.remove('hidden');
-    }
-
-    function toggleCustomModelField() {
-      const isCustom = document.getElementById('cfg-model-sel').value === 'custom';
-      document.getElementById('cfg-model-custom').classList.toggle('hidden', !isCustom);
-    }
-
-    function handleSingleAvatarUpload(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        const img = new Image();
-        img.onload = () => {
-          const c = document.createElement('canvas');
-          c.width = 256; c.height = 256;
-          c.getContext('2d').drawImage(img, 0, 0, 256, 256);
-          state.hero.avatarUrl = c.toDataURL('image/webp', 0.85);
-          saveLocal();
-          renderHeader();
-          renderTamagotchi();
-          toast('Аватар Наои обновлён!');
-        };
-        img.src = ev.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function saveSettings() {
-      state.config.openRouterKey = document.getElementById('cfg-or-key').value.trim();
-      state.config.model = document.getElementById('cfg-model-sel').value;
-      state.config.customModel = document.getElementById('cfg-model-custom').value.trim();
-      state.config.supabaseUrl = document.getElementById('cfg-sb-url').value.trim();
-      state.config.supabaseKey = document.getElementById('cfg-sb-key').value.trim();
-      state.hero.name = document.getElementById('cfg-name').value.trim() || 'Наоя';
-      state.hero.corePrompt = document.getElementById('cfg-prompt').value.trim() || NAOYA_CORE_PROMPT;
-
-      saveLocal();
-      closeModal('modal-settings');
       renderAll();
-      toast('Настройки сохранены!');
-
-      if (state.config.supabaseUrl && state.config.supabaseKey) {
-        syncSupabase('push', true);
-      }
+      showToast('Бэкап восстановлен');
+    } catch (err) {
+      showToast('Неверный файл бэкапа');
     }
+  };
+  reader.readAsText(file);
+}
 
-    function downloadBackup() {
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = `naoya_backup_${toISODate(new Date())}.json`;
-      a.click();
-    }
+/* ================= UTILS ================= */
+function closeModal(id) {
+  document.getElementById(id).classList.remove('show');
+}
 
-    function uploadBackup(e) {
-      const file = e.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        try {
-          state = mergeDeep(createDefaultState(), JSON.parse(ev.target.result));
-          saveLocal();
-          renderAll();
-          closeModal('modal-settings');
-          toast('Бэкап восстановлен!');
-        } catch (err) {
-          toast('Ошибка чтения файла бэкапа');
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2600);
+}
+
+function escapeHtml(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+function fileToDataUrl(file) {
+  return new Promise((res) => {
+    const r = new FileReader();
+    r.onload = () => res(r.result);
+    r.readAsDataURL(file);
+  });
+}
+
+function compressImage(file, maxSide) {
+  return new Promise((res) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = () => {
+      img.onload = () => {
+        let w = img.width, h = img.height;
+        if (w > maxSide || h > maxSide) {
+          if (w > h) { h = Math.round(h * maxSide / w); w = maxSide; }
+          else { w = Math.round(w * maxSide / h); h = maxSide; }
         }
+        const canvas = document.createElement('canvas');
+        canvas.width = w;
+        canvas.height = h;
+        canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+        res(canvas.toDataURL('image/jpeg', 0.82));
       };
-      reader.readAsText(file);
-    }
-
-    function closeModal(id) {
-      document.getElementById(id).classList.add('hidden');
-    }
-
-    function toast(msg) {
-      const wrap = document.getElementById('toast-wrap');
-      const el = document.createElement('div');
-      el.className = 'toast';
-      el.textContent = msg;
-      wrap.appendChild(el);
-      setTimeout(() => {
-        el.style.opacity = '0';
-        setTimeout(() => el.remove(), 260);
-      }, 3000);
-    }
-
-    function esc(str) {
-      return String(str || '')
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-
-    function renderAll() {
-      renderHeader();
-      renderChatTabs();
-      renderChatMessages();
-      renderTamagotchi();
-      renderCalendar();
-      renderTracker();
-      renderMedia();
-    }
-
-    async function loadWeather() {
-      try {
-        const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=51.5336&longitude=46.0343&current_weather=true');
-        const data = await res.json();
-        if (data?.current_weather) {
-          state.weather.temp = Math.round(data.current_weather.temperature);
-          const c = data.current_weather.weathercode;
-          state.weather.desc = c >= 71 ? 'Снег' : c >= 51 ? 'Дождь' : c >= 2 ? 'Облачно' : 'Ясно';
-          document.getElementById('header-weather').textContent = `${state.weather.temp}°C, ${state.weather.desc}`;
-        }
-      } catch (e) {
-        document.getElementById('header-weather').textContent = 'На связи';
-      }
-    }
-
-    window.onload = function () {
-      loadLocal();
-      renderAll();
-      loadWeather();
-      if (state.config.supabaseUrl && state.config.supabaseKey) {
-        syncSupabase('pull', true);
-      }
+      img.src = reader.result;
     };
-  </script>
+    reader.readAsDataURL(file);
+  });
+}
+
+window.onload = async function () {
+  loadLocal();
+  await loadAllTrackBlobs();
+  renderAll();
+  if (state.config.supabaseUrl && state.config.supabaseKey) {
+    pullFromSupabase(false);
+  }
+};
+</script>
 </body>
 </html>
