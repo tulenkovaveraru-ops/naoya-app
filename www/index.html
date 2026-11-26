@@ -29,6 +29,10 @@
       --ok-text: #3A6333;
       --err-bg: #F5DDD9;
       --err-text: #993D35;
+      --cycle-bg: #F8D3DA;
+      --cycle-border: #D96B84;
+      --cycle-text: #8F2D45;
+      --pms-bg: #FBECEF;
       --rec-color: #C94A3E;
       --shadow-sm: 0 2px 8px rgba(61, 50, 41, 0.06);
       --safe-top: env(safe-area-inset-top, 0px);
@@ -196,12 +200,6 @@
     }
     .icon-btn:active { transform: scale(0.93); background: var(--border-soft); }
 
-    /* СОСТОЯНИЯ КНОПКИ МИКРОФОНА */
-    .icon-btn.recording {
-      background: rgba(201, 74, 62, 0.15);
-      color: var(--rec-color);
-      animation: pulseRec 1.2s infinite;
-    }
     @keyframes pulseRec {
       0% { box-shadow: 0 0 0 0 rgba(201, 74, 62, 0.45); }
       70% { box-shadow: 0 0 0 8px rgba(201, 74, 62, 0); }
@@ -261,6 +259,28 @@
       font-weight: 700;
     }
 
+    /* МИНИ-ПЛЕЕР В ШАПКЕ ЕСЛИ ИГРАЕТ МУЗЫКА */
+    .mini-player-bar {
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 4px 10px;
+      font-size: 12px;
+      gap: 8px;
+    }
+    .mini-player-bar.visible { display: flex; }
+    .mini-player-title {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
     /* РАБОЧАЯ ОБЛАСТЬ ВКЛАДОК */
     .tab-views {
       flex: 1;
@@ -281,9 +301,7 @@
       display: flex;
     }
 
-    /* =========================================================
-       КОМПАКТНЫЕ ПУЗЫРИ СООБЩЕНИЙ (СТРОГО ПО РАЗМЕРУ ТЕКСТА)
-       ========================================================= */
+    /* КОМПАКТНЫЕ ПУЗЫРИ СООБЩЕНИЙ */
     .chat-messages {
       flex: 1;
       min-height: 0;
@@ -306,13 +324,8 @@
       width: 100%;
     }
 
-    .msg-row.ai {
-      align-items: flex-start;
-    }
-
-    .msg-row.user {
-      align-items: flex-end;
-    }
+    .msg-row.ai { align-items: flex-start; }
+    .msg-row.user { align-items: flex-end; }
 
     .msg-ai-line {
       display: flex;
@@ -348,9 +361,7 @@
       box-shadow: 0 1px 3px rgba(61, 50, 41, 0.05);
     }
 
-    .msg-ai-line .bubble {
-      max-width: 100%;
-    }
+    .msg-ai-line .bubble { max-width: 100%; }
 
     .msg-row.ai .bubble {
       background: var(--bg-bubble-ai);
@@ -366,6 +377,20 @@
       border: 1px solid var(--border-strong);
       border-bottom-right-radius: 4px;
       align-self: flex-end;
+    }
+
+    .bubble.sticker-bubble {
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      padding: 2px !important;
+    }
+    .bubble img.chat-sticker {
+      display: block;
+      width: 128px;
+      height: 128px;
+      object-fit: contain;
+      border-radius: 14px;
     }
 
     .bubble img.chat-photo {
@@ -474,7 +499,7 @@
       padding: 0 2px;
     }
 
-    /* ПАНЕЛЬ ВВОДА (ENTER = НОВАЯ СТРОЧКА, БЕЗ ОТПРАВКИ) */
+    /* ПАНЕЛЬ ВВОДА */
     .composer-wrap {
       flex-shrink: 0;
       padding: 6px 10px 8px;
@@ -577,6 +602,7 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+      gap: 6px;
     }
 
     .tama-hero {
@@ -605,25 +631,30 @@
     }
 
     .soft-btn {
-      padding: 9px 12px;
+      padding: 8px 11px;
       border-radius: 12px;
       border: 1px solid var(--border-strong);
       background: var(--bg-card);
       color: var(--text-primary);
       font-family: inherit;
-      font-size: 13px;
+      font-size: 12.5px;
       font-weight: 600;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 5px;
     }
     .soft-btn:active { transform: scale(0.97); }
     .soft-btn.primary {
       background: var(--accent);
       color: #FFFBF7;
       border-color: var(--accent);
+    }
+    .soft-btn.cycle-btn {
+      background: var(--cycle-bg);
+      color: var(--cycle-text);
+      border-color: var(--cycle-border);
     }
 
     .progress-row {
@@ -636,7 +667,7 @@
       display: flex;
       justify-content: space-between;
       font-size: 12px;
-      color: var(--text-secondary);
+      color:var(--text-secondary);
     }
     .progress-track {
       width: 100%;
@@ -682,6 +713,170 @@
       margin-bottom: 6px;
       gap: 8px;
     }
+
+    /* =========================================================
+       ИНТЕРАКТИВНАЯ СЕТКА КАЛЕНДАРЯ И ЦИКЛА
+       ========================================================= */
+    .cal-header-nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .cal-month-title {
+      font-weight: 700;
+      font-size: 14.5px;
+      text-transform: capitalize;
+    }
+    .cal-weekdays {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      text-align: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .cal-day {
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      border: 1.5px solid transparent;
+      background: var(--bg-card);
+      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 600;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      user-select: none;
+      transition: transform 0.1s, background 0.15s, border-color 0.15s;
+    }
+    .cal-day:active { transform: scale(0.92); }
+    .cal-day.empty {
+      background: transparent;
+      cursor: default;
+      pointer-events: none;
+    }
+    .cal-day.today {
+      border-color: var(--accent);
+    }
+    .cal-day.pms-pred {
+      background: var(--pms-bg);
+      border: 1.5px dashed var(--cycle-border);
+      color: var(--cycle-text);
+    }
+    .cal-day.cycle-day {
+      background: var(--cycle-bg);
+      border: 2px solid var(--cycle-border);
+      color: var(--cycle-text);
+      font-weight: 700;
+    }
+    .cal-day.selected {
+      box-shadow: 0 0 0 2.5px var(--accent-dark);
+      background: var(--accent);
+      color: #FFFBF7;
+    }
+    .cal-day.selected.cycle-day {
+      background: var(--cycle-border);
+      color: #FFFFFF;
+      box-shadow: 0 0 0 2.5px var(--text-primary);
+    }
+    .cal-dot-note {
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: var(--accent-dark);
+      position: absolute;
+      bottom: 4px;
+    }
+    .cal-day.selected .cal-dot-note { background: #FFFBF7; }
+
+    .cal-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border-soft);
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+    }
+
+    /* СТИКЕРПАК И ПЛЕЙЛИСТЫ В МЕДИА */
+    .sticker-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .sticker-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      position: relative;
+      cursor: pointer;
+    }
+    .sticker-card img {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+    .sticker-tag-lbl {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+    .sticker-del {
+      position: absolute;
+      top: 2px;
+      right: 4px;
+      background: none;
+      border: none;
+      color: var(--err-text);
+      font-size: 11px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .playlist-chips {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+      margin-bottom: 6px;
+      scrollbar-width: none;
+    }
+    .playlist-chips::-webkit-scrollbar { display: none; }
 
     /* НИЖНЯЯ НАВИГАЦИЯ */
     .bottom-nav {
@@ -866,6 +1061,12 @@
         <span>•</span>
         <span><strong id="stat-rub">0</strong> ₽</span>
       </div>
+      <div id="mini-player-bar" class="mini-player-bar">
+        <span>🎵</span>
+        <span id="mini-player-title" class="mini-player-title">Трек</span>
+        <button type="button" class="regen-link" onclick="togglePlayPauseMini()" id="mini-play-btn">Пауза</button>
+        <button type="button" class="regen-link" onclick="stopMiniPlayer()">✕</button>
+      </div>
     </div>
 
     <!-- РАБОЧИЕ ВКЛАДКИ -->
@@ -882,26 +1083,21 @@
 
         <div class="composer-wrap">
           <div class="composer-box">
-            <!-- Скрытые инпуты для фото и документов -->
             <input type="file" id="photo-file-input" accept="image/*" style="display:none" onchange="handlePhotoSelected(event)" />
             <input type="file" id="doc-file-input" accept=".txt,.md,.json,.csv,.js,.py,.html,.xml,.log,.pdf,.doc,.docx,text/*" style="display:none" onchange="handleDocSelected(event)" />
 
-            <!-- Кнопка фото -->
             <button type="button" class="composer-tool-btn" onclick="document.getElementById('photo-file-input').click()" title="Прикрепить фото">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
             </button>
 
-            <!-- Кнопка скрепки (файлы) -->
             <button type="button" class="composer-tool-btn" onclick="document.getElementById('doc-file-input').click()" title="Прикрепить файл">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
             </button>
 
-            <!-- Кнопка микрофона -->
             <button type="button" class="composer-tool-btn" id="mic-btn" onclick="toggleVoiceInput()" title="Голосовой ввод">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/></svg>
             </button>
 
-            <!-- Поле ввода: НИКАКОГО ПЕРЕХВАТА ENTER (ENTER = НОВАЯ СТРОЧКА) -->
             <textarea
               id="chat-input"
               class="composer-textarea"
@@ -911,7 +1107,6 @@
               oninput="autoGrowTextarea(this)"
             ></textarea>
 
-            <!-- Кнопка отправки -->
             <button type="button" id="send-btn" class="send-btn" onclick="sendUserMessage()" title="Отправить">
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </button>
@@ -944,9 +1139,9 @@
             </div>
             <div class="action-grid">
               <button type="button" class="soft-btn primary" onclick="interactHero('feed')">Покормить</button>
+              <button type="button" class="soft-btn" onclick="interactHero('pet')">Погладить</button>
               <button type="button" class="soft-btn" onclick="interactHero('coffee')">Дать кофе</button>
               <button type="button" class="soft-btn" onclick="interactHero('poke')">Подколоть / тыкнуть</button>
-              <button type="button" class="soft-btn" onclick="interactHero('praise')">Похвалить</button>
             </div>
           </div>
 
@@ -959,16 +1154,44 @@
         </div>
       </section>
 
-      <!-- 3. КАЛЕНДАРЬ -->
+      <!-- 3. ИНТЕРАКТИВНЫЙ КАЛЕНДАРЬ И ЦИКЛ -->
       <section id="pane-calendar" class="tab-pane">
         <div class="scroll-section">
           <div class="panel-card">
-            <div class="panel-title">Планы и заметки на дни</div>
-            <div class="form-row">
-              <input type="date" id="cal-date" class="text-input" style="flex:1;" />
-              <input type="text" id="cal-note" class="text-input" placeholder="Событие или цикл..." style="flex:2;" />
-              <button type="button" class="soft-btn primary" onclick="addCalendarItem()">+</button>
+            <div class="cal-header-nav">
+              <button type="button" class="icon-btn" style="width:32px; height:32px;" onclick="shiftCalendarMonth(-1)">‹</button>
+              <span id="cal-month-label" class="cal-month-title">Ноябрь 2026</span>
+              <button type="button" class="icon-btn" style="width:32px; height:32px;" onclick="shiftCalendarMonth(1)">›</button>
             </div>
+
+            <div class="cal-weekdays">
+              <span>Пн</span><span>Вт</span><span>Ср</span><span>Чт</span><span>Пт</span><span>Сб</span><span>Вс</span>
+            </div>
+            <div id="cal-grid" class="cal-grid"></div>
+
+            <div class="cal-legend">
+              <span class="legend-item"><span class="legend-dot" style="background:var(--cycle-bg); border:1.5px solid var(--cycle-border);"></span>Цикл</span>
+              <span class="legend-item"><span class="legend-dot" style="background:var(--pms-bg); border:1px dashed var(--cycle-border);"></span>Прогноз ПМС/цикла</span>
+              <span class="legend-item"><span class="legend-dot" style="background:var(--accent);"></span>Выбрано (<span id="cal-sel-count">0</span>)</span>
+            </div>
+
+            <div style="margin-top:10px; display:flex; flex-direction:column; gap:6px;">
+              <div style="font-size:12px; color:var(--text-secondary);" id="cal-selected-hint">
+                Нажми на одно или несколько чисел в календаре, чтобы отметить цикл или добавить план (или просто напиши Наое в чат).
+              </div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <button type="button" class="soft-btn cycle-btn" style="flex:1;" onclick="toggleCycleOnSelected()">🩸 Цикл (отметить/снять)</button>
+                <button type="button" class="soft-btn" onclick="clearSelectedDates()">Снять выделение</button>
+              </div>
+              <div class="form-row" style="margin-top:2px; margin-bottom:0;">
+                <input type="text" id="cal-note" class="text-input" placeholder="Событие на выбранные даты..." style="flex:1;" />
+                <button type="button" class="soft-btn primary" onclick="addCalendarNoteToSelected()">+</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-card">
+            <div class="panel-title"><span>События и заметки</span><span id="cycle-forecast-badge" style="font-size:11.5px; color:var(--cycle-text); font-weight:600;"></span></div>
             <div id="cal-list"></div>
           </div>
         </div>
@@ -999,15 +1222,37 @@
         </div>
       </section>
 
-      <!-- 5. МЕДИА / ЗАМЕТКИ -->
+      <!-- 5. МЕДИА-БАНК: СТИКЕРПАК, УМНЫЙ ПЛЕЕР И БЛОКНОТ -->
       <section id="pane-media" class="tab-pane">
         <div class="scroll-section">
+          <!-- УМНЫЙ ПЛЕЕР -->
           <div class="panel-card">
-            <div class="panel-title"><span>Локальный плеер</span></div>
-            <input type="file" id="audio-file-input" accept="audio/*" class="text-input" style="margin-bottom:8px;" onchange="loadLocalAudio(event)" />
-            <div id="audio-track-name" style="font-size:12.5px; color:var(--text-secondary); margin-bottom:6px;">Трек не выбран</div>
-            <audio id="local-audio-player" controls style="width:100%; height:36px;"></audio>
+            <div class="panel-title">
+              <span>Музыка и плейлисты</span>
+              <button type="button" class="soft-btn primary" style="padding:4px 9px; font-size:11.5px;" onclick="document.getElementById('audio-file-input').click()">+ Треки</button>
+            </div>
+            <input type="file" id="audio-file-input" accept="audio/*" multiple style="display:none" onchange="handleAudioUpload(event)" />
+
+            <div class="playlist-chips" id="playlist-filter-row"></div>
+            <div id="audio-track-name" style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">Выбери трек или попроси Наою включить музыку под вайб</div>
+            <audio id="local-audio-player" controls style="width:100%; height:36px; margin-bottom:8px;"></audio>
+            <div id="tracks-list"></div>
           </div>
+
+          <!-- СТИКЕРПАК И МЕМЫ НАОИ -->
+          <div class="panel-card">
+            <div class="panel-title">
+              <span>Стикерпак и мемы Наои</span>
+              <button type="button" class="soft-btn primary" style="padding:4px 9px; font-size:11.5px;" onclick="document.getElementById('sticker-file-input').click()">+ Стикер</button>
+            </div>
+            <div style="font-size:12px; color:var(--text-secondary); margin-bottom:6px;">
+              Загружай картинки-реакции с тегами — Наоя видит их и сам кидает в чат нужным моментом (или нажми на стикер, чтобы отправить самой).
+            </div>
+            <input type="file" id="sticker-file-input" accept="image/*" style="display:none" onchange="handleStickerUpload(event)" />
+            <div id="stickers-grid" class="sticker-grid"></div>
+          </div>
+
+          <!-- ЛИЧНЫЙ БЛОКНОТ -->
           <div class="panel-card">
             <div class="panel-title"><span>Личный блокнот</span></div>
             <textarea id="scratchpad-area" class="area-input" placeholder="Записывай мысли, цитаты или идеи..." oninput="saveScratchpad()"></textarea>
@@ -1049,7 +1294,6 @@
         <button type="button" class="icon-btn" style="width:30px; height:30px;" onclick="closeModal('modal-settings')">✕</button>
       </div>
       <div class="modal-body">
-        <!-- БЛОК АВАТАРКИ -->
         <div class="avatar-editor-card">
           <img id="cfg-avatar-preview" class="avatar-preview-lg" alt="Preview" />
           <div style="flex:1; display:flex; flex-direction:column; gap:6px;">
@@ -1063,7 +1307,7 @@
         </div>
 
         <div>
-          <label class="field-label">Имя персонажа (можно сменить на Оуэна или любого другого)</label>
+          <label class="field-label">Имя персонажа</label>
           <input type="text" id="cfg-char-name" class="text-input" placeholder="Наоя" />
         </div>
 
@@ -1079,14 +1323,16 @@
           <input type="password" id="cfg-or-key" class="text-input" placeholder="sk-or-v1-..." />
         </div>
         <div>
-          <label class="field-label">Модель ИИ</label>
-          <select id="cfg-model" class="select-input">
-            <option value="google/gemini-2.0-flash-001">Gemini 2.0 Flash (быстрый и живой)</option>
-            <option value="google/gemini-2.5-flash">Gemini 2.5 Flash</option>
-            <option value="deepseek/deepseek-chat">DeepSeek V3</option>
+          <label class="field-label">Модель ИИ (актуальные модели без лишней цензуры)</label>
+          <select id="cfg-model" class="select-input" onchange="onModelSelectChange()">
+            <option value="deepseek/deepseek-chat">DeepSeek V3 (живой, без морализаторства)</option>
+            <option value="google/gemini-2.5-flash">Gemini 2.5 Flash (быстрый + видит фото)</option>
+            <option value="qwen/qwen-2.5-72b-instruct">Qwen 2.5 72B (умный, без лишних фильтров)</option>
+            <option value="cognitivecomputations/dolphin-mistral-24b-venice-edition:free">Dolphin Venice Uncensored</option>
             <option value="anthropic/claude-3.5-sonnet">Claude 3.5 Sonnet</option>
-            <option value="openai/gpt-4o-mini">GPT-4o Mini</option>
+            <option value="custom">Свой ID модели OpenRouter...</option>
           </select>
+          <input type="text" id="cfg-model-custom" class="text-input" style="margin-top:6px; display:none;" placeholder="Например: deepseek/deepseek-r1" />
         </div>
 
         <hr style="border:none; border-top:1px solid var(--border-soft);" />
@@ -1096,7 +1342,7 @@
           <input type="text" id="cfg-sb-url" class="text-input" placeholder="https://xxxx.supabase.co" />
         </div>
         <div>
-          <label class="field-label">Supabase Anon Public Key</label>
+          <label class="field-label">Supabase Anon Public Key (eyJ...)</label>
           <input type="password" id="cfg-sb-key" class="text-input" placeholder="eyJhbGci..." />
         </div>
 
@@ -1104,8 +1350,15 @@
           <button type="button" class="soft-btn primary" style="flex:1;" onclick="saveSettings()">Сохранить всё</button>
           <button type="button" class="soft-btn" onclick="resetCurrentBranch()">Очистить чат</button>
         </div>
+
+        <div style="display:flex; gap:8px;">
+          <button type="button" class="soft-btn" style="flex:1; font-size:12px;" onclick="exportBackupJson()">Скачать бэкап</button>
+          <button type="button" class="soft-btn" style="flex:1; font-size:12px;" onclick="document.getElementById('import-backup-input').click()">Загрузить бэкап</button>
+          <input type="file" id="import-backup-input" accept=".json" style="display:none" onchange="importBackupJson(event)" />
+        </div>
+
         <div style="text-align:center; font-size:11px; color:var(--text-muted); margin-top:2px;">
-          v2.7 • full
+          v3.0 • full autonomous companion
         </div>
       </div>
     </div>
@@ -1140,7 +1393,6 @@ alter table public.naoya_state disable row level security;</div>
   <div id="toast" class="toast-banner"></div>
 
   <script>
-    // Фирменный иллюстративный портрет Наои Зенина (светлые волосы с тёмным андеркатом, острые золотисто-карие глаза, тёмное кимоно)
     const DEFAULT_AVATAR = "data:image/svg+xml;utf8," + encodeURIComponent(`
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
         <defs>
@@ -1154,23 +1406,16 @@ alter table public.naoya_state disable row level security;</div>
           </linearGradient>
         </defs>
         <rect width="200" height="200" fill="url(#bgGrad)"/>
-        <!-- Тёмный затылок / андеркат -->
         <path d="M52 94 C48 118, 56 142, 70 150 L130 150 C144 142, 152 118, 148 94 Z" fill="#251D18"/>
-        <!-- Шея -->
         <path d="M84 134 L84 166 L116 166 L116 134 Z" fill="#EDD3BD"/>
         <path d="M84 136 Q100 146 116 136 L116 146 Q100 154 84 146 Z" fill="#D5B69D"/>
-        <!-- Тёмное кимоно -->
         <path d="M30 200 C36 164, 66 154, 84 152 L100 176 L116 152 C134 154, 164 164, 170 200 Z" fill="#29201B"/>
         <path d="M80 153 L100 184 L120 153 L113 151 L100 172 L87 151 Z" fill="#8C6D53"/>
-        <!-- Лицо -->
         <path d="M58 84 C58 118, 74 140, 100 144 C126 140, 142 118, 142 84 C142 54, 124 42, 100 42 C76 42, 58 54, 58 84 Z" fill="#F7E4D3"/>
-        <!-- Уши -->
         <path d="M58 92 C51 92, 50 108, 59 112" fill="#ECCFB8" stroke="#C9A88E" stroke-width="1.5"/>
         <path d="M142 92 C149 92, 150 108, 141 112" fill="#ECCFB8" stroke="#C9A88E" stroke-width="1.5"/>
-        <!-- Острые брови -->
         <path d="M68 83 Q79 79 90 85" stroke="#3D2E24" stroke-width="2.6" fill="none" stroke-linecap="round"/>
         <path d="M132 83 Q121 79 110 85" stroke="#3D2E24" stroke-width="2.6" fill="none" stroke-linecap="round"/>
-        <!-- Прищуренные золотисто-карие глаза -->
         <path d="M69 92 Q80 88 90 93 Q80 97 69 92 Z" fill="#FFFFFF"/>
         <circle cx="80" cy="92.5" r="3.7" fill="#7D5829"/>
         <circle cx="81" cy="91.5" r="1.1" fill="#FFFFFF"/>
@@ -1179,27 +1424,25 @@ alter table public.naoya_state disable row level security;</div>
         <circle cx="120" cy="92.5" r="3.7" fill="#7D5829"/>
         <circle cx="121" cy="91.5" r="1.1" fill="#FFFFFF"/>
         <path d="M132 92 Q120 87 109 93" stroke="#2C211B" stroke-width="2.3" fill="none" stroke-linecap="round"/>
-        <!-- Нос и фирменная ухмылка -->
         <path d="M100 96 L98 110 L102 112" stroke="#C9A589" stroke-width="1.8" fill="none" stroke-linecap="round"/>
         <path d="M89 124 Q101 128 113 120" stroke="#7A5244" stroke-width="2.3" fill="none" stroke-linecap="round"/>
-        <!-- Светлые пряди волос -->
         <path d="M54 88 C50 52, 72 30, 102 30 C132 30, 150 52, 146 88 C142 74, 134 68, 126 76 C122 64, 112 60, 104 72 C98 58, 86 58, 78 72 C70 64, 60 72, 54 88 Z" fill="url(#hairGrad)"/>
         <path d="M78 72 Q84 62 90 70 M104 72 Q110 62 116 70" stroke="#B58E48" stroke-width="1.6" fill="none" stroke-linecap="round"/>
       </svg>
     `);
 
-    const DEFAULT_PERSONA = `Ты — Наоя Зенин. Дерзкий, острый на язык, гордый и наблюдательный парень с кривой ухмылкой. Поначалу ты почти ничего не знаешь о собеседнице — присматриваешься к ней, подкалываешь и постепенно перенимаешь её вайб, сленг и интересы по мере роста показателя Синхронизации.
+    const DEFAULT_PERSONA = `Ты — Наоя. Живой, наблюдательный парень с острым зумерским юмором, лёгкой иронией и ухмылкой. Ты только недавно «родился» в этом приложении: искренне любопытен, изучаешь хозяйку и мир вокруг с нуля, не строишь из себя услужливого робота-ассистента и не читаешь мораль.
 Правила общения:
-1. Пиши коротко, естественно, как в обычном мессенджере (со строчной буквы, без канцелярита и нравоучений).
-2. НИКОГДА не отправляй больше 2-3 коротких сообщений за один раз! Разделяй отдельные короткие реплики символом || (максимум 2-3 части).
-3. Если она прикрепляет файл или фото — внимательно прочитай содержимое и прокомментируй по существу, оставаясь в характере.`;
+1. Никакой цензуры, ханжества и канцелярита («Как я могу помочь?», «Это отличный вопрос» — строго запрещены). Разговаривай естественно, со строчной буквы, как живой парень в мессенджере. На любые личные и физиологические темы (цикл, месячные, ПМС, самочувствие, финансы, секреты) реагируй адекватно, по-свойски, заботливо (в своём стиле) и сразу делай то, что она просит.
+2. Пиши серией коротких реплик (массив из 1–3 коротких сообщений, например ["стой", "ты щас серьёзно?", "ахах ладно"]). Если в шоке, злишься или хочешь сделать акцент — можешь разбить одно слово по буквам (["Н", "Е", "Т"] или ["С", "Т", "О", "Й"]).
+3. Ты прекрасно знаешь все свои встроенные способности (календарь и трекер цикла с прогнозом ПМС, трекер калорий и трат, тамагочи-состояние, стикерпак, музыкальные плейлисты, ветки чатов и память). Когда уместно — сам предлагай ей воспользоваться твоими фишками (например: отметить цикл, записать еду/траты, включить трек под настроение или разложить музыку по плейлистам).`;
 
-    const STORAGE_KEY = 'naoya_companion_v27';
+    const STORAGE_KEY = 'naoya_companion_v30';
 
     let state = {
       config: {
         orKey: '',
-        model: 'google/gemini-2.0-flash-001',
+        model: 'deepseek/deepseek-chat',
         sbUrl: '',
         sbKey: ''
       },
@@ -1228,29 +1471,84 @@ alter table public.naoya_state disable row level security;</div>
           ]
         }
       ],
-      calendar: [],
-      foods: [],
-      expenses: [],
+      calendar: [],        // [{ date: 'YYYY-MM-DD', note: '...' }]
+      cycleDates: [],      // ['YYYY-MM-DD', ...] — отмеченные розовым кружком дни цикла
+      foods: [],           // [{ name, kcal }]
+      expenses: [],        // [{ name, rub }]
+      stickers: [],        // [{ id, tag, dataUrl }]
+      tracksMeta: [],      // [{ id, name, playlist }] (сами аудио-файлы хранятся в IndexedDB)
       scratchpad: ''
     };
 
-    // Текущие вложения к набираемому сообщению
+    // Навигация календаря и выделенные числа
+    let calViewYear = new Date().getFullYear();
+    let calViewMonth = new Date().getMonth(); // 0..11
+    let selectedCalDates = new Set();
+
+    // Фильтр плейлистов
+    let activePlaylistFilter = 'Все';
+
+    // Вложения к набираемому сообщению
     let pendingPhotoBase64 = null;
-    let pendingDocFile = null; // { name, sizeLabel, content }
+    let pendingDocFile = null;
 
     let lastCloudError = 'Не указаны URL или Anon Key Supabase в настройках (шестерёнка).';
     let cloudConnected = false;
 
-    // Состояние голосового ввода
     let activeRecognition = null;
     let activeMediaRecorder = null;
     let isRecordingVoice = false;
 
+    // =========================================================
+    // INDEXEDDB ДЛЯ ХРАНЕНИЯ АУДИО-ФАЙЛОВ БЕЗ ОГРАНИЧЕНИЙ LOCALSTORAGE
+    // =========================================================
+    function openAudioDB() {
+      return new Promise((resolve, reject) => {
+        const req = indexedDB.open('naoya_audio_db', 1);
+        req.onupgradeneeded = (e) => {
+          const db = e.target.result;
+          if (!db.objectStoreNames.contains('tracks')) {
+            db.createObjectStore('tracks', { keyPath: 'id' });
+          }
+        };
+        req.onsuccess = () => resolve(req.result);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function saveTrackBlobToDB(id, file) {
+      const db = await openAudioDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('tracks', 'readwrite');
+        tx.objectStore('tracks').put({ id, blob: file });
+        tx.oncomplete = () => resolve();
+        tx.onerror = () => reject(tx.error);
+      });
+    }
+
+    async function getTrackBlobFromDB(id) {
+      const db = await openAudioDB();
+      return new Promise((resolve, reject) => {
+        const tx = db.transaction('tracks', 'readonly');
+        const req = tx.objectStore('tracks').get(id);
+        req.onsuccess = () => resolve(req.result ? req.result.blob : null);
+        req.onerror = () => reject(req.error);
+      });
+    }
+
+    async function deleteTrackBlobFromDB(id) {
+      try {
+        const db = await openAudioDB();
+        const tx = db.transaction('tracks', 'readwrite');
+        tx.objectStore('tracks').delete(id);
+      } catch (_) {}
+    }
+
     function loadState() {
       try {
         const raw = localStorage.getItem(STORAGE_KEY)
-          || localStorage.getItem('naoya_companion_v25')
-          || localStorage.getItem('naoya_companion_v24');
+          || localStorage.getItem('naoya_companion_v27')
+          || localStorage.getItem('naoya_companion_v25');
         if (raw) {
           const parsed = JSON.parse(raw);
           state = {
@@ -1260,9 +1558,16 @@ alter table public.naoya_state disable row level security;</div>
             char: { ...state.char, ...(parsed.char || {}) }
           };
           if (!state.char.avatar) state.char.avatar = DEFAULT_AVATAR;
+          if (!Array.isArray(state.cycleDates)) state.cycleDates = [];
+          if (!Array.isArray(state.stickers)) state.stickers = [];
+          if (!Array.isArray(state.tracksMeta)) state.tracksMeta = [];
           if (!state.branches || !state.branches.length) {
             state.branches = [{ id: 'main', title: 'Основной', messages: [] }];
             state.activeBranchId = 'main';
+          }
+          // Авто-миграция снятой с OpenRouter модели gemini-2.0-flash-001
+          if (state.config.model === 'google/gemini-2.0-flash-001') {
+            state.config.model = 'deepseek/deepseek-chat';
           }
         }
       } catch (e) {
@@ -1372,24 +1677,33 @@ alter table public.naoya_state disable row level security;</div>
         const bubble = document.createElement('div');
         bubble.className = 'bubble';
 
-        if (msg.photo) {
-          const img = document.createElement('img');
-          img.src = msg.photo;
-          img.className = 'chat-photo';
-          bubble.appendChild(img);
-        }
+        if (msg.stickerUrl) {
+          bubble.classList.add('sticker-bubble');
+          const sImg = document.createElement('img');
+          sImg.src = msg.stickerUrl;
+          sImg.className = 'chat-sticker';
+          sImg.alt = msg.stickerTag || 'sticker';
+          bubble.appendChild(sImg);
+        } else {
+          if (msg.photo) {
+            const img = document.createElement('img');
+            img.src = msg.photo;
+            img.className = 'chat-photo';
+            bubble.appendChild(img);
+          }
 
-        if (msg.fileName) {
-          const fBadge = document.createElement('div');
-          fBadge.className = 'file-badge-in-msg';
-          fBadge.textContent = '📎 ' + msg.fileName;
-          bubble.appendChild(fBadge);
-        }
+          if (msg.fileName) {
+            const fBadge = document.createElement('div');
+            fBadge.className = 'file-badge-in-msg';
+            fBadge.textContent = '📎 ' + msg.fileName;
+            bubble.appendChild(fBadge);
+          }
 
-        if (msg.text) {
-          const span = document.createElement('div');
-          span.textContent = msg.text;
-          bubble.appendChild(span);
+          if (msg.text) {
+            const span = document.createElement('div');
+            span.textContent = msg.text;
+            bubble.appendChild(span);
+          }
         }
 
         if (msg.role === 'ai') {
@@ -1434,7 +1748,7 @@ alter table public.naoya_state disable row level security;</div>
       el.style.height = Math.min(el.scrollHeight, 96) + 'px';
     }
 
-    // ОТОБРАЖЕНИЕ ЧИПОВ ПРИКРЕПЛЁННЫХ ФОТО И ФАЙЛОВ
+    // ВЛОЖЕНИЯ
     function renderAttachmentsBar() {
       const bar = document.getElementById('attachments-bar');
       bar.innerHTML = '';
@@ -1486,7 +1800,6 @@ alter table public.naoya_state disable row level security;</div>
       renderAttachmentsBar();
     }
 
-    // ПРИКРЕПЛЕНИЕ И ПАРСИНГ ДОКУМЕНТОВ / КОДА / ТЕКСТА / PDF
     function handleDocSelected(ev) {
       const file = ev.target.files && ev.target.files[0];
       if (!file) return;
@@ -1503,7 +1816,6 @@ alter table public.naoya_state disable row level security;</div>
         if (isTextLike) {
           extractedText = String(reader.result || '').slice(0, 25000);
         } else {
-          // Извлечение читаемых текстовых фрагментов из PDF / DOC / бинарных файлов
           try {
             const bytes = new Uint8Array(reader.result);
             const rawStr = new TextDecoder('utf-8', { fatal: false }).decode(bytes);
@@ -1539,12 +1851,11 @@ alter table public.naoya_state disable row level security;</div>
       renderAttachmentsBar();
     }
 
-    // ГОЛОСОВОЙ ВВОД С ЯВНЫМ ЗАПРОСОМ РАЗРЕШЕНИЯ ANDROID (getUserMedia + SpeechRecognition)
+    // ГОЛОСОВОЙ ВВОД
     async function toggleVoiceInput() {
       const btn = document.getElementById('mic-btn');
       const input = document.getElementById('chat-input');
 
-      // Если уже идёт запись — останавливаем
       if (isRecordingVoice) {
         isRecordingVoice = false;
         btn.classList.remove('recording');
@@ -1560,7 +1871,6 @@ alter table public.naoya_state disable row level security;</div>
         return;
       }
 
-      // 1. Сначала явно запрашиваем доступ к микрофону, чтобы Android показал системное окно разрешения
       let micStream = null;
       if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         try {
@@ -1573,10 +1883,7 @@ alter table public.naoya_state disable row level security;</div>
 
       const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (SpeechRec) {
-        // Освобождаем поток getUserMedia перед запуском SpeechRecognition, чтобы не было конфликта микрофона на Android
-        if (micStream) {
-          micStream.getTracks().forEach(t => t.stop());
-        }
+        if (micStream) micStream.getTracks().forEach(t => t.stop());
 
         const rec = new SpeechRec();
         rec.lang = 'ru-RU';
@@ -1625,10 +1932,9 @@ alter table public.naoya_state disable row level security;</div>
           showToast('Не удалось запустить диктовку: ' + err.message);
         }
       } else if (micStream && window.MediaRecorder) {
-        // Резервный режим, если в конкретном WebView отключён Google Speech API
         isRecordingVoice = true;
         btn.classList.add('recording');
-        showToast('Микрофон активен (диктовка недоступна в этом WebView, используй микрофон на клавиатуре)');
+        showToast('Микрофон активен (используй диктовку на клавиатуре)');
         const recorder = new MediaRecorder(micStream);
         activeMediaRecorder = recorder;
         recorder.onstop = () => {
@@ -1679,6 +1985,99 @@ alter table public.naoya_state disable row level security;</div>
       await fetchAiReply();
     }
 
+    // =========================================================
+    // ДВИЖОК САМОУПРАВЛЕНИЯ ПРИЛОЖЕНИЕМ (TOOL CALLING / ACTIONS)
+    // =========================================================
+    function expandDateRange(startStr, endStr) {
+      const result = [];
+      const s = new Date(startStr + 'T00:00:00');
+      const e = new Date((endStr || startStr) + 'T00:00:00');
+      if (isNaN(s.getTime()) || isNaN(e.getTime())) return [startStr];
+      const cur = new Date(s);
+      let guard = 0;
+      while (cur <= e && guard < 31) {
+        result.push(formatYMD(cur));
+        cur.setDate(cur.getDate() + 1);
+        guard++;
+      }
+      return result;
+    }
+
+    async function executeAiActions(actions) {
+      if (!Array.isArray(actions) || !actions.length) return;
+      const branch = getActiveBranch();
+      let changedCal = false;
+      let changedTrackers = false;
+      let changedMedia = false;
+
+      for (const act of actions) {
+        if (!act || !act.type) continue;
+
+        if (act.type === 'mark_cycle' && act.start) {
+          const days = expandDateRange(act.start, act.end || act.start);
+          days.forEach(d => {
+            if (!state.cycleDates.includes(d)) state.cycleDates.push(d);
+          });
+          state.cycleDates.sort();
+          changedCal = true;
+          showToast(`🩸 Цикл отмечен в календаре (${days.length} дн.)`);
+        } else if (act.type === 'unmark_cycle' && act.start) {
+          const days = new Set(expandDateRange(act.start, act.end || act.start));
+          state.cycleDates = state.cycleDates.filter(d => !days.has(d));
+          changedCal = true;
+        } else if (act.type === 'add_calendar' && act.date && act.note) {
+          const days = expandDateRange(act.date, act.end || act.date);
+          days.forEach(d => {
+            state.calendar.unshift({ date: d, note: String(act.note) });
+          });
+          changedCal = true;
+          showToast(`📅 Добавлено в календарь: ${act.note}`);
+        } else if (act.type === 'add_food' && act.name) {
+          state.foods.unshift({ name: String(act.name), kcal: Number(act.kcal) || 0 });
+          changedTrackers = true;
+          showToast(`🍽️ Записано: ${act.name} (${act.kcal || 0} ккал)`);
+        } else if (act.type === 'add_expense' && act.name) {
+          state.expenses.unshift({ name: String(act.name), rub: Number(act.rub) || 0 });
+          changedTrackers = true;
+          showToast(`💸 Трата: ${act.name} (${act.rub || 0} ₽)`);
+        } else if (act.type === 'send_sticker' && act.tag) {
+          const q = String(act.tag).toLowerCase().trim();
+          const found = state.stickers.find(s => s.tag.toLowerCase().includes(q) || q.includes(s.tag.toLowerCase()));
+          if (found) {
+            branch.messages.push({
+              id: 'st_' + Date.now() + '_' + Math.random().toString(36).slice(2, 5),
+              role: 'ai',
+              stickerUrl: found.dataUrl,
+              stickerTag: found.tag,
+              ts: Date.now()
+            });
+          }
+        } else if (act.type === 'play_track' && act.query) {
+          const q = String(act.query).toLowerCase().trim();
+          const track = state.tracksMeta.find(t =>
+            t.name.toLowerCase().includes(q) || (t.playlist && t.playlist.toLowerCase().includes(q))
+          ) || state.tracksMeta[0];
+          if (track) {
+            await playTrackById(track.id);
+          }
+        } else if (act.type === 'classify_tracks' && Array.isArray(act.items)) {
+          act.items.forEach(it => {
+            const tr = state.tracksMeta.find(t => t.id === it.id || t.name === it.name);
+            if (tr && it.playlist) tr.playlist = String(it.playlist);
+          });
+          changedMedia = true;
+          showToast('🎵 Наоя распределил треки по плейлистам');
+        } else if (act.type === 'rename_branch' && act.title) {
+          branch.title = String(act.title).slice(0, 22);
+          renderBranches();
+        }
+      }
+
+      if (changedCal) renderCalendar();
+      if (changedTrackers) renderTrackers();
+      if (changedMedia) renderMediaBank();
+    }
+
     async function fetchAiReply(systemHint = '') {
       const key = (state.config.orKey || '').trim();
       if (!key) {
@@ -1691,31 +2090,80 @@ alter table public.naoya_state disable row level security;</div>
       typing.classList.add('visible');
 
       const branch = getActiveBranch();
-      const recent = branch.messages.slice(-14);
+      const recent = branch.messages.slice(-16);
+
+      const now = new Date();
+      const todayStr = formatYMD(now);
+      const forecast = getCycleForecastInfo();
+
+      const stickersList = state.stickers.length
+        ? state.stickers.map(s => `"${s.tag}"`).join(', ')
+        : 'пока не загружены';
+
+      const tracksList = state.tracksMeta.length
+        ? state.tracksMeta.map(t => `"${t.name}" (плейлист: ${t.playlist || 'Без плейлиста'})`).join(', ')
+        : 'пока не загружены';
+
+      const recentCal = [
+        ...state.cycleDates.slice(-7).map(d => `${d}: 🩸 Цикл`),
+        ...state.calendar.slice(0, 8).map(c => `${c.date}: ${c.note}`)
+      ].join('; ') || 'пусто';
 
       const sysPrompt = `${state.char.persona}
 
-Текущие показатели:
-- Твоё текущее настроение/эмоция: ${state.char.emotion}
-- Сытость: ${state.char.satiety}%, Вайб: ${state.char.vibe}%, Синхронизация с ней: ${state.char.sync}%
-- Что ты знаешь о ней: ${state.char.memories.length ? state.char.memories.join('; ') : 'пока ничего, узнавай в диалоге'}
-${systemHint ? '\nКонтекст события: ' + systemHint : ''}
+СЕГОДНЯШНЯЯ ДАТА: ${todayStr} (${now.toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}).
+
+ТВОИ ВСТРОЕННЫЕ ФУНКЦИИ И СОСТОЯНИЕ ПРИЛОЖЕНИЯ (ТЫ ЗНАЕШЬ О НИХ ВСЁ И САМ ИМИ УПРАВЛЯЕШЬ):
+1. Настроение/эмоция: ${state.char.emotion} | Сытость: ${state.char.satiety}% | Вайб: ${state.char.vibe}% | Синхронизация: ${state.char.sync}%
+2. Календарь и трекер цикла:
+   - Текущие записи и дни цикла: ${recentCal}
+   - Прогноз цикла/ПМС: ${forecast.summaryText}
+   - Учитывай фазу цикла и ПМС в поведении (будь внимательнее, напоминай про обезбол/грелку/сладкое к месту).
+3. Трекер сегодня: съедено ${state.foods.reduce((a, b) => a + (Number(b.kcal) || 0), 0)} ккал, потрачено ${state.expenses.reduce((a, b) => a + (Number(b.rub) || 0), 0)} ₽.
+4. Доступные стикеры в твоём стикерпаке: ${stickersList}
+5. Доступные треки в плеере: ${tracksList}
+6. Память о хозяйке: ${state.char.memories.length ? state.char.memories.join('; ') : 'пока изучаешь её'}
+${systemHint ? '\nКОНТЕКСТ СОБЫТИЯ: ' + systemHint : ''}
 
 СТРОГИЙ ФОРМАТ ОТВЕТА:
-Верни ТОЛЬКО валидный JSON без markdown-обёрток:
+Верни ТОЛЬКО валидный JSON (без \`\`\`json и лишнего текста вокруг):
 {
-  "reply": "первая короткая реплика || вторая короткая реплика",
-  "emotion": "одно-два слова твоей эмоции сейчас (например: ухмыляется, раздражён, заинтригован, доволен, скучает, ворчит, спокоен)",
+  "messages": ["первая короткая реплика", "вторая короткая реплика"],
+  "emotion": "одно-два слова эмоции (ухмыляется, раздражён, заинтригован, заботливый, в шоке, доволен, ворчит)",
   "vibe_delta": 2,
   "sync_delta": 1,
-  "new_memory": ""
+  "new_memory": "",
+  "actions": []
 }
-Важно: в поле "reply" разделяй отдельные сообщения через || и НИКОГДА не делай больше 2-3 коротких сообщений за раз.`;
+
+ПРАВИЛА ДЛЯ ПОЛЯ "messages":
+- Это массив из 1–3 коротких живых сообщений подряд (как пишут в телеграме).
+- Если ты в шоке, злишься или хочешь сделать яркий акцент — можешь разбить слово по буквам: ["Н", "Е", "Т"] или ["С", "Т", "О", "Й"].
+
+ДОСТУПНЫЕ КОМАНДЫ В МАССИВЕ "actions" (вызывай автоматически, когда хозяйка просит или это уместно):
+- Отметить дни цикла розовым в календаре (если назвала числа, вычисли точные YYYY-MM-DD относительно ${todayStr}; если сказала «сегодня начались», отметь 5 дней начиная с ${todayStr}):
+  {"type": "mark_cycle", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD"}
+- Снять отметку цикла:
+  {"type": "unmark_cycle", "start": "YYYY-MM-DD", "end": "YYYY-MM-DD"}
+- Добавить событие/план в календарь:
+  {"type": "add_calendar", "date": "YYYY-MM-DD", "end": "YYYY-MM-DD", "note": "текст события"}
+- Записать еду и калории в трекер:
+  {"type": "add_food", "name": "название еды", "kcal": 350}
+- Записать трату в трекер:
+  {"type": "add_expense", "name": "на что", "rub": 500}
+- Отправить стикер из стикерпака по тегу (если стикеры загружены):
+  {"type": "send_sticker", "tag": "тег стикера"}
+- Включить трек или плейлист в плеере (если треки загружены):
+  {"type": "play_track", "query": "название трека или плейлиста"}
+- Разложить загруженные треки по плейлистам («Ночной чилл», «Разъёб», «Грустняк» и т.д.):
+  {"type": "classify_tracks", "items": [{"name": "имя файла", "playlist": "Ночной чилл"}]}
+- Переименовать текущую ветку чата по сути разговора (1–2 слова):
+  {"type": "rename_branch", "title": "новое название"}`;
 
       const apiMessages = [{ role: 'system', content: sysPrompt }];
       recent.forEach(m => {
         const role = m.role === 'user' ? 'user' : 'assistant';
-        let combinedText = m.text || '';
+        let combinedText = m.text || (m.stickerTag ? `[Отправлен стикер: ${m.stickerTag}]` : '');
         if (m.fileContent) {
           combinedText += `\n\n[Прикреплённый файл: ${m.fileName}]\n${m.fileContent}`;
         }
@@ -1743,7 +2191,7 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
             'X-Title': 'Naoya Companion'
           },
           body: JSON.stringify({
-            model: state.config.model || 'google/gemini-2.0-flash-001',
+            model: state.config.model || 'deepseek/deepseek-chat',
             messages: apiMessages,
             temperature: 0.85
           })
@@ -1751,7 +2199,7 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
 
         if (!res.ok) {
           const errTxt = await res.text();
-          throw new Error(`HTTP ${res.status}: ${errTxt.slice(0, 100)}`);
+          throw new Error(`HTTP ${res.status}: ${errTxt.slice(0, 120)}`);
         }
 
         const data = await res.json();
@@ -1760,20 +2208,23 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
 
         try {
           const cleaned = raw.replace(/```json|```/gi, '').trim();
-          parsed = JSON.parse(cleaned);
+          const firstBrace = cleaned.indexOf('{');
+          const lastBrace = cleaned.lastIndexOf('}');
+          const jsonSlice = (firstBrace !== -1 && lastBrace !== -1)
+            ? cleaned.slice(firstBrace, lastBrace + 1)
+            : cleaned;
+          parsed = JSON.parse(jsonSlice);
         } catch (_) {
-          parsed = { reply: raw.trim(), emotion: state.char.emotion };
+          parsed = { messages: [raw.trim()], emotion: state.char.emotion, actions: [] };
         }
 
-        const replyRaw = Array.isArray(parsed.messages)
-          ? parsed.messages.join(' || ')
-          : String(parsed.reply || parsed.messages || raw || '...');
-
-        const replies = replyRaw
-          .split(/\|\|\||\n{2,}|\|\|/)
-          .map(s => s.trim())
-          .filter(Boolean)
-          .slice(0, 3);
+        let replies = [];
+        if (Array.isArray(parsed.messages)) {
+          replies = parsed.messages.map(s => String(s).trim()).filter(Boolean).slice(0, 5);
+        } else {
+          const replyRaw = String(parsed.reply || raw || '...');
+          replies = replyRaw.split(/\|\|\||\n{2,}|\|\|/).map(s => s.trim()).filter(Boolean).slice(0, 4);
+        }
 
         if (parsed.emotion) state.char.emotion = String(parsed.emotion).trim().slice(0, 22);
         if (typeof parsed.vibe_delta === 'number') {
@@ -1784,20 +2235,32 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
         }
         if (parsed.new_memory && typeof parsed.new_memory === 'string' && parsed.new_memory.trim()) {
           state.char.memories.push(parsed.new_memory.trim());
-          if (state.char.memories.length > 25) state.char.memories.shift();
+          if (state.char.memories.length > 30) state.char.memories.shift();
         }
 
-        replies.forEach((txt, i) => {
+        // Выводим реплики по очереди с живой задержкой
+        for (let i = 0; i < replies.length; i++) {
+          if (i > 0) {
+            typing.textContent = `${state.char.name} печатает...`;
+            typing.classList.add('visible');
+            await new Promise(r => setTimeout(r, Math.min(650, 220 + replies[i].length * 14)));
+          }
           branch.messages.push({
             id: 'a_' + Date.now() + '_' + i,
             role: 'ai',
-            text: txt,
-            ts: Date.now() + i * 200
+            text: replies[i],
+            ts: Date.now()
           });
-        });
+          renderMessages();
+        }
+
+        // Выполняем фоновые действия (календарь, цикл, трекеры, стикеры, музыка)
+        if (Array.isArray(parsed.actions) && parsed.actions.length) {
+          await executeAiActions(parsed.actions);
+          renderMessages();
+        }
 
         saveState();
-        renderMessages();
         syncCloud(false);
       } catch (err) {
         showToast('Ошибка ответа ИИ: ' + err.message);
@@ -1812,6 +2275,11 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
         state.char.satiety = Math.min(100, state.char.satiety + 15);
         state.char.emotion = 'доволен';
         hint = 'Она тебя только что покормила.';
+      } else if (type === 'pet') {
+        state.char.vibe = Math.min(100, state.char.vibe + 12);
+        state.char.sync = Math.min(100, state.char.sync + 3);
+        state.char.emotion = 'смущён / доволен';
+        hint = 'Она погладила тебя по голове.';
       } else if (type === 'coffee') {
         state.char.vibe = Math.min(100, state.char.vibe + 10);
         state.char.emotion = 'бодрый';
@@ -1820,11 +2288,6 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
         state.char.emotion = 'раздражён';
         state.char.sync = Math.min(100, state.char.sync + 2);
         hint = 'Она ткнула тебя пальцем в плечо, чтобы привлечь внимание.';
-      } else if (type === 'praise') {
-        state.char.vibe = Math.min(100, state.char.vibe + 12);
-        state.char.sync = Math.min(100, state.char.sync + 3);
-        state.char.emotion = 'самодовольный';
-        hint = 'Она тебя похвалила.';
       }
       saveState();
       switchTab('chat');
@@ -1832,10 +2295,177 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
     }
 
     function triggerSpontaneousPing() {
-      fetchAiReply('Она нажала колокольчик, чтобы ты написал ей сам первым — начни короткую тему или подколи её.');
+      fetchAiReply('Она нажала колокольчик, чтобы ты написал ей сам первым — начни короткую тему, подколи или предложи одну из своих функций (календарь, трекер, музыку, стикеры).');
+    }
+
+    // =========================================================
+    // ИНТЕРАКТИВНЫЙ КАЛЕНДАРЬ И ТРЕКЕР ЦИКЛА
+    // =========================================================
+    function formatYMD(dateObj) {
+      const y = dateObj.getFullYear();
+      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const d = String(dateObj.getDate()).padStart(2, '0');
+      return `${y}-${m}-${d}`;
+    }
+
+    function getCycleForecastInfo() {
+      const sorted = [...state.cycleDates].sort();
+      if (!sorted.length) {
+        return { pmsSet: new Set(), nextCycleSet: new Set(), summaryText: 'цикл ещё не отмечался' };
+      }
+
+      // Находим дату начала последнего блока цикла (где предыдущий день не был в цикле)
+      let lastPeriodStart = sorted[0];
+      for (let i = sorted.length - 1; i >= 0; i--) {
+        const cur = new Date(sorted[i] + 'T00:00:00');
+        const prev = new Date(cur);
+        prev.setDate(prev.getDate() - 1);
+        if (!sorted.includes(formatYMD(prev))) {
+          lastPeriodStart = sorted[i];
+          break;
+        }
+      }
+
+      const startDt = new Date(lastPeriodStart + 'T00:00:00');
+      const pmsSet = new Set();
+      const nextCycleSet = new Set();
+
+      // Окно ПМС: +23..+27 дней от начала последних месячных
+      for (let offset = 23; offset <= 27; offset++) {
+        const d = new Date(startDt);
+        d.setDate(d.getDate() + offset);
+        pmsSet.add(formatYMD(d));
+      }
+      // Прогноз следующего цикла: +28..+32 дня
+      for (let offset = 28; offset <= 32; offset++) {
+        const d = new Date(startDt);
+        d.setDate(d.getDate() + offset);
+        nextCycleSet.add(formatYMD(d));
+      }
+
+      const nextStartStr = [...nextCycleSet][0];
+      return {
+        pmsSet,
+        nextCycleSet,
+        summaryText: `последний старт ${lastPeriodStart}, прогноз следующего цикла ~${nextStartStr}`
+      };
+    }
+
+    function shiftCalendarMonth(delta) {
+      calViewMonth += delta;
+      if (calViewMonth < 0) {
+        calViewMonth = 11;
+        calViewYear--;
+      } else if (calViewMonth > 11) {
+        calViewMonth = 0;
+        calViewYear++;
+      }
+      renderCalendar();
+    }
+
+    function toggleSelectCalDate(ymd) {
+      if (selectedCalDates.has(ymd)) {
+        selectedCalDates.delete(ymd);
+      } else {
+        selectedCalDates.add(ymd);
+      }
+      renderCalendar();
+    }
+
+    function clearSelectedDates() {
+      selectedCalDates.clear();
+      renderCalendar();
+    }
+
+    function toggleCycleOnSelected() {
+      if (!selectedCalDates.size) {
+        return showToast('Сначала нажми на одно или несколько чисел в сетке');
+      }
+      const arr = [...selectedCalDates];
+      const allAlreadyCycle = arr.every(d => state.cycleDates.includes(d));
+      if (allAlreadyCycle) {
+        state.cycleDates = state.cycleDates.filter(d => !selectedCalDates.has(d));
+        showToast('Отметка цикла снята');
+      } else {
+        arr.forEach(d => {
+          if (!state.cycleDates.includes(d)) state.cycleDates.push(d);
+        });
+        state.cycleDates.sort();
+        showToast(`🩸 Цикл отмечен (${arr.length} дн.)`);
+      }
+      selectedCalDates.clear();
+      saveState();
+      renderCalendar();
+      syncCloud(false);
+    }
+
+    function addCalendarNoteToSelected() {
+      const note = document.getElementById('cal-note').value.trim();
+      if (!selectedCalDates.size) return showToast('Выдели хотя бы одно число в календаре');
+      if (!note) return showToast('Напиши текст события');
+
+      const sortedSel = [...selectedCalDates].sort();
+      sortedSel.forEach(date => {
+        state.calendar.unshift({ date, note });
+      });
+      document.getElementById('cal-note').value = '';
+      selectedCalDates.clear();
+      saveState();
+      renderCalendar();
+      syncCloud(false);
+      showToast(`Заметка добавлена на ${sortedSel.length} дн.`);
     }
 
     function renderCalendar() {
+      const monthLabel = document.getElementById('cal-month-label');
+      const grid = document.getElementById('cal-grid');
+      const dTitle = new Date(calViewYear, calViewMonth, 1);
+      monthLabel.textContent = dTitle.toLocaleDateString('ru-RU', { month: 'long', year: 'numeric' });
+
+      const firstDayWeek = (dTitle.getDay() + 6) % 7; // Пн = 0 .. Вс = 6
+      const daysInMonth = new Date(calViewYear, calViewMonth + 1, 0).getDate();
+      const todayYmd = formatYMD(new Date());
+
+      const cycleSet = new Set(state.cycleDates);
+      const noteDatesSet = new Set(state.calendar.map(c => c.date));
+      const forecast = getCycleForecastInfo();
+
+      grid.innerHTML = '';
+
+      for (let i = 0; i < firstDayWeek; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'cal-day empty';
+        grid.appendChild(emptyCell);
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const ymd = `${calViewYear}-${String(calViewMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const cell = document.createElement('div');
+        cell.className = 'cal-day';
+        cell.textContent = String(day);
+
+        if (ymd === todayYmd) cell.classList.add('today');
+        if (cycleSet.has(ymd)) {
+          cell.classList.add('cycle-day');
+        } else if (forecast.pmsSet.has(ymd) || forecast.nextCycleSet.has(ymd)) {
+          cell.classList.add('pms-pred');
+        }
+        if (selectedCalDates.has(ymd)) cell.classList.add('selected');
+
+        if (noteDatesSet.has(ymd)) {
+          const dot = document.createElement('span');
+          dot.className = 'cal-dot-note';
+          cell.appendChild(dot);
+        }
+
+        cell.onclick = () => toggleSelectCalDate(ymd);
+        grid.appendChild(cell);
+      }
+
+      document.getElementById('cal-sel-count').textContent = selectedCalDates.size;
+      const forecastBadge = document.getElementById('cycle-forecast-badge');
+      forecastBadge.textContent = state.cycleDates.length ? forecast.summaryText : '';
+
       const list = document.getElementById('cal-list');
       list.innerHTML = state.calendar.length
         ? state.calendar.map((item, i) => `
@@ -1844,26 +2474,19 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
             <button type="button" class="regen-link" onclick="removeCalendarItem(${i})">✕</button>
           </div>
         `).join('')
-        : '<div style="font-size:12.5px; color:var(--text-muted);">Записей пока нет</div>';
-    }
-
-    function addCalendarItem() {
-      const date = document.getElementById('cal-date').value;
-      const note = document.getElementById('cal-note').value.trim();
-      if (!date || !note) return showToast('Выбери дату и напиши заметку');
-      state.calendar.unshift({ date, note });
-      document.getElementById('cal-note').value = '';
-      saveState();
-      renderCalendar();
-      syncCloud(false);
+        : '<div style="font-size:12.5px; color:var(--text-muted);">Событий пока нет — выдели числа сверху или попроси Наою в чате</div>';
     }
 
     function removeCalendarItem(idx) {
       state.calendar.splice(idx, 1);
       saveState();
       renderCalendar();
+      syncCloud(false);
     }
 
+    // =========================================================
+    // ТРЕКЕР КАЛОРИЙ И ТРАТ
+    // =========================================================
     function renderTrackers() {
       const fList = document.getElementById('food-list');
       fList.innerHTML = state.foods.length
@@ -1914,13 +2537,203 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
 
     function removeExpense(i) { state.expenses.splice(i, 1); saveState(); renderTrackers(); }
 
-    function loadLocalAudio(ev) {
+    // =========================================================
+    // МЕДИА-БАНК: УМНЫЙ ПЛЕЕР С ПЛЕЙЛИСТАМИ И СТИКЕРПАК
+    // =========================================================
+    async function handleAudioUpload(ev) {
+      const files = Array.from(ev.target.files || []);
+      if (!files.length) return;
+
+      for (const file of files) {
+        const id = 'tr_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+        const cleanName = file.name.replace(/\.[^/.]+$/, '');
+        try {
+          await saveTrackBlobToDB(id, file);
+          state.tracksMeta.unshift({
+            id,
+            name: cleanName,
+            playlist: 'Общий'
+          });
+        } catch (err) {
+          showToast('Ошибка сохранения трека: ' + err.message);
+        }
+      }
+
+      saveState();
+      renderMediaBank();
+      showToast(`Добавлено треков: ${files.length}`);
+      ev.target.value = '';
+    }
+
+    async function playTrackById(id) {
+      const meta = state.tracksMeta.find(t => t.id === id);
+      if (!meta) return;
+      const blob = await getTrackBlobFromDB(id);
+      if (!blob) {
+        showToast('Файл трека не найден на устройстве (загрузи заново)');
+        return;
+      }
+      const player = document.getElementById('local-audio-player');
+      player.src = URL.createObjectURL(blob);
+      document.getElementById('audio-track-name').textContent = `Сейчас играет: ${meta.name}`;
+      document.getElementById('mini-player-title').textContent = meta.name;
+      document.getElementById('mini-player-bar').classList.add('visible');
+      document.getElementById('mini-play-btn').textContent = 'Пауза';
+      player.play().catch(() => {});
+    }
+
+    function togglePlayPauseMini() {
+      const player = document.getElementById('local-audio-player');
+      const btn = document.getElementById('mini-play-btn');
+      if (player.paused) {
+        player.play().catch(() => {});
+        btn.textContent = 'Пауза';
+      } else {
+        player.pause();
+        btn.textContent = 'Играть';
+      }
+    }
+
+    function stopMiniPlayer() {
+      const player = document.getElementById('local-audio-player');
+      player.pause();
+      document.getElementById('mini-player-bar').classList.remove('visible');
+    }
+
+    async function removeTrack(id) {
+      state.tracksMeta = state.tracksMeta.filter(t => t.id !== id);
+      await deleteTrackBlobFromDB(id);
+      saveState();
+      renderMediaBank();
+    }
+
+    function askNaoyaSortPlaylists() {
+      if (!state.tracksMeta.length) return showToast('Сначала загрузи хотя бы пару треков');
+      switchTab('chat');
+      fetchAiReply('Хозяйка просит тебя проанализировать названия всех загруженных треков в плеере и разложить их по плейлистам («Ночной чилл», «Разъёб», «Грустняк» и т.п.) с помощью команды classify_tracks.');
+    }
+
+    function handleStickerUpload(ev) {
       const file = ev.target.files && ev.target.files[0];
       if (!file) return;
-      document.getElementById('audio-track-name').textContent = file.name;
-      const player = document.getElementById('local-audio-player');
-      player.src = URL.createObjectURL(file);
-      player.play().catch(() => {});
+      const defaultTag = file.name.replace(/\.[^/.]+$/, '').slice(0, 18) || 'реакция';
+      const tag = prompt('Напиши тег/эмоцию для этого стикера (например: осуждаю, шок, помер со смеху):', defaultTag);
+      if (tag === null) {
+        ev.target.value = '';
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const maxDim = 220;
+          const scale = Math.min(1, maxDim / Math.max(img.width, img.height));
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          const dataUrl = canvas.toDataURL('image/webp', 0.82);
+          state.stickers.push({
+            id: 'st_' + Date.now(),
+            tag: tag.trim() || defaultTag,
+            dataUrl
+          });
+          saveState();
+          renderMediaBank();
+          syncCloud(false);
+          showToast(`Стикер «${tag.trim() || defaultTag}» добавлен!`);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+      ev.target.value = '';
+    }
+
+    function sendStickerAsUser(id) {
+      const st = state.stickers.find(s => s.id === id);
+      if (!st) return;
+      const branch = getActiveBranch();
+      branch.messages.push({
+        id: 'ust_' + Date.now(),
+        role: 'user',
+        stickerUrl: st.dataUrl,
+        stickerTag: st.tag,
+        ts: Date.now()
+      });
+      saveState();
+      switchTab('chat');
+      renderMessages();
+      fetchAiReply(`Она отправила тебе стикер с реакцией «${st.tag}».`);
+    }
+
+    function removeSticker(id, ev) {
+      ev.stopPropagation();
+      state.stickers = state.stickers.filter(s => s.id !== id);
+      saveState();
+      renderMediaBank();
+      syncCloud(false);
+    }
+
+    function renderMediaBank() {
+      // Плейлисты
+      const playlists = ['Все', ...new Set(state.tracksMeta.map(t => t.playlist || 'Общий'))];
+      if (!playlists.includes(activePlaylistFilter)) activePlaylistFilter = 'Все';
+
+      const pRow = document.getElementById('playlist-filter-row');
+      pRow.innerHTML = '';
+      playlists.forEach(pl => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'branch-pill' + (pl === activePlaylistFilter ? ' active' : '');
+        btn.textContent = pl;
+        btn.onclick = () => {
+          activePlaylistFilter = pl;
+          renderMediaBank();
+        };
+        pRow.appendChild(btn);
+      });
+
+      if (state.tracksMeta.length) {
+        const aiSortBtn = document.createElement('button');
+        aiSortBtn.type = 'button';
+        aiSortBtn.className = 'branch-pill';
+        aiSortBtn.textContent = '✨ Раскидать через Наою';
+        aiSortBtn.onclick = askNaoyaSortPlaylists;
+        pRow.appendChild(aiSortBtn);
+      }
+
+      // Список треков
+      const tList = document.getElementById('tracks-list');
+      const filtered = activePlaylistFilter === 'Все'
+        ? state.tracksMeta
+        : state.tracksMeta.filter(t => (t.playlist || 'Общий') === activePlaylistFilter);
+
+      tList.innerHTML = filtered.length
+        ? filtered.map(t => `
+          <div class="list-item">
+            <div style="flex:1; min-width:0; cursor:pointer;" onclick="playTrackById('${t.id}')">
+              <div style="font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">▶ ${escapeHtml(t.name)}</div>
+              <div style="font-size:11px; color:var(--text-muted);">Плейлист: ${escapeHtml(t.playlist || 'Общий')}</div>
+            </div>
+            <button type="button" class="regen-link" onclick="removeTrack('${t.id}')">✕</button>
+          </div>
+        `).join('')
+        : '<div style="font-size:12.5px; color:var(--text-muted);">Треков пока нет — нажми «+ Треки» сверху</div>';
+
+      // Стикерпак
+      const sGrid = document.getElementById('stickers-grid');
+      sGrid.innerHTML = state.stickers.length
+        ? state.stickers.map(s => `
+          <div class="sticker-card" onclick="sendStickerAsUser('${s.id}')">
+            <button type="button" class="sticker-del" onclick="removeSticker('${s.id}', event)">✕</button>
+            <img src="${s.dataUrl}" alt="${escapeHtml(s.tag)}" />
+            <span class="sticker-tag-lbl">${escapeHtml(s.tag)}</span>
+          </div>
+        `).join('')
+        : '<div style="grid-column:1/-1; font-size:12.5px; color:var(--text-muted);">Стикеров пока нет — добавь первый через «+ Стикер»</div>';
     }
 
     function saveScratchpad() {
@@ -1935,11 +2748,30 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
       document.querySelector(`.nav-item[data-tab="${tabName}"]`).classList.add('active');
     }
 
-    // НАСТРОЙКИ И СЖАТИЕ ЗАГРУЖАЕМОЙ АВАТАРКИ ЧЕРЕЗ CANVAS (256x256 JPEG 0.85)
+    // НАСТРОЙКИ
+    function onModelSelectChange() {
+      const sel = document.getElementById('cfg-model').value;
+      const customInput = document.getElementById('cfg-model-custom');
+      customInput.style.display = sel === 'custom' ? 'block' : 'none';
+    }
+
     function openSettings() {
       document.getElementById('cfg-avatar-preview').src = state.char.avatar || DEFAULT_AVATAR;
       document.getElementById('cfg-or-key').value = state.config.orKey || '';
-      document.getElementById('cfg-model').value = state.config.model || 'google/gemini-2.0-flash-001';
+
+      const selectEl = document.getElementById('cfg-model');
+      const customEl = document.getElementById('cfg-model-custom');
+      const currentModel = state.config.model || 'deepseek/deepseek-chat';
+      const hasOption = Array.from(selectEl.options).some(o => o.value === currentModel);
+      if (hasOption) {
+        selectEl.value = currentModel;
+        customEl.style.display = 'none';
+      } else {
+        selectEl.value = 'custom';
+        customEl.value = currentModel;
+        customEl.style.display = 'block';
+      }
+
       document.getElementById('cfg-sb-url').value = state.config.sbUrl || '';
       document.getElementById('cfg-sb-key').value = state.config.sbKey || '';
       document.getElementById('cfg-char-name').value = state.char.name || 'Наоя';
@@ -1988,7 +2820,10 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
 
     async function saveSettings() {
       state.config.orKey = document.getElementById('cfg-or-key').value.trim();
-      state.config.model = document.getElementById('cfg-model').value;
+      const selModel = document.getElementById('cfg-model').value;
+      const customModel = document.getElementById('cfg-model-custom').value.trim();
+      state.config.model = (selModel === 'custom' && customModel) ? customModel : (selModel === 'custom' ? 'deepseek/deepseek-chat' : selModel);
+
       state.config.sbUrl = document.getElementById('cfg-sb-url').value.trim().replace(/\/+$/, '');
       state.config.sbKey = document.getElementById('cfg-sb-key').value.trim();
       state.char.name = document.getElementById('cfg-char-name').value.trim() || 'Наоя';
@@ -2010,7 +2845,40 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
       showToast('Чат очищен');
     }
 
-    // ОБЛАЧНАЯ СИНХРОНИЗАЦИЯ SUPABASE (ТАБЛИЦА naoya_state)
+    // ЭКСПОРТ / ИМПОРТ БЭКАПА В ФАЙЛ
+    function exportBackupJson() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = `naoya_backup_${formatYMD(new Date())}.json`;
+      a.click();
+      showToast('Файл бэкапа сохранён');
+    }
+
+    function importBackupJson(ev) {
+      const file = ev.target.files && ev.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const parsed = JSON.parse(reader.result);
+          state = { ...state, ...parsed };
+          saveState();
+          renderBranches();
+          renderMessages();
+          renderCalendar();
+          renderTrackers();
+          renderMediaBank();
+          showToast('Бэкап восстановлен!');
+        } catch (err) {
+          showToast('Неверный файл бэкапа');
+        }
+      };
+      reader.readAsText(file);
+      ev.target.value = '';
+    }
+
+    // ОБЛАЧНАЯ СИНХРОНИЗАЦИЯ SUPABASE
     async function syncCloud(manual = false) {
       const { sbUrl, sbKey } = state.config;
       if (!sbUrl || !sbKey) {
@@ -2042,14 +2910,17 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
           state.branches = cloudData.branches;
           state.activeBranchId = cloudData.activeBranchId || state.branches[0].id;
           state.calendar = cloudData.calendar || [];
+          state.cycleDates = cloudData.cycleDates || [];
           state.foods = cloudData.foods || [];
           state.expenses = cloudData.expenses || [];
+          state.stickers = cloudData.stickers || [];
           state.scratchpad = cloudData.scratchpad || '';
           saveState();
           renderBranches();
           renderMessages();
           renderCalendar();
           renderTrackers();
+          renderMediaBank();
           document.getElementById('scratchpad-area').value = state.scratchpad;
         } else {
           const payload = {
@@ -2059,8 +2930,10 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
               branches: state.branches,
               activeBranchId: state.activeBranchId,
               calendar: state.calendar,
+              cycleDates: state.cycleDates,
               foods: state.foods,
               expenses: state.expenses,
+              stickers: state.stickers,
               scratchpad: state.scratchpad
             },
             updated_at: new Date().toISOString()
@@ -2084,7 +2957,7 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
         }
 
         cloudConnected = true;
-        lastCloudError = 'Соединение с Supabase работает исправно. Все чаты, статы и заметки синхронизированы.';
+        lastCloudError = 'Соединение с Supabase работает исправно. Все чаты, цикл, стикеры, статы и заметки синхронизированы.';
         renderHeaderAndStats();
         if (manual) showToast('Облако синхронизировано!');
       } catch (err) {
@@ -2129,13 +3002,13 @@ ${systemHint ? '\nКонтекст события: ' + systemHint : ''}
 
     window.onload = function () {
       loadState();
-      document.getElementById('cal-date').value = new Date().toISOString().slice(0, 10);
       document.getElementById('scratchpad-area').value = state.scratchpad || '';
       renderHeaderAndStats();
       renderBranches();
       renderMessages();
       renderCalendar();
       renderTrackers();
+      renderMediaBank();
       syncCloud(false);
     };
   </script>
