@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1057043522067",
+    "project_id": "naoya-31de5",
+    "storage_bucket": "naoya-31de5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1057043522067:android:67b51200606198063155e6",
+        "android_client_info": {
+          "package_name": "com.naoya.companion"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdhWgJfRjj4kGhcY8zdxOwiEO8eUEoj-k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
