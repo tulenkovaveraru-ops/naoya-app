@@ -1180,7 +1180,7 @@
           </select>
 
           <label class="field-label" style="color:var(--text-on-surface); opacity:0.75;">Модель генерации картинок</label>
-          <input type="text" id="cfg-img-model" class="text-input" placeholder="google/gemini-2.5-flash-image-preview" style="margin-bottom:8px;" />
+          <input type="text" id="cfg-img-model" class="text-input" placeholder="google/gemini-2.5-flash-image" style="margin-bottom:8px;" />
 
           <label class="field-label" style="color:var(--text-on-surface); opacity:0.75;">Модель разбора фото и документов</label>
           <input type="text" id="cfg-vision-model" class="text-input" placeholder="google/gemini-2.5-flash" />
@@ -1302,7 +1302,7 @@ alter table public.naoya_state disable row level security;</div>
       config: {
         orKey: '',
         model: 'deepseek/deepseek-chat',
-        imgModel: 'google/gemini-2.5-flash-image-preview',
+        imgModel: 'google/gemini-2.5-flash-image',
         visionModel: 'google/gemini-2.5-flash',
         sbUrl: '',
         sbKey: '',
@@ -2920,15 +2920,70 @@ ${systemHint ? '\nТЕКУЩАЯ ЗАДАЧА: ' + systemHint : ''}
       else input.placeholder = 'Напиши Наое, кинь ссылку или попроси собрать файл...';
     }
 
+    function describeOrError(status, data) {
+      const raw = data && data.error && (data.error.message || data.error);
+      const m = raw ? (typeof raw === 'string' ? raw : JSON.stringify(raw)) : '';
+      if (status === 401) return 'ключ OpenRouter не принят: проверь его в настройках';
+      if (status === 402) return 'на балансе OpenRouter слишком мало денег: для картинок нужно больше $1, пополни баланс';
+      if (status === 404) return 'модель для картинок не найдена или переименована' + (m ? ` (${m.slice(0, 120)})` : '');
+      if (status === 429) return 'слишком много запросов, попробуй через минуту';
+      return `ошибка ${status}${m ? ': ' + m.slice(0, 160) : ''}`;
+    }
+
+    // Уменьшает картинку, чтобы чат не раздувался (память телефона и облако)
+    function shrinkDataUrl(url, maxSide = 768) {
+      return new Promise(resolve => {
+        try {
+          if (typeof Image === 'undefined' || !/^data:image\//.test(url)) return resolve(url);
+          const img = new Image();
+          img.onload = () => {
+            try {
+              const k = Math.min(1, maxSide / Math.max(img.width, img.height));
+              const c = document.createElement('canvas'); c.width = Math.round(img.width * k); c.height = Math.round(img.height * k);
+              c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+              resolve(c.toDataURL('image/jpeg', 0.82));
+            } catch (_) { resolve(url); }
+          };
+          img.onerror = () => resolve(url);
+          img.src = url;
+        } catch (_) { resolve(url); }
+      });
+    }
+
     async function generateImageViaOpenRouter(promptText) {
       const key = (state.config.orKey || '').trim(); if (!key) return showToast('Вставь OpenRouter API Key'); if (isAiBusy) return; isAiBusy = true;
       const typing = document.getElementById('typing-indicator'); typing.textContent = `${state.char.name} рисует...`; typing.classList.add('visible');
+      const model = (state.config.imgModel && !/image-preview$/.test(state.config.imgModel)) ? state.config.imgModel : 'google/gemini-2.5-flash-image';
+      const headers = { 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' };
+      let imgUrl = null, failText = '';
       try {
-        const res = await fetch('https://openrouter.ai/api/v1/chat/completions', { method: 'POST', headers: { 'Authorization': 'Bearer ' + key, 'Content-Type': 'application/json' }, body: JSON.stringify({ model: state.config.imgModel || 'google/gemini-2.5-flash-image-preview', messages: [{ role: 'user', content: `Generate an image: ${promptText}` }], modalities: ['image', 'text'] }) });
-        const data = await res.json(), msgObj = data.choices?.[0]?.message || {}, imgUrl = msgObj.images?.[0]?.image_url?.url || (Array.isArray(msgObj.content) ? msgObj.content.find(p => p.type === 'image_url')?.image_url?.url : null);
-        getActiveBranch().messages.push({ id: 'img_' + Date.now(), role: 'ai', photo: imgUrl || null, text: imgUrl ? `готово: «${promptText}».` : (msgObj.content || 'не удалось сгенерировать.'), ts: Date.now() });
-        bumpRevisionAndSave(); renderMessages();
-      } catch (err) { showToast('Ошибка: ' + err.message); } finally { typing.classList.remove('visible'); isAiBusy = false; }
+        try {
+          // основной способ: специальный эндпоинт картинок
+          const res = await fetch('https://openrouter.ai/api/v1/images', { method: 'POST', headers, body: JSON.stringify({ model, prompt: promptText }) });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) { const e = new Error(describeOrError(res.status, data)); e.status = res.status; throw e; }
+          const item = data.data && data.data[0];
+          imgUrl = item && item.b64_json ? `data:${item.media_type || 'image/png'};base64,${item.b64_json}` : ((item && item.url) || null);
+          if (!imgUrl) throw new Error('модель ответила без картинки');
+        } catch (e1) {
+          failText = e1.message;
+          if (e1.status === 401 || e1.status === 402 || e1.status === 429) throw e1;
+          // запасной способ: обычный чат с выводом картинки
+          const res = await fetch('https://openrouter.ai/api/v1/chat/completions', { method: 'POST', headers, body: JSON.stringify({ model, messages: [{ role: 'user', content: `Generate an image: ${promptText}` }], modalities: ['image', 'text'] }) });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(describeOrError(res.status, data));
+          const msgObj = (data.choices && data.choices[0] && data.choices[0].message) || {};
+          const fromParts = Array.isArray(msgObj.content) ? ((msgObj.content.find(p => p.type === 'image_url') || {}).image_url || {}).url : null;
+          imgUrl = (msgObj.images && msgObj.images[0] && msgObj.images[0].image_url && msgObj.images[0].image_url.url) || fromParts || null;
+          if (!imgUrl) throw new Error(failText || 'модель ответила без картинки');
+        }
+        imgUrl = await shrinkDataUrl(imgUrl);
+        getActiveBranch().messages.push({ id: 'img_' + Date.now(), role: 'ai', photo: imgUrl, text: `готово: «${promptText}».`, ts: Date.now() });
+      } catch (err) {
+        getActiveBranch().messages.push({ id: 'img_' + Date.now(), role: 'ai', text: `не вышло нарисовать: ${err.message}`, ts: Date.now() });
+        showToast('Генератор: ' + err.message);
+      } finally { typing.classList.remove('visible'); isAiBusy = false; }
+      bumpRevisionAndSave(); renderMessages();
     }
 
     async function continueAiThought() { if (isAiBusy) return; state.lastUserInteractionTs = Date.now(); await fetchAiReply('Продолжи мысль в 1–2 коротких сообщениях или предложи более лёгкий путь.', { syntheticUserTurn: '(продолжай)' }); }
@@ -3361,7 +3416,7 @@ ${systemHint ? '\nТЕКУЩАЯ ЗАДАЧА: ' + systemHint : ''}
 
       document.getElementById('cfg-or-key').value = state.config.orKey || '';
       document.getElementById('cfg-model').value = state.config.model || 'deepseek/deepseek-chat';
-      document.getElementById('cfg-img-model').value = state.config.imgModel || 'google/gemini-2.5-flash-image-preview';
+      document.getElementById('cfg-img-model').value = (state.config.imgModel && !/image-preview$/.test(state.config.imgModel)) ? state.config.imgModel : 'google/gemini-2.5-flash-image';
       document.getElementById('cfg-vision-model').value = state.config.visionModel || 'google/gemini-2.5-flash';
       document.getElementById('cfg-auto-initiative').checked = state.config.autoInitiative !== false;
       document.getElementById('cfg-web-links').checked = state.config.webLinks !== false;
