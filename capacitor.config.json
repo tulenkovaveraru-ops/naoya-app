@@ -1,11 +1,6 @@
 {
   "appId": "com.naoya.companion",
   "appName": "Naoya",
-  "webDir": "www"
-}
-{
-  "appId": "com.naoya.companion",
-  "appName": "Naoya",
   "webDir": "www",
   "server": {
     "url": "https://tulenkovaveraru-ops.github.io/naoya-app/www/",
